@@ -1,0 +1,78 @@
+# ==========================================
+# DeepGuard AI - .gitignore
+# ==========================================
+
+# Local draft docs & personal notes
+*.docx
+*.doc
+*.pptx
+*.pdf
+extracted_report.txt
+_local_notes/
+
+# Screenshots & raw image dumps in root
+Screenshot*.png
+Screenshot*.jpg
+*.png
+*.jpg
+*.jpeg
+
+# Environments & Secrets
+.env
+.env.local
+.env.*.local
+venv/
+.venv/
+env/
+ENV/
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Node / Frontend
+node_modules/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ML Model weights & checkpoints (Prevent committing massive binaries)
+*.pt
+*.pth
+*.bin
+*.onnx
+*.safetensors
+*.h5
+*.hdf5
+*.ckpt
+*.tflite
+models/checkpoints/
+
+# Media test samples & raw audio/video datasets
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.wav
+*.mp3
+*.flac
+*.aac
+datasets/
+data/
+test_samples/
+
+# Operating System & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
