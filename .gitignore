@@ -70,6 +70,7 @@ models/checkpoints/
 datasets/
 data/
 test_samples/
+uploads/
 
 # Operating System & IDE files
 .DS_Store

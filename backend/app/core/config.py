@@ -1,7 +1,7 @@
 import os
-from pydantic_settings import BaseSettings
+from typing import List
 
-class Settings(BaseSettings):
+class Settings:
     PROJECT_NAME: str = "DeepGuard AI Backend"
     API_V1_STR: str = "/api/v1"
     PROJECT_VERSION: str = "1.0.0"
@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # Storage settings
     UPLOAD_DIR: str = os.path.join(os.getcwd(), "uploads")
     MAX_UPLOAD_SIZE_MB: int = 100
-    ALLOWED_EXTENSIONS: list[str] = [
+    ALLOWED_EXTENSIONS: List[str] = [
         "mp4", "avi", "mov", "mkv", "webm",
         "wav", "mp3", "flac", "aac"
     ]
@@ -22,8 +22,5 @@ class Settings(BaseSettings):
     AWS_REGION: str = os.getenv("AWS_REGION", "ap-south-1")
     AWS_S3_BUCKET_NAME: str = os.getenv("AWS_S3_BUCKET_NAME", "deepguard-media-storage")
     USE_S3_STORAGE: bool = bool(os.getenv("AWS_ACCESS_KEY_ID") and os.getenv("AWS_S3_BUCKET_NAME"))
-
-    class Config:
-        case_sensitive = True
 
 settings = Settings()
