@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  deepguard-backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    container_name: deepguard_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PROJECT_NAME=DeepGuard AI Backend
+      - AWS_REGION=ap-south-1
+      - AWS_S3_BUCKET_NAME=deepguard-media-storage
+    volumes:
+      - ../uploads:/app/uploads
+      - ../backend:/app/backend
+      - ../src:/app/src
+    restart: unless-stopped
