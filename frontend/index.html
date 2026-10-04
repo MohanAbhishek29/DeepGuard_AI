@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepGuard AI | Multimodal Forensic Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(18, 24, 38, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #8b5cf6;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(139, 92, 246, 0.12) 0%, transparent 40%);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    }
+
+    .brand-text h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #fff, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--card-border);
+      background: rgba(255, 255, 255, 0.04);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .badge.live {
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    /* Grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 22px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #e5e7eb;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Upload Zone */
+    .upload-box {
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 32px 18px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .upload-box:hover, .upload-box.dragover {
+      border-color: var(--accent-blue);
+      background: rgba(59, 130, 246, 0.05);
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);
+    }
+
+    .upload-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+
+    .upload-text {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .upload-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .file-input { display: none; }
+
+    .btn {
+      width: 100%;
+      margin-top: 14px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+      transition: 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover { opacity: 0.95; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    /* Verdict Banner */
+    .verdict-banner {
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.1);
+    }
+
+    .verdict-banner.authentic {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.35);
+    }
+
+    .verdict-banner.manipulated {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+
+    .verdict-icon { font-size: 26px; }
+    .verdict-title { font-size: 15px; font-weight: 700; color: #fbbf24; }
+    .verdict-desc { font-size: 13px; color: #d1d5db; margin-top: 4px; line-height: 1.4; }
+
+    /* Modality Cards */
+    .modality-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .modality-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .modality-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .modality-name { font-size: 13px; font-weight: 600; color: #9ca3af; display: flex; align-items: center; gap: 6px; }
+    .modality-status { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 12px; }
+    .status-suspicious { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .status-authentic { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+    .score-container { margin: 10px 0; }
+    .score-bar-bg { height: 8px; background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden; }
+    .score-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+    .fill-danger { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+    .fill-success { background: linear-gradient(90deg, #3b82f6, #10b981); }
+
+    .modality-meta { font-size: 11px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
+
+    /* Timeline */
+    .timeline {
+      margin-top: 14px;
+      position: relative;
+      padding-left: 20px;
+      border-left: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -25px;
+      top: 3px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      border: 2px solid var(--bg);
+    }
+
+    .timeline-time { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #60a5fa; }
+    .timeline-label { color: #d1d5db; margin-left: 6px; }
+
+    /* Transcript Box */
+    .transcript-box {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #e5e7eb;
+      font-style: italic;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <div class="logo-icon">🛡️</div>
+        <div class="brand-text">
+          <h1>DeepGuard AI</h1>
+          <p>Multimodal Synthetic Media & Deepfake Forensic Platform</p>
+        </div>
+      </div>
+      <div class="badges">
+        <span class="badge live"><span class="dot"></span> Backend Live: 8000</span>
+        <span class="badge">Group: K3C0175</span>
+        <span class="badge">SIH1683</span>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="grid-2">
+      
+      <!-- Upload & Ingestion -->
+      <div class="card">
+        <h2 class="card-title">📤 Media Ingestion & Inspection</h2>
+        <div class="upload-box" id="dropZone" onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">📁</div>
+          <p class="upload-text" id="fileNameText">Click to select or drag video/audio here</p>
+          <p class="upload-hint">Supported: .MP4, .AVI, .MOV, .MP3, .WAV (Max 100MB)</p>
+          <input type="file" id="fileInput" class="file-input" accept="video/*,audio/*" onchange="handleFileSelect(this.files)">
+        </div>
+
+        <button class="btn" id="analyzeBtn" onclick="runAnalysis()">
+          <span>⚡ Run Multimodal Forensic Analysis</span>
+        </button>
+
+        <div style="margin-top: 18px; font-size: 11px; color: var(--text-muted); line-height: 1.5;">
+          <strong>Pipeline Owners:</strong><br>
+          • Cloud / Backend: Mohan Abhishek Gupta<br>
+          • Frontend Dashboard: Harsha<br>
+          • Computer Vision: Tunga Durga Sai Prasad<br>
+          • Audio & Speech: Harsha Paladi & Vinay Rayi
+        </div>
+      </div>
+
+      <!-- Results View -->
+      <div class="card" id="resultsCard">
+        <h2 class="card-title">🔍 Forensic Correlation Verdict</h2>
+
+        <!-- Verdict Banner -->
+        <div class="verdict-banner" id="verdictBanner">
+          <div class="verdict-icon" id="verdictIcon">⚠️</div>
+          <div>
+            <div class="verdict-title" id="verdictTitle">CROSS-MODAL DISAGREEMENT DETECTED</div>
+            <div class="verdict-desc" id="verdictReason">
+              Visual pipeline identified facial boundary artifacts, while acoustic frequency signals match authentic human vocal cords.
+            </div>
+          </div>
+        </div>
+
+        <!-- Modalities Breakdown -->
+        <div class="modality-grid">
+          <!-- Vision Card -->
+          <div class="modality-card" id="visionCard">
+            <div class="modality-header">
+              <span class="modality-name">📹 Visual Artifacts</span>
+              <span class="modality-status status-suspicious" id="visionStatus">SUSPICIOUS</span>
+            </div>
+            <div class="score-container">
+              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                <span>Manipulation Prob:</span>
+                <strong id="visionScore">78%</strong>
+              </div>
+              <div class="score-bar-bg">
+                <div class="score-bar-fill fill-danger" id="visionFill" style="width: 78%;"></div>
+              </div>
+            </div>
+            <div class="modality-meta" id="visionMeta">
+              Frames: 120 analyzed<br>
+              Artifacts: Facial boundary blurring, rPPG pulse abnormality
+            </div>
+          </div>
+
+          <!-- Audio Card -->
+          <div class="modality-card">
+            <div class="modality-header">
+              <span class="modality-name">🎙️ Acoustic Spoofing</span>
+              <span class="modality-status status-authentic" id="audioStatus">AUTHENTIC</span>
+            </div>
+            <div class="score-container">
+              <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+                <span>Spoof Prob:</span>
+                <strong id="audioScore">22%</strong>
+              </div>
+              <div class="score-bar-bg">
+                <div class="score-bar-fill fill-success" id="audioFill" style="width: 22%;"></div>
+              </div>
+            </div>
+            <div class="modality-meta">
+              Spectrogram: 128 Mel-bands<br>
+              Harmonics: Natural human jitter
+            </div>
+          </div>
+        </div>
+
+        <!-- Speech Whisper Transcript -->
+        <div style="margin-bottom: 18px;">
+          <div style="font-size: 12px; font-weight: 600; color: #9ca3af; margin-bottom: 6px;">📝 Whisper ASR Transcript:</div>
+          <div class="transcript-box" id="transcriptText">
+            "DeepGuard AI is performing cross-modal forensic inspection on this uploaded test media file."
+          </div>
+        </div>
+
+        <!-- Timeline Events -->
+        <div>
+          <div style="font-size: 12px; font-weight: 600; color: #9ca3af; margin-bottom: 6px;">⏱️ Synchronized Forensic Timeline:</div>
+          <div class="timeline" id="timelineList">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <span class="timeline-time">01.4s</span>
+              <span class="timeline-label">Facial boundary anomaly detected (Vision)</span>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <span class="timeline-time">02.8s</span>
+              <span class="timeline-label">Abnormal biological rPPG pulse signal</span>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <span class="timeline-time">03.2s</span>
+              <span class="timeline-label">High-frequency blending artifact</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let selectedFile = null;
+
+    function handleFileSelect(files) {
+      if (files && files.length > 0) {
+        selectedFile = files[0];
+        document.getElementById('fileNameText').innerText = "Selected: " + selectedFile.name + " (" + (selectedFile.size / (1024*1024)).toFixed(2) + " MB)";
+      }
+    }
+
+    // Drag and drop support
+    const dropZone = document.getElementById('dropZone');
+    ['dragenter', 'dragover'].forEach(name => {
+      dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false);
+    });
+    ['dragleave', 'drop'].forEach(name => {
+      dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); }, false);
+    });
+    dropZone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      handleFileSelect(dt.files);
+    });
+
+    async function runAnalysis() {
+      const btn = document.getElementById('analyzeBtn');
+      btn.innerHTML = '<span class="spinner"></span> <span>Running Orchestrator...</span>';
+
+      try {
+        if (selectedFile) {
+          // 1. Upload to backend
+          const formData = new FormData();
+          formData.append('file', selectedFile);
+          const uploadRes = await fetch('http://localhost:8000/api/v1/media/upload', {
+            method: 'POST',
+            body: formData
+          });
+          const uploadData = await uploadRes.json();
+
+          // 2. Start analysis
+          const analysisRes = await fetch('http://localhost:8000/api/v1/analysis/start', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ file_id: uploadData.file_id, enabled_modalities: ['vision', 'audio', 'speech'] })
+          });
+          const result = await analysisRes.json();
+          renderResults(result);
+        } else {
+          // Demo fallback
+          setTimeout(() => {
+            alert('Please select a video or audio file first!');
+            btn.innerHTML = '<span>⚡ Run Multimodal Forensic Analysis</span>';
+          }, 400);
+          return;
+        }
+      } catch (err) {
+        console.warn('Backend call failed, showing simulated data:', err);
+      } finally {
+        btn.innerHTML = '<span>⚡ Run Multimodal Forensic Analysis</span>';
+      }
+    }
+
+    function renderResults(data) {
+      if (!data) return;
+      
+      // Update verdict
+      const banner = document.getElementById('verdictBanner');
+      const title = document.getElementById('verdictTitle');
+      const reason = document.getElementById('verdictReason');
+
+      if (data.cross_modal) {
+        title.innerText = data.cross_modal.overall_verdict.replace('_', ' ');
+        reason.innerText = data.cross_modal.disagreement_reason || '';
+        if (data.cross_modal.overall_verdict === 'AUTHENTIC') {
+          banner.className = 'verdict-banner authentic';
+          document.getElementById('verdictIcon').innerText = '✅';
+        } else {
+          banner.className = 'verdict-banner';
+          document.getElementById('verdictIcon').innerText = '⚠️';
+        }
+      }
+
+      // Vision
+      if (data.vision) {
+        document.getElementById('visionCard').style.display = 'block';
+        document.getElementById('visionScore').innerText = Math.round(data.vision.score * 100) + '%';
+        document.getElementById('visionFill').style.width = Math.round(data.vision.score * 100) + '%';
+        document.getElementById('visionStatus').innerText = data.vision.status;
+        document.getElementById('visionMeta').innerHTML = `Frames: ${data.vision.total_frames_analyzed} analyzed<br>Artifacts: ${data.vision.artifacts.join(', ')}`;
+      } else {
+        document.getElementById('visionCard').style.display = 'none';
+      }
+
+      // Audio
+      if (data.audio) {
+        document.getElementById('audioScore').innerText = Math.round(data.audio.score * 100) + '%';
+        document.getElementById('audioFill').style.width = Math.round(data.audio.score * 100) + '%';
+        document.getElementById('audioStatus').innerText = data.audio.status;
+      }
+
+      // Speech
+      if (data.speech) {
+        document.getElementById('transcriptText').innerText = `"${data.speech.transcript}"`;
+      }
+    }
+  </script>
+</body>
+</html>

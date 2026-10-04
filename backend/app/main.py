@@ -38,6 +38,12 @@ app.add_middleware(
 # Include V1 Routers
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
+import os
+from fastapi.staticfiles import StaticFiles
+frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "frontend")
+if os.path.exists(frontend_dir):
+    app.mount("/dashboard", StaticFiles(directory=frontend_dir, html=True), name="frontend")
+
 @app.get("/", tags=["System Health"], summary="Root Health Check")
 async def root():
     return {
