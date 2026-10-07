@@ -118,6 +118,23 @@ flowchart TD
 
 ---
 
+## 🧪 Pipeline Testing & Verification Guide
+
+Evaluators, reviewers, and project supervisors can execute the automated test suites using standard Python:
+
+```bash
+# 1. Run Core Cloud Architecture & Telemetry Tests
+python -m unittest tests/test_cloud_architecture.py -v
+
+# 2. Run Capstone Pipeline Verification Template
+python -m unittest tests/test_template.py -v
+
+# 3. Run Audio & Speech Forensic Branch Tests
+python -m unittest tests/test_multimodal_branches.py -v
+```
+
+---
+
 ## ⚖️ Academic Disclaimer & Responsible Use
 
 DeepGuard AI is an academic research prototype intended for experimental evaluation and educational demonstration. Detection outputs represent probabilistic model estimates under tested conditions and are not presented as legally conclusive forensic evidence.
