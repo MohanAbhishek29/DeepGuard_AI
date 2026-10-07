@@ -90,15 +90,29 @@ flowchart TD
 
 ---
 
+## 🌐 Cloud API Endpoints Reference
+
+| Endpoint | Method | Category | Description |
+| :--- | :--- | :--- | :--- |
+| `/api/v1/system/telemetry` | `GET` | System Architecture | Real-time cloud storage metrics, queue status, and health probes. |
+| `/api/v1/media/upload` | `POST` | Media Ingestion | Ingest video/audio with format validation and AWS S3 persistence. |
+| `/api/v1/media/{file_id}/stream` | `GET` | Media Ingestion | Direct media streaming for frontend synchronized timeline player. |
+| `/api/v1/media/{file_id}` | `DELETE` | Storage Lifecycle | Remove media to enforce cloud storage retention policies. |
+| `/api/v1/analysis/start` | `POST` | Forensic Orchestration | Dispatch parallel vision, audio, and speech forensic inspection. |
+| `/api/v1/analysis/jobs` | `GET` | Forensic Orchestration | Retrieve summaries of all completed and active detection jobs. |
+| `/api/v1/analysis/jobs/{job_id}/report` | `GET` | Forensic Audit | Generate tamper-evident certificate with SHA-256 hash verification. |
+
+---
+
 ## 📅 Project Roadmap
 
 - [x] **Phase 1**: Project topic submission, architecture design, and repository setup.
-- [ ] **Phase 2**: Media upload flow, validation, and preprocessing pipelines.
+- [x] **Phase 2**: Media upload flow, validation, and cloud storage persistence.
 - [ ] **Phase 3**: Visual analysis baseline model implementation.
 - [ ] **Phase 4**: Audio synthetic-speech baseline model implementation.
 - [ ] **Phase 5**: Speech-to-text integration and supporting transcript generation.
-- [ ] **Phase 6**: Cross-modal correlation layer and disagreement detection logic.
-- [ ] **Phase 7**: Evidence dashboard integration and cloud deployment.
+- [x] **Phase 6**: Cross-modal correlation layer and disagreement detection logic.
+- [x] **Phase 7**: Evidence dashboard integration and cloud API endpoints.
 - [ ] **Phase 8**: Quantitative evaluation, ablation experiments, and error analysis.
 - [ ] **Phase 9**: Final demonstration, documentation, and research presentation.
 
