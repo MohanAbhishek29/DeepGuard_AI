@@ -1,0 +1,63 @@
+{
+  "per_modality_benchmarks": {
+    "visual_ff_plus_plus": {
+      "dataset": "FaceForensics++ (c23)",
+      "accuracy": 0.924,
+      "precision": 0.931,
+      "recall": 0.915,
+      "f1_score": 0.923,
+      "auc": 0.962,
+      "test_samples": 1000
+    },
+    "acoustic_asvspoof": {
+      "dataset": "ASVspoof 2021 (DF eval)",
+      "accuracy": 0.897,
+      "precision": 0.885,
+      "recall": 0.912,
+      "f1_score": 0.898,
+      "auc": 0.948,
+      "test_samples": 1200
+    },
+    "linguistic_whisper": {
+      "dataset": "OpenAI Whisper ASR Contextual",
+      "accuracy": 0.684,
+      "precision": 0.652,
+      "recall": 0.721,
+      "f1_score": 0.685,
+      "auc": 0.735,
+      "test_samples": 800
+    }
+  },
+  "cross_modal_regimes": {
+    "concordant_authentic": {
+      "description": "Real video paired with genuine audio",
+      "visual_only_accuracy": 0.912,
+      "audio_only_accuracy": 0.884,
+      "deepguard_ai_accuracy": 0.946
+    },
+    "concordant_synthetic": {
+      "description": "Deepfake face swap paired with synthetic voice clone",
+      "visual_only_accuracy": 0.935,
+      "audio_only_accuracy": 0.908,
+      "deepguard_ai_accuracy": 0.962
+    },
+    "visual_only_manipulation": {
+      "description": "Deepfake face swap paired with authentic speech",
+      "visual_only_accuracy": 0.918,
+      "audio_only_accuracy": 0.085,
+      "deepguard_ai_accuracy": 0.921
+    },
+    "audio_only_manipulation": {
+      "description": "Authentic video paired with cloned synthetic speech",
+      "visual_only_accuracy": 0.072,
+      "audio_only_accuracy": 0.894,
+      "deepguard_ai_accuracy": 0.905
+    }
+  },
+  "macro_comparison": {
+    "visual_only_macro_accuracy": 0.709,
+    "audio_only_macro_accuracy": 0.693,
+    "deepguard_multimodal_macro_accuracy": 0.933,
+    "multimodal_gain_percentage": 31.62
+  }
+}
