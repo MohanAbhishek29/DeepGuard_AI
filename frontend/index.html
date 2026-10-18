@@ -415,7 +415,7 @@
                 <div class="score-bar-fill fill-success" id="audioFill" style="width: 22%;"></div>
               </div>
             </div>
-            <div class="modality-meta">
+            <div class="modality-meta" id="audioMeta">
               Spectrogram: 128 Mel-bands<br>
               Harmonics: Natural human jitter
             </div>
@@ -489,14 +489,14 @@
           // 1. Upload to backend
           const formData = new FormData();
           formData.append('file', selectedFile);
-          const uploadRes = await fetch('http://localhost:8000/api/v1/media/upload', {
+          const uploadRes = await fetch('/api/v1/media/upload', {
             method: 'POST',
             body: formData
           });
           const uploadData = await uploadRes.json();
 
           // 2. Start analysis
-          const analysisRes = await fetch('http://localhost:8000/api/v1/analysis/start', {
+          const analysisRes = await fetch('/api/v1/analysis/start', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ file_id: uploadData.file_id, enabled_modalities: ['vision', 'audio', 'speech'] })
@@ -532,6 +532,10 @@
         if (data.cross_modal.overall_verdict === 'AUTHENTIC') {
           banner.className = 'verdict-banner authentic';
           document.getElementById('verdictIcon').innerText = '✅';
+        } else if (data.cross_modal.overall_verdict === 'MANIPULATED') {
+          banner.className = 'verdict-banner';
+          banner.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+          document.getElementById('verdictIcon').innerText = '🚨';
         } else {
           banner.className = 'verdict-banner';
           document.getElementById('verdictIcon').innerText = '⚠️';
@@ -541,24 +545,56 @@
       // Vision
       if (data.vision) {
         document.getElementById('visionCard').style.display = 'block';
-        document.getElementById('visionScore').innerText = Math.round(data.vision.score * 100) + '%';
-        document.getElementById('visionFill').style.width = Math.round(data.vision.score * 100) + '%';
+        const vScorePct = Math.round(data.vision.score * 100);
+        document.getElementById('visionScore').innerText = vScorePct + '%';
+        document.getElementById('visionFill').style.width = vScorePct + '%';
         document.getElementById('visionStatus').innerText = data.vision.status;
-        document.getElementById('visionMeta').innerHTML = `Frames: ${data.vision.total_frames_analyzed} analyzed<br>Artifacts: ${data.vision.artifacts.join(', ')}`;
+        if (data.vision.status === 'SUSPICIOUS') {
+          document.getElementById('visionStatus').className = 'modality-status status-suspicious';
+          document.getElementById('visionFill').className = 'score-bar-fill fill-danger';
+        } else {
+          document.getElementById('visionStatus').className = 'modality-status status-authentic';
+          document.getElementById('visionFill').className = 'score-bar-fill fill-success';
+        }
+        document.getElementById('visionMeta').innerHTML = `Frames: ${data.vision.total_frames_analyzed} analyzed (${data.vision.suspicious_frames_detected} suspicious)<br>Artifacts: ${data.vision.artifacts.join(', ')}`;
       } else {
         document.getElementById('visionCard').style.display = 'none';
       }
 
       // Audio
       if (data.audio) {
-        document.getElementById('audioScore').innerText = Math.round(data.audio.score * 100) + '%';
-        document.getElementById('audioFill').style.width = Math.round(data.audio.score * 100) + '%';
+        const aScorePct = Math.round(data.audio.score * 100);
+        document.getElementById('audioScore').innerText = aScorePct + '%';
+        document.getElementById('audioFill').style.width = aScorePct + '%';
         document.getElementById('audioStatus').innerText = data.audio.status;
+        if (data.audio.status === 'SUSPICIOUS') {
+          document.getElementById('audioStatus').className = 'modality-status status-suspicious';
+          document.getElementById('audioFill').className = 'score-bar-fill fill-danger';
+        } else {
+          document.getElementById('audioStatus').className = 'modality-status status-authentic';
+          document.getElementById('audioFill').className = 'score-bar-fill fill-success';
+        }
+        if (data.audio.acoustic_features) {
+          const af = data.audio.acoustic_features;
+          document.getElementById('audioMeta').innerHTML = `Spectrogram: ${af.mel_bands} Mel-bands (${af.sampling_rate_hz} Hz)<br>Harmonics: Jitter ${af.pitch_jitter_score} (${af.spectral_flatness_normal ? 'Natural Human Jitter' : 'Robotic Vocoder Artifact'})`;
+        }
       }
 
       // Speech
       if (data.speech) {
         document.getElementById('transcriptText').innerText = `"${data.speech.transcript}"`;
+      }
+
+      // Timeline events
+      if (data.cross_modal && data.cross_modal.timeline_events && data.cross_modal.timeline_events.length > 0) {
+        const timelineList = document.getElementById('timelineList');
+        timelineList.innerHTML = data.cross_modal.timeline_events.map(ev => `
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <span class="timeline-time">${ev.time_sec}s</span>
+            <span class="timeline-label">${ev.label} (${ev.modality.toUpperCase()})</span>
+          </div>
+        `).join('');
       }
     }
   </script>
