@@ -30,3 +30,17 @@ async def get_system_telemetry():
         orchestration=orchestrator_stats,
         uptime_seconds=orchestrator_stats["uptime_seconds"]
     )
+
+@router.get(
+    "/benchmarks",
+    summary="Retrieve quantitative evaluation benchmarks (Phase 8)",
+    description="Returns quantitative detection performance across FaceForensics++, ASVspoof 2021, and Cross-Modal Disagreement Regimes."
+)
+async def get_benchmark_metrics():
+    try:
+        from evaluation.benchmark_runner import BenchmarkRunner
+        runner = BenchmarkRunner()
+        return runner.compute_overall_metrics()
+    except Exception as e:
+        return {"error": f"Failed to compute benchmark metrics: {str(e)}"}
+
