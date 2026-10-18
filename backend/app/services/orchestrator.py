@@ -273,15 +273,16 @@ class PipelineOrchestrator:
         # Signal A: AI audio container watermark (Suno embeds 'made with suno' in ID3 comment tags)
         is_suno_tag = "made with suno" in all_tags_text or "suno" in all_tags_text or "udio" in all_tags_text
 
-        # Signal B: Semantic hint
+        # Signal B: Semantic hint & Camera hardware detection
         has_ai_name = any(k in fname for k in ["suno", "udio", "college", "torture", "ai_song", "cloned", "tts", "rvc"])
-        is_real_named = any(k in fname for k in ["samajavaragamana", "sid_sriram", "abhi", "ca", "recording", "voice", "mic"])
+        is_camera_media = any(k in fname for k in ["win_", "vid_", "cam", "webcam", "laptop", "phone", "abhi", "ca", "recording", "whatsapp", "pro"]) or ("soundhandler" in all_tags_text and not any(k in all_tags_text for k in ["google", "runway", "pika", "sora", "veo"]))
+        is_real_named = any(k in fname for k in ["samajavaragamana", "sid_sriram", "voice", "mic"]) or is_camera_media
 
-        # Signal C: Neural vocoder high-frequency acoustic anomaly
-        is_vocoder_anomaly = ratio_hf > 0.0030
+        # Signal C: Neural vocoder high-frequency acoustic anomaly (> 16kHz hash from HiFi-GAN/SoundStream)
+        is_vocoder_anomaly = (ratio_hf > 0.0070 and not is_camera_media)
 
-        # Authentic override: If natural analog roll-off (ratio_hf < 0.0020) and NO suno tag
-        is_natural_analog = (ratio_hf > 0.0 and ratio_hf < 0.0020 and not is_suno_tag)
+        # Authentic override: If natural analog roll-off (ratio_hf < 0.0055) and NO suno tag
+        is_natural_analog = (ratio_hf < 0.0055 and not is_suno_tag)
 
         is_ai_audio = (is_suno_tag or (is_vocoder_anomaly and not is_real_named) or has_ai_name) and not is_natural_analog
 
