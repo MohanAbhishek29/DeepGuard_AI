@@ -101,6 +101,7 @@ flowchart TD
 | `/api/v1/analysis/start` | `POST` | Forensic Orchestration | Dispatch parallel vision, audio, and speech forensic inspection. |
 | `/api/v1/analysis/jobs` | `GET` | Forensic Orchestration | Retrieve summaries of all completed and active detection jobs. |
 | `/api/v1/analysis/jobs/{job_id}/report` | `GET` | Forensic Audit | Generate tamper-evident certificate with SHA-256 hash verification. |
+| `/api/v1/system/benchmarks` | `GET` | Quantitative Evaluation | Retrieve quantitative benchmarks (FaceForensics++, ASVspoof, Regimes). |
 
 ---
 
@@ -113,7 +114,7 @@ flowchart TD
 - [ ] **Phase 5**: Speech-to-text integration and supporting transcript generation.
 - [x] **Phase 6**: Cross-modal correlation layer and disagreement detection logic.
 - [x] **Phase 7**: Evidence dashboard integration and cloud API endpoints.
-- [ ] **Phase 8**: Quantitative evaluation, ablation experiments, and error analysis.
+- [x] **Phase 8**: Quantitative evaluation, ablation experiments, and error analysis.
 - [ ] **Phase 9**: Final demonstration, documentation, and research presentation.
 
 ---
@@ -131,6 +132,9 @@ python -m unittest tests/test_template.py -v
 
 # 3. Run Audio & Speech Forensic Branch Tests
 python -m unittest tests/test_multimodal_branches.py -v
+
+# 4. Run Quantitative Evaluation & Benchmarks Suite
+python -m unittest tests/test_evaluation.py -v
 ```
 
 ---
