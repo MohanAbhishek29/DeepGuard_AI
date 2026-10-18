@@ -527,17 +527,22 @@
       const reason = document.getElementById('verdictReason');
 
       if (data.cross_modal) {
-        title.innerText = data.cross_modal.overall_verdict.replace('_', ' ');
+        title.innerText = data.cross_modal.overall_verdict.replaceAll('_', ' ');
         reason.innerText = data.cross_modal.disagreement_reason || '';
         if (data.cross_modal.overall_verdict === 'AUTHENTIC') {
           banner.className = 'verdict-banner authentic';
+          banner.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+          banner.style.background = 'rgba(16, 185, 129, 0.1)';
           document.getElementById('verdictIcon').innerText = '✅';
-        } else if (data.cross_modal.overall_verdict === 'MANIPULATED') {
+        } else if (data.cross_modal.overall_verdict.includes('MANIPULATED') || data.cross_modal.overall_verdict.includes('SYNTHETIC')) {
           banner.className = 'verdict-banner';
           banner.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+          banner.style.background = 'rgba(239, 68, 68, 0.12)';
           document.getElementById('verdictIcon').innerText = '🚨';
         } else {
           banner.className = 'verdict-banner';
+          banner.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+          banner.style.background = 'rgba(245, 158, 11, 0.1)';
           document.getElementById('verdictIcon').innerText = '⚠️';
         }
       }

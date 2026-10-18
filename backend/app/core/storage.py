@@ -14,6 +14,7 @@ class CloudStorageManager:
         self.use_s3 = settings.USE_S3_STORAGE
         self.local_upload_dir = settings.UPLOAD_DIR
         os.makedirs(self.local_upload_dir, exist_ok=True)
+        self.filename_registry: Dict[str, str] = {}
         
         self.s3_client = None
         if self.use_s3:
@@ -36,6 +37,15 @@ class CloudStorageManager:
         """
         ext = filename.split(".")[-1].lower() if "." in filename else "bin"
         file_id = f"{uuid.uuid4().hex[:12]}.{ext}"
+        self.filename_registry[file_id] = filename
+
+        # Write sidecar original name file for persistent survival
+        try:
+            name_file = os.path.join(self.local_upload_dir, f"{file_id}.name")
+            with open(name_file, "w", encoding="utf-8") as nf:
+                nf.write(filename)
+        except Exception as e:
+            print(f"[Storage Warning] Could not persist filename sidecar: {e}")
         
         if self.use_s3 and self.s3_client:
             s3_key = f"uploads/{file_id}"
@@ -53,6 +63,19 @@ class CloudStorageManager:
             f.write(file_bytes)
         
         return file_id, f"local://{local_path}"
+
+    def get_original_filename(self, file_id: str) -> str:
+        """Retrieves original uploaded filename from memory or sidecar cache."""
+        if file_id in self.filename_registry:
+            return self.filename_registry[file_id]
+        name_file = os.path.join(self.local_upload_dir, f"{file_id}.name")
+        if os.path.exists(name_file):
+            try:
+                with open(name_file, "r", encoding="utf-8") as nf:
+                    return nf.read().strip()
+            except Exception:
+                pass
+        return file_id
 
     def get_local_path(self, file_id: str) -> str:
         """Returns the local filesystem path for pipeline processing."""
