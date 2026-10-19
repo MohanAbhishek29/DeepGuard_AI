@@ -1,3 +1,12 @@
+# ==============================================================================
+#  🛡️ DeepGuard AI — Multimodal Synthetic Media Forensic Platform
+#  Author & Project Lead: Mohan Abhishek Gupta (@MohanAbhishek29)
+#  Repository: https://github.com/MohanAbhishek29/DeepGuard_AI
+#  Module: backend.app.schemas.media
+#  License: MIT License
+#  Copyright (c) 2026 DeepGuard AI. All rights reserved.
+# ==============================================================================
+
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 from datetime import datetime

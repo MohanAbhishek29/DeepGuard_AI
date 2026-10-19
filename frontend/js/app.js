@@ -1,7 +1,17 @@
-    let selectedFile = null;
-    let lastAnalysisResult = null;
-    let audioCtx = null;
-    let animFrame = null;
+/**
+ * ==============================================================================
+ * 🛡️ DeepGuard AI — Cyber Forensic Command Center UI Engine
+ * Author & Project Lead: Mohan Abhishek Gupta (@MohanAbhishek29)
+ * Repository: https://github.com/MohanAbhishek29/DeepGuard_AI
+ * License: MIT License
+ * Copyright (c) 2026 DeepGuard AI. All rights reserved.
+ * ==============================================================================
+ */
+
+let selectedFile = null;
+let lastAnalysisResult = null;
+let audioCtx = null;
+let animFrame = null;
 
     function handleFileSelect(files) {
       if (files && files.length > 0) {

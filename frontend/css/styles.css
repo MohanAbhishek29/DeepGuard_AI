@@ -1,4 +1,14 @@
-    :root {
+/**
+ * ==============================================================================
+ * 🛡️ DeepGuard AI — Cyber Forensic Command Center Stylesheet
+ * Author & Project Lead: Mohan Abhishek Gupta (@MohanAbhishek29)
+ * Repository: https://github.com/MohanAbhishek29/DeepGuard_AI
+ * License: MIT License
+ * Copyright (c) 2026 DeepGuard AI. All rights reserved.
+ * ==============================================================================
+ */
+
+:root {
       --bg-dark: #070a13;
       --bg-surface: rgba(14, 21, 37, 0.75);
       --bg-surface-elevated: rgba(22, 33, 56, 0.85);

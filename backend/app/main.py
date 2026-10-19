@@ -1,20 +1,29 @@
+# ==============================================================================
+#  🛡️ DeepGuard AI — Multimodal Synthetic Media Forensic Platform
+#  Author & Project Lead: Mohan Abhishek Gupta (@MohanAbhishek29)
+#  Repository: https://github.com/MohanAbhishek29/DeepGuard_AI
+#  Module: backend.app.main
+#  License: MIT License
+#  Copyright (c) 2026 DeepGuard AI. All rights reserved.
+# ==============================================================================
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.core.config import settings
 from backend.app.api.v1.router import api_router
 
 app = FastAPI(
-    title="DeepGuard AI - Cloud & Forensic Orchestration API",
+    title="DeepGuard AI — Forensic Orchestration & Inspection Engine",
     description="""
-    ## Multimodal Synthetic Media & Deepfake Detection Platform
+    ## Multimodal Synthetic Media & Deepfake Detection Intelligence Platform
     
-    Backend orchestration service designed for **Capstone Group K3C0175** (Mapped to **SIH1683**).
+    Production-grade forensic backend engine designed for real-time artifact inspection across physical optical sensors, ultrasonic neural vocoders, and cross-modal semantic coherence.
     
-    ### System Architecture & Capabilities:
-    * **Media Ingestion**: High-throughput video and audio ingestion with cloud persistence (AWS S3).
-    * **Parallel Inspection**: Dispatches to Vision (FaceForensics++), Audio (ASVspoof 2021), and Speech (Whisper ASR).
-    * **Cross-Modal Evidence Correlation**: Correlates separate modality signals and highlights cross-modal disagreements.
-    * **Forensic Evidence Timeline**: Synchronized timestamped forensic anomalies for downstream dashboard consumption.
+    ### Core System Capabilities:
+    * **Media Ingestion & Streaming**: High-throughput media ingestion with cloud persistence (AWS S3 / Local Hybrid).
+    * **Parallel Inspection Engine**: Dispatches parallel extraction to Vision (Laplacian/2D-FFT), Audio (Ultrasonic Vocoder), and Speech (Whisper ASR).
+    * **Cross-Modal Disagreement Matrix**: Correlates separate modality signals and highlights chimeric audio-visual tampering.
+    * **Forensic Audit & Certificate**: Generates tamper-evident cryptographic reports with SHA-256 verification hashes.
     
     **Architect & Lead:** Mohan Abhishek Gupta
     """,
