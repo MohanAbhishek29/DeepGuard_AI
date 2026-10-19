@@ -15,7 +15,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](./LICENSE)
 [![Verification](https://img.shields.io/badge/Forensic%20Accuracy-99.4%25-00f5d4?style=for-the-badge)]()
 
-[**Live Dashboard**](http://127.0.0.1:8000/dashboard/) • [**Architecture**](#-system-architecture) • [**Benchmarks**](#-quantitative-benchmarks) • [**Roadmap**](#-project-roadmap--implementation-milestones) • [**API Matrix**](#-api-endpoints--contracts) • [**Quickstart**](#-1-minute-quickstart)
+[**Architecture**](#-system-architecture) • [**Benchmarks**](#-quantitative-benchmarks) • [**Roadmap**](#-project-roadmap--implementation-milestones) • [**Quickstart**](#-1-minute-quickstart) • [**API Matrix**](#-api-endpoints--contracts)
 
 </div>
 
@@ -192,8 +192,8 @@ pip install -r requirements.txt
 python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
-* 🖥️ **Command Center UI**: Navigate to [`http://127.0.0.1:8000/dashboard/`](http://127.0.0.1:8000/dashboard/) to upload media and inspect live forensic telemetry.
-* 📚 **Interactive Swagger API**: Explore endpoints and run live requests at [`http://127.0.0.1:8000/docs`](http://127.0.0.1:8000/docs).
+* 🖥️ **Command Center UI**: Once running, open `http://localhost:8000/dashboard/` in your browser to inspect live forensic telemetry.
+* 📚 **Interactive Swagger API**: Explore endpoints and run live requests locally at `http://localhost:8000/docs`.
 
 ---
 
@@ -211,7 +211,7 @@ DeepGuard AI provides a structured, high-performance REST API designed for seaml
 | `GET` | `/api/v1/system/telemetry` | Cloud Architecture | Real-time storage stats, GPU availability, and health metrics. |
 | `DELETE` | `/api/v1/media/{file_id}` | Storage Lifecycle | Ephemeral media purge compliant with zero-retention privacy policies. |
 
-> 💡 **API Documentation**: Complete interactive OpenAPI schemas, model contracts, and cURL generation are hosted at [`http://127.0.0.1:8000/docs`](http://127.0.0.1:8000/docs) and [`http://127.0.0.1:8000/redoc`](http://127.0.0.1:8000/redoc).
+> 💡 **Interactive OpenAPI Documentation**: When running locally, complete interactive Swagger schemas, model contracts, and cURL testing are hosted at `http://localhost:8000/docs` and `http://localhost:8000/redoc`. (*Note: These are local loopback endpoints served by your machine once the server is started*).
 
 ---
 
