@@ -1,22 +1,30 @@
-MIT License
+PROPRIETARY INTELLECTUAL PROPERTY & ACADEMIC COPYRIGHT NOTICE
 
-Copyright (c) 2026 DeepGuard AI Contributors
+Copyright (c) 2026 Mohan Abhishek Gupta (Project Lead & System Architect).
+All Rights Reserved.
+
+CONFIDENTIAL & PROPRIETARY — PATENT / ACADEMIC IP PENDING
+
+1. OWNERSHIP:
+All source code, algorithmic architectures, pipeline workflows, forensic correlation matrices,
+documentation, UI designs, and related digital assets contained in this repository (DeepGuard AI)
+are the exclusive intellectual property of Mohan Abhishek Gupta.
+
+2. RESTRICTIONS ON USE & DISTRIBUTION:
+This repository is published on GitHub strictly for portfolio showcase, professional evaluation,
+and academic peer review.
+- NO PERMISSION is granted to copy, clone, distribute, sublicense, modify, fork, reproduce,
+  publish, sell, or commercially exploit any part of this software or its underlying algorithms.
+- NO PERMISSION is granted to submit this codebase, its architecture, or derived works for
+  academic degree evaluations, capstone projects, hackathons, or scientific publications
+  without explicit, verified prior written authorization from the copyright holder.
+
+3. ANTI-PLAGIARISM & LEGAL ENFORCEMENT:
+Any unauthorized cloning, reproduction, or redistribution of this software constitutes willful
+copyright infringement and academic misconduct. The copyright holder reserves all rights under
+applicable intellectual property laws to pursue civil, criminal, and institutional disciplinary
+actions against any infringing parties.
+
+For inquiries, academic citation requests, or authorized evaluations:
 Project Architect & Lead: Mohan Abhishek Gupta
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+GitHub Profile: https://github.com/MohanAbhishek29
