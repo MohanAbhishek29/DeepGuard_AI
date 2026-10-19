@@ -311,65 +311,7 @@
       color: #f1f5f9;
     }
 
-    /* Quick Test Samples Selector */
-    .samples-tray {
-      margin-bottom: 16px;
-    }
 
-    .samples-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .samples-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .sample-chip {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      padding: 6px 11px;
-      font-size: 12px;
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-
-    .sample-chip:hover {
-      background: rgba(56, 189, 248, 0.12);
-      border-color: rgba(56, 189, 248, 0.4);
-      color: #ffffff;
-      transform: translateY(-1px);
-    }
-
-    .sample-chip.active {
-      background: rgba(56, 189, 248, 0.2);
-      border-color: var(--accent-blue);
-      color: #ffffff;
-      box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
-    }
-
-    .chip-badge {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 1px 5px;
-      border-radius: 4px;
-    }
-    .badge-real { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-    .badge-fake { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
 
     /* Drag & Drop Upload Zone */
     .dropzone {
@@ -974,36 +916,7 @@
           <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">AWS S3 / HYBRID</span>
         </div>
 
-        <!-- 1-Click Quick Samples Showcase -->
-        <div class="samples-tray">
-          <div class="samples-title">
-            <span>⚡ 1-Click Test Samples:</span>
-            <span style="font-size: 10px; color: var(--accent-blue);">Instant Evaluation</span>
-          </div>
-          <div class="samples-chips">
-            <div class="sample-chip" onclick="loadSample('uploads/db15ae94c108.mp3', 'Samajavaragamana.mp3', 'audio')">
-              🎵 Samajavaragamana <span class="chip-badge badge-real">Real Song</span>
-            </div>
-            <div class="sample-chip" onclick="loadSample('uploads/ba0baa67ab5a.mp3', 'Venkatesha Kalyanam ✨🙇🏻.mp3', 'audio')">
-              🤖 Venkatesha Kalyanam <span class="chip-badge badge-fake">Suno 5m</span>
-            </div>
-            <div class="sample-chip" onclick="loadSample('uploads/612da7817707.mp3', 'College Torture 😜.mp3', 'audio')">
-              🤖 College Torture <span class="chip-badge badge-fake">Suno AI</span>
-            </div>
-            <div class="sample-chip" onclick="loadSample('uploads/5791c4bc57dd.mp4', 'Abhi CA 1 2nd sem.mp4', 'video')">
-              📹 Abhi CA Presentation <span class="chip-badge badge-real">Real Camera</span>
-            </div>
-            <div class="sample-chip" onclick="loadSample('uploads/54b3446b8077.mp4', 'WhatsApp Video 2026-09-14.mp4', 'video')">
-              📱 WhatsApp Video <span class="chip-badge badge-real">Real Phone</span>
-            </div>
-            <div class="sample-chip" onclick="loadSample('uploads/fde99beb3561.mp4', 'gemini_generated_video_44f89889.mp4', 'video')">
-              🤖 Gemini Lady Video <span class="chip-badge badge-fake">AI Veo</span>
-            </div>
-            <div class="sample-chip" onclick="loadSample('uploads/336011dc7290.mp4', 'Motu patlu Video.mp4', 'video')">
-              🎨 Motu Patlu Video <span class="chip-badge badge-fake">Cartoon AI</span>
-            </div>
-          </div>
-        </div>
+
 
         <!-- Drag & Drop Zone -->
         <div class="dropzone" id="dropZone" onclick="document.getElementById('fileInput').click()">
@@ -1161,55 +1074,13 @@
 
   <script>
     let selectedFile = null;
-    let selectedSample = null;
     let lastAnalysisResult = null;
     let audioCtx = null;
     let animFrame = null;
 
-    // Preloaded Test Samples Loader
-    function loadSample(path, name, type) {
-      selectedFile = null;
-      selectedSample = { path, name, type };
-      
-      // Update UI
-      document.querySelectorAll('.sample-chip').forEach(c => c.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-
-      document.getElementById('dropzoneTitle').innerText = "Selected Sample: " + name;
-      document.getElementById('dropzoneSubtitle').innerText = "Click 'RUN MULTIMODAL FORENSIC PIPELINE' to execute inspection";
-
-      // Setup preview
-      const hud = document.getElementById('mediaHud');
-      const video = document.getElementById('hudVideo');
-      const audioBlock = document.getElementById('audioVisualizerBlock');
-      const audio = document.getElementById('hudAudio');
-      const overlay = document.getElementById('hudOverlay');
-
-      hud.style.display = 'block';
-
-      // We extract the file_id from uploads path
-      const fileId = path.split('/').pop();
-      const streamUrl = `/api/v1/media/${fileId}/stream`;
-
-      if (type === 'video') {
-        video.style.display = 'block';
-        video.src = streamUrl;
-        audioBlock.style.display = 'none';
-        overlay.style.display = 'flex';
-      } else {
-        video.style.display = 'none';
-        overlay.style.display = 'none';
-        audioBlock.style.display = 'block';
-        audio.src = streamUrl;
-        startAudioSpectrumSimulation();
-      }
-    }
-
     function handleFileSelect(files) {
       if (files && files.length > 0) {
-        selectedSample = null;
         selectedFile = files[0];
-        document.querySelectorAll('.sample-chip').forEach(c => c.classList.remove('active'));
 
         const sizeMb = (selectedFile.size / (1024 * 1024)).toFixed(2);
         document.getElementById('dropzoneTitle').innerText = selectedFile.name;
@@ -1282,8 +1153,8 @@
 
     // Run Forensic Analysis
     async function runAnalysis() {
-      if (!selectedFile && !selectedSample) {
-        alert('Please select or drag a media file first (or choose a 1-Click sample)!');
+      if (!selectedFile) {
+        alert('Please select or drag a media file first to analyze!');
         return;
       }
 
@@ -1297,37 +1168,24 @@
       btn.innerHTML = '<span class="spinner"></span> <span>ANALYZING MULTIMODAL SIGNALS...</span>';
       progress.style.display = 'block';
 
-      step1.innerHTML = '⚡ [1/3] Extracting 2D FFT Spatial Frequencies & Photons...';
+      step1.innerHTML = '⚡ [1/3] Uploading & Ingesting Media File...';
       step2.innerHTML = '⏳ [2/3] Probing Ultrasonic Neural Vocoder Hash (>16kHz)...';
       step3.innerHTML = '⏳ [3/3] Correlating Cross-Modal Evidence Matrices...';
 
       try {
-        let fileId = "";
+        // Upload file
+        const formData = new FormData();
+        formData.append('file', selectedFile);
 
-        if (selectedSample) {
-          fileId = selectedSample.path.split('/').pop();
-          await new Promise(r => setTimeout(r, 300));
-          step1.innerHTML = '✅ [1/3] 2D FFT Spatial & Laplacian Noise Extracted';
-          step2.innerHTML = '⚡ [2/3] Probing Ultrasonic Neural Vocoder Hash (>16kHz)...';
-          await new Promise(r => setTimeout(r, 300));
-          step2.innerHTML = '✅ [2/3] Neural Vocoder Spectrum Probed';
-          step3.innerHTML = '⚡ [3/3] Correlating Cross-Modal Evidence Matrices...';
-        } else {
-          // Upload file
-          const formData = new FormData();
-          formData.append('file', selectedFile);
+        const upRes = await fetch('/api/v1/media/upload', { method: 'POST', body: formData });
+        const upData = await upRes.json();
+        const fileId = upData.file_id;
 
-          step1.innerHTML = '⚡ [1/3] Uploading & Ingesting Media File...';
-          const upRes = await fetch('/api/v1/media/upload', { method: 'POST', body: formData });
-          const upData = await upRes.json();
-          fileId = upData.file_id;
-
-          step1.innerHTML = '✅ [1/3] 2D FFT Spatial & Laplacian Noise Extracted';
-          step2.innerHTML = '⚡ [2/3] Probing Ultrasonic Neural Vocoder Hash (>16kHz)...';
-          await new Promise(r => setTimeout(r, 400));
-          step2.innerHTML = '✅ [2/3] Neural Vocoder Spectrum Probed';
-          step3.innerHTML = '⚡ [3/3] Correlating Cross-Modal Evidence Matrices...';
-        }
+        step1.innerHTML = '✅ [1/3] 2D FFT Spatial & Laplacian Noise Extracted';
+        step2.innerHTML = '⚡ [2/3] Probing Ultrasonic Neural Vocoder Hash (>16kHz)...';
+        await new Promise(r => setTimeout(r, 400));
+        step2.innerHTML = '✅ [2/3] Neural Vocoder Spectrum Probed';
+        step3.innerHTML = '⚡ [3/3] Correlating Cross-Modal Evidence Matrices...';
 
         // Start analysis
         const anRes = await fetch('/api/v1/analysis/start', {
@@ -1352,6 +1210,7 @@
         btn.innerHTML = '<span>⚡ RUN MULTIMODAL FORENSIC PIPELINE</span>';
       }
     }
+
 
     // Render Forensic Data to Dashboard
     function renderForensics(data) {
