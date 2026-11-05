@@ -7,7 +7,8 @@
 #  Copyright (c) 2026 Mohan Abhishek Gupta. All rights reserved.
 # ==============================================================================
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.core.config import settings
 from backend.app.api.v1.router import api_router
@@ -53,8 +54,12 @@ frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__fi
 if os.path.exists(frontend_dir):
     app.mount("/dashboard", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
-@app.get("/", tags=["System Health"], summary="Root Health Check")
-async def root():
+@app.get("/", tags=["System Health"], summary="Root Health Check & Dashboard Redirect")
+async def root(request: Request):
+    accept_header = request.headers.get("accept", "")
+    if "text/html" in accept_header:
+        return RedirectResponse(url="/dashboard/", status_code=303)
+
     return {
         "status": "online",
         "service": "DeepGuard AI Backend Orchestrator",
@@ -62,6 +67,7 @@ async def root():
         "group_code": settings.GROUP_CODE,
         "sih_mapping": settings.SIH_PROBLEM_ID,
         "storage_mode": "AWS S3" if settings.USE_S3_STORAGE else "Local Hybrid Storage",
+        "dashboard_url": "/dashboard/",
         "docs_url": "/docs"
     }
 
