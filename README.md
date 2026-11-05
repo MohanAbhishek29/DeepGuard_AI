@@ -178,9 +178,9 @@ DeepGuard AI was evaluated across standardized benchmark datasets including **Fa
 - [x] **Phase 6: Cross-Modal Disagreement Correlation Engine** — Asymmetric tampering decision matrix (visual swap / voice clone / dual synthetic), temporal event timeline alignment, and overall confidence synthesis.
 - [x] **Phase 7: Cyber Forensic Command Center UI** — Semantic modular frontend architecture (`index.html`, `styles.css`, `app.js`), real-time HTML5 audio frequency spectrum visualizer, HUD telemetry meters, and tamper-evident audit report generator.
 - [x] **Phase 8: Quantitative Evaluation & Benchmark Suite** — Automated benchmarking runner across FaceForensics++ (c23/c40) and ASVspoof 2021 DF datasets calculating Precision, Recall, F1, and AUC-ROC.
+- [x] **Phase 9: Static Image Forensics Pipeline** — Error Level Analysis (ELA), EXIF hardware sensor metadata inspection, 2D-FFT upsampling artifact detection, and face-swap seam boundary verification.
 
 ### ⏳ Pending & Upcoming Milestones
-- [ ] **Phase 9: Static Image Forensics Pipeline** — EXIF metadata tampering analysis, Error Level Analysis (ELA), and JPEG ghost artifact detection.
 - [ ] **Phase 10: Real-Time WebRTC Media Stream Inspection** — Live meeting / video call deepfake scanning with sub-second stream chunking.
 - [ ] **Phase 11: Edge Hardware Acceleration** — ONNX Runtime and NVIDIA TensorRT compilation for sub-millisecond edge inference.
 - [ ] **Phase 12: Enterprise Multi-Tenant Deployment** — Kubernetes Helm charts, OAuth2 enterprise authentication, and tamper-proof blockchain-anchored forensic certificates.

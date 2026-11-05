@@ -71,12 +71,13 @@
         <div class="dropzone" id="dropZone" onclick="document.getElementById('fileInput').click()">
           <div class="dropzone-icon">📂</div>
           <div class="dropzone-title" id="dropzoneTitle">Click to select or drag media file here</div>
-          <div class="dropzone-subtitle" id="dropzoneSubtitle">Supports MP4, AVI, MOV, MP3, WAV (Up to 100MB)</div>
-          <input type="file" id="fileInput" class="file-input" accept="video/*,audio/*" onchange="handleFileSelect(this.files)">
+          <div class="dropzone-subtitle" id="dropzoneSubtitle">Supports Video (MP4, MOV), Audio (MP3, WAV), & Images (JPG, PNG, WEBP)</div>
+          <input type="file" id="fileInput" class="file-input" accept="video/*,audio/*,image/*" onchange="handleFileSelect(this.files)">
         </div>
 
         <!-- Live Media Inspection HUD -->
         <div class="media-hud-container" id="mediaHud">
+          <img class="media-hud-image" id="hudImage" style="display: none; width: 100%; border-radius: 8px; object-fit: contain; max-height: 280px; background: #000;" alt="Forensic image preview" />
           <video class="media-hud-video" id="hudVideo" controls playsinline style="display: none;"></video>
           <div id="audioVisualizerBlock" style="display: none;">
             <canvas id="audioSpectrumCanvas"></canvas>

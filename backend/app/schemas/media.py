@@ -15,7 +15,7 @@ class MediaUploadResponse(BaseModel):
     file_id: str = Field(..., description="Unique media identifier")
     original_filename: str
     file_size_bytes: int
-    media_type: str = Field(..., description="video or audio")
+    media_type: str = Field(..., description="video, audio, or image")
     storage_uri: str = Field(..., description="AWS S3 URI or local storage path")
     stream_url: Optional[str] = Field(None, description="Direct playback or presigned URL")
     uploaded_at: datetime = Field(default_factory=datetime.utcnow)

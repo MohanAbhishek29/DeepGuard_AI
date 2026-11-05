@@ -33,7 +33,12 @@ async def upload_media(file: UploadFile = File(...)):
             detail=f"File exceeds maximum allowed limit of {settings.MAX_UPLOAD_SIZE_MB}MB."
         )
 
-    media_type = "video" if ext in ["mp4", "avi", "mov", "mkv", "webm"] else "audio"
+    if ext in ["mp4", "avi", "mov", "mkv", "webm"]:
+        media_type = "video"
+    elif ext in ["jpg", "jpeg", "png", "webp"]:
+        media_type = "image"
+    else:
+        media_type = "audio"
     file_id, storage_uri = storage_manager.save_media(content, filename)
     stream_url = storage_manager.generate_presigned_url(file_id)
 

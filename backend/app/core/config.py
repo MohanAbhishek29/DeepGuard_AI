@@ -13,7 +13,8 @@ class Settings:
     MAX_UPLOAD_SIZE_MB: int = 100
     ALLOWED_EXTENSIONS: List[str] = [
         "mp4", "avi", "mov", "mkv", "webm",
-        "wav", "mp3", "flac", "aac"
+        "wav", "mp3", "flac", "aac",
+        "jpg", "jpeg", "png", "webp"
     ]
     
     # AWS S3 Settings (Configurable via environment variables)

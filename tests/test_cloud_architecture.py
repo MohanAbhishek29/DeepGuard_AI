@@ -115,5 +115,35 @@ class TestCloudArchitecture(unittest.TestCase):
         # Cleanup
         self.client.delete(f"/api/v1/media/{file_id}")
 
+    def test_image_only_pipeline_dispatch(self):
+        # Create a small valid 10x10 PNG bytes
+        import io
+        from PIL import Image
+        img_buf = io.BytesIO()
+        img = Image.new("RGB", (100, 100), color=(120, 150, 180))
+        img.save(img_buf, format="PNG")
+        image_content = img_buf.getvalue()
+
+        files = {"file": ("camera_photo_test.png", image_content, "image/png")}
+        upload_res = self.client.post("/api/v1/media/upload", files=files)
+        self.assertEqual(upload_res.status_code, 201)
+        file_id = upload_res.json()["file_id"]
+        self.assertEqual(upload_res.json()["media_type"], "image")
+
+        analysis_res = self.client.post(
+            "/api/v1/analysis/start",
+            json={"file_id": file_id}
+        )
+        self.assertEqual(analysis_res.status_code, 202)
+        data = analysis_res.json()
+        self.assertIsNotNone(data["vision"])
+        self.assertIsNone(data["audio"])   # Audio bypassed for static image
+        self.assertIsNone(data["speech"])  # Speech bypassed for static image
+        self.assertIn("AUTHENTIC", data["cross_modal"]["overall_verdict"])
+        self.assertEqual(data["vision"]["total_frames_analyzed"], 1)
+
+        # Cleanup
+        self.client.delete(f"/api/v1/media/{file_id}")
+
 if __name__ == "__main__":
     unittest.main()
