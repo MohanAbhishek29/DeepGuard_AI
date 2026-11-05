@@ -292,9 +292,9 @@ let animFrame = null;
       }
       const report = {
         platform: "DeepGuard AI Multimodal Forensic Platform",
-        group: "K3C0175",
-        sih_problem: "SIH1683",
-        supervisor: "Dr. Navneet Kaur (LPU)",
+        edition: "Enterprise Forensic Core v2.4",
+        architecture: "Multimodal Deepfake Inspection",
+        license: "Proprietary — All Rights Reserved (Patent Pending)",
         lead_architect: "Mohan Abhishek Gupta",
         timestamp: new Date().toISOString(),
         analysis_job: lastAnalysisResult
