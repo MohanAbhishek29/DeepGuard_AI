@@ -594,6 +594,12 @@ function renderForensics(data) {
         <td style="text-align: right;"><span class="status-pill ${isPass ? 'pill-pass' : 'pill-flag'}">${isPass ? 'PASSED ✅' : 'SEAM FLAGGED 🚨'}</span></td>
       </tr>
       <tr>
+        <td><strong>Resolution & Aspect Latent Bucket</strong></td>
+        <td>Checks if aspect ratio and pixel dimensions match known generative models (Midjourney/SDXL)</td>
+        <td><code>${diag.resolution_profile || 'Standard Optical Dimensions'}</code></td>
+        <td style="text-align: right;"><span class="status-pill ${diag.resolution_profile && diag.resolution_profile.includes('AI') ? 'pill-flag' : 'pill-pass'}">${diag.resolution_profile && diag.resolution_profile.includes('AI') ? 'AI BUCKET 🚨' : 'STANDARD ✅'}</span></td>
+      </tr>
+      <tr>
         <td><strong>Multi-Signal Composite Decision</strong></td>
         <td>Bayesian combination across all independent physical & metadata indicators</td>
         <td><code>${diag.composite_signal_score || 'Evaluation Complete'}</code></td>

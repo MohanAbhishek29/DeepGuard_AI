@@ -166,4 +166,97 @@
     });
   });
 
+  /* ── 9. INTERACTIVE FORENSIC LAB ─────────────────────────────────────────── */
+  const spectrumContainer = document.getElementById('spectrumBarsContainer');
+  const barCount = 24;
+
+  if (spectrumContainer) {
+    for (let i = 0; i < barCount; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'spectrum-bar';
+      const baseHeight = Math.max(8, Math.round(95 * Math.exp(-i * 0.14) + (Math.random() * 12)));
+      bar.style.height = baseHeight + '%';
+      spectrumContainer.appendChild(bar);
+    }
+  }
+
+  window.setAudioSimMode = function (mode) {
+    const btnReal = document.getElementById('btnAudioReal');
+    const btnAi = document.getElementById('btnAudioAi');
+    const status = document.getElementById('audioReadoutStatus');
+    const ratio = document.getElementById('audioReadoutRatio');
+    const bars = document.querySelectorAll('.spectrum-bar');
+
+    if (mode === 'real') {
+      btnReal.classList.add('active');
+      btnAi.classList.remove('active');
+      status.innerText = 'STATUS: NATURAL ANALOG ROLL-OFF (AUTHENTIC)';
+      status.style.color = 'var(--accent)';
+      ratio.innerText = 'HF RATIO: 0.0019';
+
+      bars.forEach((bar, i) => {
+        bar.classList.remove('hf-spike');
+        const h = Math.max(6, Math.round(92 * Math.exp(-i * 0.16) + (Math.random() * 10)));
+        bar.style.height = h + '%';
+      });
+    } else {
+      btnAi.classList.add('active');
+      btnReal.classList.remove('active');
+      status.innerText = 'STATUS: ULTRASONIC NEURAL VOCODER SPIKE (>16kHz HASH DETECTED)';
+      status.style.color = 'var(--accent-warn)';
+      ratio.innerText = 'HF RATIO: 0.0124 (FLAGGED >0.007)';
+
+      bars.forEach((bar, i) => {
+        if (i >= 16) {
+          bar.classList.add('hf-spike');
+          const h = Math.round(75 + (Math.random() * 22));
+          bar.style.height = h + '%';
+        } else {
+          bar.classList.remove('hf-spike');
+          const h = Math.max(10, Math.round(85 * Math.exp(-i * 0.12) + (Math.random() * 12)));
+          bar.style.height = h + '%';
+        }
+      });
+    }
+  };
+
+  window.setVisionSimMode = function (mode) {
+    const btnReal = document.getElementById('btnVisionReal');
+    const btnFake = document.getElementById('btnVisionFake');
+    const seamBadge = document.getElementById('simSeamBadge');
+    const elaBadge = document.getElementById('simElaBadge');
+    const tracker = document.getElementById('simTrackerBox');
+    const lapText = document.getElementById('simLaplacianText');
+    const verdict = document.getElementById('simVerdictText');
+    const desc = document.getElementById('simDescText');
+
+    if (mode === 'real') {
+      btnReal.classList.add('active');
+      btnFake.classList.remove('active');
+      seamBadge.innerText = 'BOUNDARY SEAM: NATURAL (1.04x)';
+      seamBadge.style.color = 'var(--accent)';
+      elaBadge.innerText = 'ELA STD: 4.82';
+      tracker.style.borderColor = 'var(--accent)';
+      tracker.style.color = 'var(--accent)';
+      tracker.innerText = 'FACE REGION [AUTHENTIC]';
+      lapText.innerText = 'SENSOR NOISE: LAPLACIAN 145 (NATURAL GRAIN)';
+      verdict.innerText = 'PASSED ✅';
+      verdict.style.color = 'var(--accent)';
+      desc.innerText = 'Original camera photo shows smooth optical blending between the facial skin and surrounding background with uniform photon sensor grain.';
+    } else {
+      btnFake.classList.add('active');
+      btnReal.classList.remove('active');
+      seamBadge.innerText = 'BOUNDARY SEAM: SPLICED DISCONTINUITY (2.48x)';
+      seamBadge.style.color = '#ef4444';
+      elaBadge.innerText = 'ELA STD: 1.42 (COMPRESSION DISPARITY)';
+      tracker.style.borderColor = '#ef4444';
+      tracker.style.color = '#ef4444';
+      tracker.innerText = 'SEAM FLAGGED [2.48x]';
+      lapText.innerText = 'SENSOR NOISE: LAPLACIAN 22 (SYNTHETIC SMOOTHING)';
+      verdict.innerText = 'FLAGGED 🚨';
+      verdict.style.color = '#ef4444';
+      desc.innerText = 'Face-swap deepfake detected: The pasted facial boundary has an unnatural sharpness step compared to the background, and skin textures show artificial diffusion smoothing.';
+    }
+  };
+
 })();

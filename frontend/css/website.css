@@ -679,3 +679,110 @@ section {
   #mainNav { padding: 0 20px; }
   section { padding: 48px 20px; }
 }
+
+
+/* ── INTERACTIVE FORENSIC LAB SIMULATORS ─────────────────────────────────── */
+#lab {
+  padding-top: 60px; padding-bottom: 100px;
+  border-top: 1px solid var(--border);
+}
+.lab-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  margin-top: 48px;
+}
+.lab-card {
+  background: var(--near-black);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 32px;
+  display: flex; flex-direction: column; gap: 20px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.lab-card:hover {
+  border-color: var(--border-hi);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+}
+.lab-card-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+}
+.lab-card-title {
+  font-family: var(--display); font-size: 19px; font-weight: 700; color: var(--text);
+}
+.lab-card-sub {
+  font-size: 13px; color: var(--text-dim); margin-top: 4px; line-height: 1.5;
+}
+.lab-badge {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  padding: 3px 8px; border-radius: 4px; text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.lab-badge-live { background: rgba(0, 245, 180, 0.12); color: var(--accent); border: 1px solid rgba(0, 245, 180, 0.25); }
+.lab-badge-tool { background: rgba(96, 165, 250, 0.12); color: var(--accent-blue); border: 1px solid rgba(96, 165, 250, 0.25); }
+
+/* Interactive Toggle Tabs */
+.sim-controls {
+  display: flex; gap: 8px;
+  background: var(--surface); padding: 4px; border-radius: 6px;
+  border: 1px solid var(--border);
+}
+.sim-btn {
+  flex: 1; padding: 8px 14px;
+  background: transparent; border: none; border-radius: 4px;
+  font-family: var(--sans); font-size: 12.5px; font-weight: 600;
+  color: var(--text-dim); cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.sim-btn.active {
+  background: var(--surface-2); color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+.sim-btn.active.fake-active {
+  color: var(--accent-warn);
+}
+
+/* Audio Bars Visualizer */
+.audio-spectrum-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 20px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.spectrum-bars {
+  display: flex; align-items: flex-end; gap: 4px; height: 110px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.spectrum-bar {
+  flex: 1; border-radius: 2px 2px 0 0;
+  background: linear-gradient(to top, #10b981, #00f5b4);
+  transition: height 0.35s ease, background 0.35s ease;
+}
+.spectrum-bar.hf-spike {
+  background: linear-gradient(to top, #f97316, #ef4444);
+}
+.spectrum-labels {
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 10px; color: var(--text-muted);
+}
+.spectrum-readout {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 11px;
+}
+
+/* ELA / Seam Comparison Visualizer */
+.visual-compare-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: 18px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.compare-screen {
+  height: 140px; border-radius: 6px; overflow: hidden;
+  position: relative; display: flex; align-items: center; justify-content: center;
+  background: #000000;
+}
+.compare-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: space-between; padding: 10px;
+  font-family: var(--mono); font-size: 10.5px;
+}

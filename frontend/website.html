@@ -42,6 +42,7 @@
     <ul class="nav-links">
       <li><a href="#how">How It Works</a></li>
       <li><a href="#threats">Threat Matrix</a></li>
+      <li><a href="#lab">Interactive Lab</a></li>
       <li><a href="#architecture">Architecture</a></li>
       <li><a href="#team">Team</a></li>
       <li><a href="#performance">Results</a></li>
@@ -261,6 +262,98 @@
           <div class="threat-desc">Real video + cloned voice, or deepfake face + authentic voice. Identified when Vision Branch and Audio Branch disagree — a manipulation signal no single-modality system can detect.</div>
         </div>
         <div class="threat-badge badge-medium">MEDIUM</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 3.5 — INTERACTIVE FORENSIC LAB
+  ════════════════════════════════════════════════════════════════ -->
+  <section id="lab">
+    <div class="section-label">Interactive Forensic Sandbox</div>
+    <h2 class="section-title">Test Physical Forensic Signals in Real Time</h2>
+    <p class="section-body">
+      Interact with DeepGuard AI's core signal extractors below to see exactly how computer vision and acoustic Fourier transforms distinguish genuine human recordings from AI synthesizers.
+    </p>
+
+    <div class="lab-grid fade-up">
+      <!-- Interactive Lab 1: Neural Vocoder Acoustic Spectrum -->
+      <div class="lab-card">
+        <div class="lab-card-header">
+          <div>
+            <div class="lab-card-title">🎙️ 1D-FFT Neural Vocoder Analyzer</div>
+            <div class="lab-card-sub">Ultrasonic high-frequency band energy (&gt;16,000 Hz)</div>
+          </div>
+          <span class="lab-badge lab-badge-live">LIVE SIMULATOR</span>
+        </div>
+
+        <div class="sim-controls">
+          <button class="sim-btn active" id="btnAudioReal" onclick="setAudioSimMode('real')">
+            <span>●</span> <span>Authentic Human Voice</span>
+          </button>
+          <button class="sim-btn" id="btnAudioAi" onclick="setAudioSimMode('ai')">
+            <span>⚡</span> <span>AI Voice Clone (HiFi-GAN)</span>
+          </button>
+        </div>
+
+        <div class="audio-spectrum-box">
+          <div class="spectrum-bars" id="spectrumBarsContainer">
+            <!-- 20 Bars dynamically populated -->
+          </div>
+          <div class="spectrum-labels">
+            <span>500 Hz (Fundamental)</span>
+            <span>4 kHz (Formants)</span>
+            <span>8 kHz (Sibilance)</span>
+            <span style="color: var(--accent-warn);">16–22 kHz (Ultrasonic AI Hash)</span>
+          </div>
+          <div class="spectrum-readout">
+            <span id="audioReadoutStatus" style="color: var(--accent); font-weight: 600;">STATUS: NATURAL ANALOG ROLL-OFF (AUTHENTIC)</span>
+            <span id="audioReadoutRatio" style="color: var(--text-muted); font-family: var(--mono);">HF RATIO: 0.0019</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Lab 2: Facial Seam & ELA Compression Delta -->
+      <div class="lab-card">
+        <div class="lab-card-header">
+          <div>
+            <div class="lab-card-title">👁️ Facial Boundary Seam &amp; ELA Scan</div>
+            <div class="lab-card-sub">Face-swap cutline Laplacian &amp; recompression residual</div>
+          </div>
+          <span class="lab-badge lab-badge-tool">OPENCV PROBE</span>
+        </div>
+
+        <div class="sim-controls">
+          <button class="sim-btn active" id="btnVisionReal" onclick="setVisionSimMode('real')">
+            <span>●</span> <span>Original Optical Photo</span>
+          </button>
+          <button class="sim-btn" id="btnVisionFake" onclick="setVisionSimMode('fake')">
+            <span>🚨</span> <span>Face-Swap Deepfake (Spliced)</span>
+          </button>
+        </div>
+
+        <div class="visual-compare-box">
+          <div class="compare-screen" id="compareScreen">
+            <div class="compare-overlay" id="compareOverlay">
+              <div style="display: flex; justify-content: space-between;">
+                <span id="simSeamBadge" style="color: var(--accent); font-weight: 600;">BOUNDARY SEAM: NATURAL (1.04x)</span>
+                <span id="simElaBadge" style="color: var(--text-dim);">ELA STD: 4.82</span>
+              </div>
+              <div style="margin: auto; border: 1.5px solid var(--accent); border-radius: 8px; width: 120px; height: 90px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 10px; color: var(--accent);" id="simTrackerBox">
+                FACE REGION
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted);">
+                <span id="simLaplacianText">SENSOR NOISE: LAPLACIAN 145 (NATURAL GRAIN)</span>
+                <span id="simVerdictText" style="color: var(--accent); font-weight: 700;">PASSED ✅</span>
+              </div>
+            </div>
+          </div>
+          <div style="font-size: 12px; color: var(--text-dim); line-height: 1.5;" id="simDescText">
+            Original camera photo shows smooth optical blending between the facial skin and surrounding background with uniform photon sensor grain.
+          </div>
+        </div>
       </div>
     </div>
   </section>

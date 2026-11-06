@@ -221,27 +221,26 @@
     }
 
     .kpi-card {
-      background: var(--bg-surface);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-md);
+      background: #0d0f17;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
       padding: 16px 20px;
       position: relative;
       overflow: hidden;
-      transition: all 0.25s ease;
+      transition: border-color 0.2s, transform 0.2s;
     }
 
     .kpi-card:hover {
-      border-color: var(--card-border-glow);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      border-color: rgba(0, 245, 180, 0.35);
+      transform: translateY(-1px);
     }
 
     .kpi-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; width: 4px; height: 100%;
-      background: linear-gradient(180deg, var(--accent-blue), var(--accent-purple));
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, #00f5b4, #38bdf8);
+      opacity: 0.8;
     }
 
     .kpi-label {
@@ -281,12 +280,11 @@
     }
 
     .panel {
-      background: var(--bg-surface);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius-lg);
+      background: #0d0f17;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
       padding: 24px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
     }
 
     .panel-header {
@@ -455,19 +453,18 @@
     .btn-analyze {
       width: 100%;
       margin-top: 18px;
-      padding: 14px;
+      padding: 13px 20px;
       border: none;
-      border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo), var(--accent-purple));
-      background-size: 200% 200%;
-      color: #ffffff;
-      font-family: 'Outfit', sans-serif;
-      font-size: 15px;
+      border-radius: 6px;
+      background: #00f5b4;
+      color: #060608;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
       font-weight: 700;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.5px;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(56, 189, 248, 0.35);
-      transition: all 0.25s ease;
+      box-shadow: 0 4px 18px rgba(0, 245, 180, 0.2);
+      transition: all 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -476,8 +473,8 @@
     }
 
     .btn-analyze:hover {
-      background-position: 100% 100%;
-      box-shadow: 0 6px 28px rgba(99, 102, 241, 0.5);
+      background: #34d399;
+      box-shadow: 0 6px 24px rgba(0, 245, 180, 0.35);
       transform: translateY(-1px);
     }
 
