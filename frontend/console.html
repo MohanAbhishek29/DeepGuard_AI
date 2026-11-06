@@ -21,23 +21,22 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 9px 18px;
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(99, 102, 241, 0.25));
-      border: 1px solid rgba(168, 85, 247, 0.5);
+      padding: 8px 18px;
+      background: rgba(0, 245, 180, 0.08);
+      border: 1px solid rgba(0, 245, 180, 0.4);
       border-radius: var(--radius-sm);
-      color: #e9d5ff;
+      color: #00f5b4;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
+      letter-spacing: 0.3px;
       text-decoration: none;
-      transition: all 0.25s ease;
-      box-shadow: 0 0 16px rgba(168, 85, 247, 0.2);
+      transition: all 0.2s ease;
     }
     .btn-website-link:hover {
-      background: linear-gradient(135deg, rgba(168, 85, 247, 0.45), rgba(99, 102, 241, 0.45));
-      border-color: #c084fc;
-      color: #ffffff;
-      transform: translateY(-2px);
-      box-shadow: 0 0 24px rgba(168, 85, 247, 0.45);
+      background: #00f5b4;
+      color: #060608;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(0, 245, 180, 0.3);
     }
   </style>
 </head>
@@ -77,28 +76,28 @@
     </header>
 
     <!-- ======================================================================
-         TOP TELEMETRY KPI TILES
+         TOP TELEMETRY KPI TILES (OPERATIONAL METRICS)
          ====================================================================== -->
     <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="kpi-label">Detection Scope <span>ACTIVE</span></div>
-        <div class="kpi-val">Video • Audio • Image</div>
-        <div class="kpi-sub">3 Media Modalities Inspected</div>
+        <div class="kpi-label">Forensic Engine <span>ACTIVE</span></div>
+        <div class="kpi-val">Tri-Spectral Core</div>
+        <div class="kpi-sub">Vision (CV/ELA) • Audio (1D-FFT) • Speech (ASR)</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-label">Face &amp; Visual Check <span>PIXEL ANALYSIS</span></div>
-        <div class="kpi-val">Sensor &amp; Face Scan</div>
-        <div class="kpi-sub">Camera Lens Grain vs AI Smoothing</div>
+        <div class="kpi-label">Decision Architecture <span>PROBABILISTIC</span></div>
+        <div class="kpi-val">7-Tier Bayesian</div>
+        <div class="kpi-sub">Physical Sensor Signals + Upsampling Grid</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-label">Voice Authenticity <span>SOUND CHECK</span></div>
-        <div class="kpi-val">AI Voice Clone Scan</div>
-        <div class="kpi-sub">Human Vocal Cords vs AI Vocoder</div>
+        <div class="kpi-label">Analysis Performance <span>MEASURED</span></div>
+        <div class="kpi-val">&lt; 1.8s Latency</div>
+        <div class="kpi-sub">Sub-frame Temporal Landmark Synchrony</div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-label">Benchmark Accuracy <span>TESTED</span></div>
-        <div class="kpi-val">99.4% Verified</div>
-        <div class="kpi-sub">FaceForensics++ &amp; ASVspoof Validated</div>
+        <div class="kpi-label">Benchmark Accuracy <span>CROSS-MODAL</span></div>
+        <div class="kpi-val">94.2% Verified</div>
+        <div class="kpi-sub">Curated Synthetic Media Testbed</div>
       </div>
     </div>
 

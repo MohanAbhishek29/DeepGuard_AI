@@ -217,11 +217,16 @@ class PipelineOrchestrator:
         has_face = face_detected_count > 0
         fps_drift = abs(fps - round(fps)) > 0.003  # Phone cameras have clock drift (e.g. 30.015 fps)
 
-        # Hardware Camera verification (Optical clock drift, clean border seam, and low temporal jitter)
+        # Hardware Camera verification:
+        # Physical clock drift in real cameras (e.g. 30.015 fps, not clean 30.000)
+        # + Clean facial border seams (not spliced) + Low temporal jitter
+        # Note: filename-based override REMOVED — a deepfake can be named "cam_recording.mp4"
         is_verified_hardware_camera = (
-            any(k in fname for k in ["win_", "vid_", "cam", "webcam", "laptop", "phone", "abhi", "ca", "recording", "pro"]) or
-            (fps_drift and max_b_ratio <= 1.25 and avg_jitter <= 12.0)
-        ) and (max_b_ratio <= 1.25 and avg_jitter <= 12.0)
+            fps_drift               # Physical sensor clock drift (real cameras drift slightly)
+            and max_b_ratio <= 1.25 # Natural face-background blend (no seam)
+            and avg_jitter <= 12.0  # Low temporal face jitter (real face, stable movement)
+            and not is_ai_meta      # No AI encoder watermark in container
+        )
 
         # 3. Objective Algorithmic Decision Engine
         # Signal A: Face-Swap Seam & Boundary Discontinuity (e.g. Brahmi / Roop / DeepFaceLab / FaceFusion)
@@ -426,28 +431,77 @@ class PipelineOrchestrator:
                 logger.debug(f"OpenCV image forensic error: {e}")
 
         # 3. Objective Algorithmic Decision for Static Images
-        # Definitive AI Generative Watermarks / Chunks in PNG/EXIF:
-        # If any explicit generative AI software chunk was found, it is 100% synthetic.
-        # Explicit AI generator tags in filename:
-        has_ai_name = any(k in fname for k in ["midjourney", "dalle", "stablediffusion", "sdxl", "flux", "deepfake", "faceswap", "roop", "civitai"])
-        
-        # Physical Facial & Spatial Anomalies:
-        # In face-swaps, the pasted face box has an unnatural sharpness contrast to the boundary.
-        is_seam_anomaly = face_detected and (max_b_ratio > 2.3 or max_b_ratio < 0.22)
-        # In generative diffusion portraits, skin is smoothed with near-zero photon noise (< 16 Laplacian) without camera hardware.
-        is_diffusion_smooth = face_detected and (lap_var < 16.0) and not has_camera_hardware
-        # Periodic 2D-FFT upsampling grid spikes from transposed convolutions:
-        is_fft_anomaly = (fft_ratio > 1.48)
+        # ==================================================================
+        # SIGNAL TIER 1 — Explicit AI Generator Watermarks (Highest confidence)
+        # ==================================================================
+        has_ai_name = any(k in fname for k in [
+            "midjourney", "dalle", "stablediffusion", "sdxl", "flux",
+            "deepfake", "faceswap", "roop", "civitai", "firefly",
+            "imagen", "ideogram", "playground", "ai_generated", "ai_art",
+            "aigenerated", "genai", "diffusion", "comfyui", "novelai"
+        ])
 
-        # Realistic Image Forensic Presumption:
-        # An image is presumed AUTHENTIC by default unless positive, verifiable synthetic manipulation is proven.
-        if has_camera_hardware and not is_ai_meta and not has_ai_name and not is_seam_anomaly:
+        # ==================================================================
+        # SIGNAL TIER 2 — Physical Pixel Forensics
+        # ==================================================================
+        # A) Face-swap seam: pasted face has unnatural sharpness contrast at boundary
+        is_seam_anomaly = face_detected and (max_b_ratio > 2.3 or max_b_ratio < 0.22)
+
+        # B) Diffusion smoothing: generative skin textures are hyper-smooth (< 25 Laplacian)
+        #    Threshold raised from 16 → 25 because modern SD/MJ images ARE smoother than 16
+        #    but still above the old threshold. No camera hardware = more suspicious.
+        is_diffusion_smooth = face_detected and (lap_var < 25.0) and not has_camera_hardware
+
+        # C) FFT generative upsampling grid (transposed convolution checkerboard pattern)
+        is_fft_anomaly = (fft_ratio > 1.38)  # Lowered from 1.48 to catch more AI-generated images
+
+        # D) ELA anomaly: AI images re-compressed at JPEG-90 show unusually low residual
+        #    because they were already generated at near-perfect quality (no previous JPEG lossy chain)
+        #    Real photos taken then compressed have higher, more uniform ELA residual std
+        is_ela_anomaly = (std_ela < 3.5 and max_ela < 20.0 and not has_camera_hardware)
+
+        # E) Missing camera EXIF is a strong soft-signal (but NOT alone definitive)
+        #    Real photos almost always have Make/Model/DateTime EXIF from hardware
+        no_camera_exif = not has_camera_hardware
+
+        # ==================================================================
+        # SIGNAL TIER 3 — Composite Bayesian Forensic Decision Engine
+        # ==================================================================
+        # Count how many independent signals fire
+        signal_count = sum([
+            is_ai_meta,          # Highest weight — explicit AI tag
+            has_ai_name,         # Explicit AI name in filename
+            is_seam_anomaly,     # Face-swap detected
+            is_diffusion_smooth, # Smooth diffusion skin
+            is_fft_anomaly,      # Generative upsampling grid
+            is_ela_anomaly,      # ELA too clean (AI generated)
+            no_camera_exif,      # No hardware EXIF (soft signal)
+        ])
+
+        # Definitive flags: even ONE is enough to flag
+        definitive_synthetic = is_ai_meta or has_ai_name or is_seam_anomaly
+
+        # Composite threshold: 3+ soft signals = SUSPICIOUS
+        # (catches modern Midjourney/SDXL/Flux images with no filename hints)
+        soft_signal_threshold = signal_count >= 3
+
+        # Hard authentic override: if camera hardware confirmed + no other flags
+        confirmed_authentic = (
+            has_camera_hardware
+            and not is_ai_meta
+            and not has_ai_name
+            and not is_seam_anomaly
+            and signal_count <= 2  # allow up to 2 weak signals (ELA, FFT fluctuations)
+        )
+
+        if confirmed_authentic:
             is_synthetic = False
-        elif is_ai_meta or has_ai_name or is_seam_anomaly or is_diffusion_smooth or is_fft_anomaly:
+        elif definitive_synthetic or soft_signal_threshold:
             is_synthetic = True
         else:
-            # Clean natural photo (with or without EXIF, e.g. WhatsApp, phone, web, social download)
-            is_synthetic = False
+            # Ambiguous case: no camera EXIF, no AI watermark, no strong signals
+            # Default SUSPICIOUS for no-EXIF images (better safe than miss a deepfake)
+            is_synthetic = no_camera_exif and signal_count >= 2
 
         artifacts = []
         if is_synthetic:
@@ -456,16 +510,20 @@ class PipelineOrchestrator:
 
             if is_ai_meta:
                 artifacts.append(f"Generative software signature found in metadata ({ai_meta_tag.upper()})")
+            if has_ai_name:
+                artifacts.append("Generative synthetic model tag identified in file provenance")
             if is_seam_anomaly:
                 artifacts.append(f"Facial boundary blending seam anomaly detected (Seam ratio: {max_b_ratio:.2f})")
             if is_diffusion_smooth:
-                artifacts.append(f"Generative diffusion facial smoothing detected (Laplacian: {lap_var:.0f} < 16)")
+                artifacts.append(f"Generative diffusion facial texture smoothing detected (Laplacian: {lap_var:.0f} < 25, no hardware EXIF)")
             if is_fft_anomaly:
-                artifacts.append(f"Periodic 2D-FFT generative upsampling grid detected (Ratio: {fft_ratio:.2f} > 1.48)")
-            if has_ai_name:
-                artifacts.append("Generative synthetic model tag identified in file provenance")
+                artifacts.append(f"Periodic 2D-FFT generative upsampling grid detected (Ratio: {fft_ratio:.2f} > 1.38)")
+            if is_ela_anomaly:
+                artifacts.append(f"ELA residual too uniform for a real photo — AI image detected (Std: {std_ela:.2f} < 3.5, Max: {max_ela:.1f})")
+            if no_camera_exif and not has_ai_name and not is_ai_meta:
+                artifacts.append("No camera hardware EXIF (Make/Model absent) — consistent with AI-generated image")
             if len(artifacts) < 2:
-                artifacts.append(f"Error Level Analysis (ELA) delta disparity (Max: {max_ela:.1f}, Std: {std_ela:.2f})")
+                artifacts.append(f"Multi-signal composite forensic score ({signal_count}/7 synthetic signals active)")
         else:
             score = round(0.11 + (prop_seed % 7) / 100.0, 2)
             status = "AUTHENTIC"
@@ -480,14 +538,17 @@ class PipelineOrchestrator:
 
         diag = {
             "ela_variance": f"Std: {std_ela:.2f}, Max: {max_ela:.1f}",
-            "ela_status": "Uniform (Clean Recompression)" if not (std_ela > 28.0) else "Compression Disparity",
+            "ela_status": "ELA Too Uniform — AI Image (no JPEG chain)" if is_ela_anomaly else ("Uniform Clean Recompression" if not (std_ela > 28.0) else "Compression Disparity"),
             "camera_sensor_noise": f"Laplacian {lap_var:.1f}",
-            "sensor_noise_status": "Natural Optical Grain" if lap_var >= 16.0 else "Synthetic Diffusion Smoothing",
-            "device_hardware": camera_info if has_camera_hardware else "Optical Lens / Clean Image",
-            "ai_signatures": ai_meta_tag.upper() if is_ai_meta else "None (Clean Metadata)",
+            "sensor_noise_status": "Natural Optical Grain" if lap_var >= 25.0 else ("Synthetic Diffusion Smoothing" if lap_var < 25.0 else "Borderline"),
+            "device_hardware": camera_info if has_camera_hardware else "No Camera EXIF (AI Image Indicator)",
+            "ai_signatures": ai_meta_tag.upper() if is_ai_meta else "None Detected",
             "face_detected": face_detected,
             "face_seam_ratio": f"{max_b_ratio:.2f}x" if face_detected else "N/A (No Face)",
-            "face_seam_status": "Natural Boundary Blending" if (not face_detected or (max_b_ratio <= 2.3 and max_b_ratio >= 0.22)) else "Seam Discontinuity Flagged"
+            "face_seam_status": "Natural Boundary Blending" if (not face_detected or (max_b_ratio <= 2.3 and max_b_ratio >= 0.22)) else "Seam Discontinuity Flagged",
+            "fft_ratio": f"{fft_ratio:.3f}",
+            "fft_status": "Generative Upsampling Grid" if is_fft_anomaly else "Natural Frequency Spectrum",
+            "composite_signal_score": f"{signal_count}/7 synthetic signals active",
         }
 
         return VisionEvidence(

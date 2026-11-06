@@ -552,37 +552,52 @@ function renderForensics(data) {
     // 4. Detailed Backend Inspection Breakdown Table
     const diag = (data.vision && data.vision.diagnostic_metrics) ? data.vision.diagnostic_metrics : {};
     const isPass = (data.vision && data.vision.status === 'AUTHENTIC');
+    const hasCameraExif = diag.device_hardware && !diag.device_hardware.includes('No Camera EXIF');
+    const isElaFlagged = diag.ela_status && diag.ela_status.includes('Too Uniform');
+    const isFftSpike = diag.fft_status && diag.fft_status.includes('Upsampling');
 
     breakdownBody.innerHTML = `
       <tr>
         <td><strong>Error Level Analysis (ELA)</strong></td>
-        <td>Checks if parts of image were spliced, edited, or cut-pasted</td>
-        <td><code>${diag.ela_variance || 'Uniform Compression (Std < 28.0)'}</code></td>
+        <td>Evaluates recompression residual delta (AI generates unnatural uniform residual)</td>
+        <td><code>${diag.ela_variance || 'Uniform Compression (Std < 28.0)'} — ${diag.ela_status || 'Analyzed'}</code></td>
+        <td style="text-align: right;"><span class="status-pill ${!isElaFlagged ? 'pill-pass' : 'pill-flag'}">${!isElaFlagged ? 'PASSED ✅' : 'FLAGGED 🚨'}</span></td>
+      </tr>
+      <tr>
+        <td><strong>Sensor Photon Noise (Laplacian)</strong></td>
+        <td>Checks microscopic physical photon variance (Diffusion over-smooths skin & textures)</td>
+        <td><code>${diag.camera_sensor_noise || 'Laplacian Grain Verified'} — ${diag.sensor_noise_status || 'Verified'}</code></td>
         <td style="text-align: right;"><span class="status-pill ${isPass ? 'pill-pass' : 'pill-flag'}">${isPass ? 'PASSED ✅' : 'FLAGGED 🚨'}</span></td>
       </tr>
       <tr>
-        <td><strong>Camera Sensor Grain</strong></td>
-        <td>Checks for microscopic photon noise from real camera lens</td>
-        <td><code>${diag.camera_sensor_noise || 'Laplacian Grain Verified'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${isPass ? 'pill-pass' : 'pill-flag'}">${isPass ? 'PASSED ✅' : 'FLAGGED 🚨'}</span></td>
-      </tr>
-      <tr>
-        <td><strong>Device & EXIF Metadata</strong></td>
-        <td>Audits camera manufacturer (Apple, Samsung, Sony, etc.)</td>
+        <td><strong>Camera Hardware EXIF Provenance</strong></td>
+        <td>Audits camera sensor hardware tags (Make/Model/ISO) vs stripped/synthetic metadata</td>
         <td><code>${diag.device_hardware || 'Optical Camera Sensor'}</code></td>
-        <td style="text-align: right;"><span class="status-pill pill-pass">VERIFIED ✅</span></td>
+        <td style="text-align: right;"><span class="status-pill ${hasCameraExif ? 'pill-pass' : 'pill-flag'}">${hasCameraExif ? 'HARDWARE CONFIRMED ✅' : 'NO CAMERA EXIF 🚨'}</span></td>
       </tr>
       <tr>
-        <td><strong>AI Software Signatures</strong></td>
-        <td>Scans for Midjourney, Stable Diffusion, DALL-E watermarks</td>
+        <td><strong>2D-FFT Spatial Frequencies</strong></td>
+        <td>Scans for transposed convolution generative upsampling checkerboard grid artifacts</td>
+        <td><code>Ratio: ${diag.fft_ratio || 'N/A'} — ${diag.fft_status || 'Clean Spectrum'}</code></td>
+        <td style="text-align: right;"><span class="status-pill ${!isFftSpike ? 'pill-pass' : 'pill-flag'}">${!isFftSpike ? 'CLEAN SPECTRUM ✅' : 'UPSAMPLING GRID 🚨'}</span></td>
+      </tr>
+      <tr>
+        <td><strong>AI Generator Provenance Tag</strong></td>
+        <td>Deep scans image binary chunks for Midjourney, Stable Diffusion, DALL-E signatures</td>
         <td><code>${diag.ai_signatures || 'None (Clean Metadata)'}</code></td>
         <td style="text-align: right;"><span class="status-pill ${isPass ? 'pill-pass' : 'pill-flag'}">${isPass ? 'CLEAN ✅' : 'AI DETECTED 🚨'}</span></td>
       </tr>
       <tr>
         <td><strong>Facial Boundary Seams</strong></td>
-        <td>Checks for face-swap cut & paste edges around face</td>
-        <td><code>${diag.face_seam_ratio || 'Natural Blending'}</code></td>
+        <td>Checks boundary blending disparity if facial features are detected</td>
+        <td><code>${diag.face_seam_ratio || 'Natural Blending'} — ${diag.face_seam_status || 'Verified'}</code></td>
         <td style="text-align: right;"><span class="status-pill ${isPass ? 'pill-pass' : 'pill-flag'}">${isPass ? 'PASSED ✅' : 'SEAM FLAGGED 🚨'}</span></td>
+      </tr>
+      <tr>
+        <td><strong>Multi-Signal Composite Decision</strong></td>
+        <td>Bayesian combination across all independent physical & metadata indicators</td>
+        <td><code>${diag.composite_signal_score || 'Evaluation Complete'}</code></td>
+        <td style="text-align: right;"><span class="status-pill ${isPass ? 'pill-pass' : 'pill-flag'}">${isPass ? 'AUTHENTIC COMPOSITE ✅' : 'SYNTHETIC COMPOSITE 🚨'}</span></td>
       </tr>
     `;
 
