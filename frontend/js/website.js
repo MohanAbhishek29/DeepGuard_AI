@@ -1,6 +1,6 @@
 /**
  * ==============================================================================
- * 🛡️ DeepGuard AI — Official Product Showcase Interactive Engine
+ * 🛡️ DeepGuard AI — Cinematic Immersive Product Showcase Interactive Engine
  * Author & Project Lead: Mohan Abhishek Gupta (@MohanAbhishek29)
  * Repository: https://github.com/MohanAbhishek29/DeepGuard_AI
  * License: Proprietary — All Rights Reserved (Patent Pending)
@@ -9,17 +9,152 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initCinematicBootLoader();
+  initCursorSpotlight();
+  initSceneDeckObserver();
+  initSceneHudNav();
   initMorphTabs();
   initComparisonSlider();
-  initTerminalCopy();
-  initHeroTilt();
   initAudioSim();
   initElaToggle();
   initRegimeSelector();
+  initTerminalCopy();
+  init3DCardTilts();
 });
 
 /* ==========================================================================
-   1. INTERACTIVE MORPHING & SLIDING TABS
+   1. CINEMATIC BOOT LOADER & UNBLUR SEQUENCE
+   ========================================================================== */
+function initCinematicBootLoader() {
+  const overlay = document.getElementById('bootIntroOverlay');
+  const progressFill = document.getElementById('bootProgressFill');
+  const statusText = document.getElementById('bootStatusText');
+  const unblurStage = document.getElementById('unblurStage');
+
+  if (!overlay || !progressFill || !statusText || !unblurStage) return;
+
+  const bootSteps = [
+    { pct: 15, msg: "Probing optical sensor physical photon grains..." },
+    { pct: 35, msg: "Initializing 2D-FFT spatial frequency upsampling mesh..." },
+    { pct: 60, msg: "Activating ultrasonic vocoder filter (>16,000 Hz)..." },
+    { pct: 85, msg: "Aligning multilingual Whisper phoneme sync..." },
+    { pct: 100, msg: "DeepGuard AI v2.4 Tri-Spectral Core Initialized." }
+  ];
+
+  let currentStep = 0;
+
+  function runNextBootStep() {
+    if (currentStep >= bootSteps.length) {
+      setTimeout(() => {
+        overlay.classList.add('boot-complete');
+        unblurStage.classList.add('unblurred');
+      }, 350);
+      return;
+    }
+
+    const step = bootSteps[currentStep];
+    progressFill.style.width = `${step.pct}%`;
+    statusText.innerText = step.msg;
+    currentStep++;
+
+    const delay = currentStep === 1 ? 150 : 250;
+    setTimeout(runNextBootStep, delay);
+  }
+
+  // Start sequence
+  setTimeout(runNextBootStep, 100);
+}
+
+/* ==========================================================================
+   2. DYNAMIC CYBER CURSOR SPOTLIGHT
+   ========================================================================== */
+function initCursorSpotlight() {
+  const spotlight = document.getElementById('cursorSpotlight');
+  if (!spotlight) return;
+
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let currentX = mouseX;
+  let currentY = mouseY;
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function animateSpotlight() {
+    currentX += (mouseX - currentX) * 0.15;
+    currentY += (mouseY - currentY) * 0.15;
+    spotlight.style.transform = `translate(${currentX}px, ${currentY}px) translate(-50%, -50%)`;
+    requestAnimationFrame(animateSpotlight);
+  }
+  animateSpotlight();
+}
+
+/* ==========================================================================
+   3. SCENE DECK OBSERVER (ACTIVE SCENE TRANSITIONS)
+   ========================================================================== */
+function initSceneDeckObserver() {
+  const scenes = document.querySelectorAll('.scene-deck-section');
+  const dots = document.querySelectorAll('.scene-dot-btn');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '-20% 0px -20% 0px',
+    threshold: 0.25
+  };
+
+  const sceneObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        scenes.forEach(s => s.classList.remove('scene-active'));
+        entry.target.classList.add('scene-active');
+
+        // Update active dot in right HUD
+        const sceneId = entry.target.id;
+        dots.forEach(dot => {
+          if (dot.getAttribute('data-scene') === sceneId) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+
+        // Update top nav active item
+        const navLinks = document.querySelectorAll('.header-nav .nav-item');
+        navLinks.forEach(link => {
+          if (link.getAttribute('href') === `#${sceneId}`) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    });
+  }, observerOptions);
+
+  scenes.forEach(scene => sceneObserver.observe(scene));
+}
+
+/* ==========================================================================
+   4. SCENE HUD NAVIGATOR CLICK HANDLER
+   ========================================================================== */
+function initSceneHudNav() {
+  const dots = document.querySelectorAll('.scene-dot-btn');
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const targetId = dot.getAttribute('data-scene');
+      const targetScene = document.getElementById(targetId);
+      if (targetScene) {
+        targetScene.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+}
+
+/* ==========================================================================
+   5. INTERACTIVE MORPHING & SLIDING TABS
    ========================================================================== */
 function initMorphTabs() {
   const tabButtons = document.querySelectorAll('.morph-tab-btn');
@@ -29,11 +164,9 @@ function initMorphTabs() {
     btn.addEventListener('click', () => {
       const targetId = btn.getAttribute('data-target');
 
-      // Update button active states
       tabButtons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
-      // Update card states with slide-in animation
       tabCards.forEach(card => {
         if (card.id === targetId) {
           card.classList.add('active');
@@ -46,7 +179,7 @@ function initMorphTabs() {
 }
 
 /* ==========================================================================
-   2. INTERACTIVE BEFORE/AFTER FACE COMPARISON SLIDER
+   6. INTERACTIVE BEFORE/AFTER FACE COMPARISON SLIDER
    ========================================================================== */
 function initComparisonSlider() {
   const container = document.getElementById('faceSliderContainer');
@@ -73,25 +206,18 @@ function initComparisonSlider() {
     updateSlider(e.clientX);
   });
 
-  window.addEventListener('mouseup', () => {
-    isDragging = false;
-  });
-
+  window.addEventListener('mouseup', () => { isDragging = false; });
   window.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
     updateSlider(e.clientX);
   });
 
-  // Mobile Touch Support
+  // Touch Support
   container.addEventListener('touchstart', (e) => {
     isDragging = true;
     updateSlider(e.touches[0].clientX);
   });
-
-  window.addEventListener('touchend', () => {
-    isDragging = false;
-  });
-
+  window.addEventListener('touchend', () => { isDragging = false; });
   window.addEventListener('touchmove', (e) => {
     if (!isDragging) return;
     updateSlider(e.touches[0].clientX);
@@ -99,7 +225,161 @@ function initComparisonSlider() {
 }
 
 /* ==========================================================================
-   3. DEVELOPER QUICKSTART TERMINAL COPY
+   7. INTERACTIVE AUDIO VOCODER SPECTRUM SIMULATOR
+   ========================================================================== */
+function initAudioSim() {
+  const btnHuman = document.getElementById('btnAudioHuman');
+  const btnAi = document.getElementById('btnAudioAi');
+  const graphBars = document.querySelectorAll('.audio-sim-bar');
+  const specText = document.getElementById('audioSimSpecs');
+  const badge = document.getElementById('audioSimBadge');
+
+  if (!btnHuman || !btnAi) return;
+
+  btnHuman.addEventListener('click', () => {
+    btnHuman.classList.add('active');
+    btnAi.classList.remove('active');
+
+    if (badge) {
+      badge.style.background = 'rgba(16, 185, 129, 0.2)';
+      badge.style.color = '#34d399';
+      badge.innerText = 'NATURAL HUMAN VOCAL CORDS';
+    }
+
+    if (specText) {
+      specText.innerHTML = `
+        • <strong>Natural Acoustic Roll-off:</strong> Smooth continuous analog attenuation past 12 kHz.<br>
+        • <strong>Biomechanical Pitch Jitter:</strong> 0.0128 (Normal human vocal fold vibration variance).<br>
+        • <strong>Ultrasonic Noise Floor (>16kHz):</strong> -78.4 dB (Clean analog decay, zero AI quantization spikes).
+      `;
+    }
+
+    graphBars.forEach((bar, index) => {
+      const height = Math.max(12, 85 - index * 6 + (Math.random() * 8));
+      bar.style.height = `${height}%`;
+      bar.style.background = 'linear-gradient(to top, #10b981, #38bdf8)';
+    });
+  });
+
+  btnAi.addEventListener('click', () => {
+    btnAi.classList.add('active');
+    btnHuman.classList.remove('active');
+
+    if (badge) {
+      badge.style.background = 'rgba(244, 63, 94, 0.2)';
+      badge.style.color = '#fb7185';
+      badge.innerText = 'AI NEURAL VOCODER (CLONED VOICE)';
+    }
+
+    if (specText) {
+      specText.innerHTML = `
+        • <strong>Unnatural Ultrasonic Spike:</strong> Harsh energy burst between 16,000 Hz and 22,000 Hz.<br>
+        • <strong>Robotic Pitch Jitter:</strong> 0.0009 (Unnaturally steady synthetic neural frequency generator).<br>
+        • <strong>Quantization Hash:</strong> HiFi-GAN / ElevenLabs / Suno AI neural vocoder signature confirmed.
+      `;
+    }
+
+    graphBars.forEach((bar, index) => {
+      let height = 35 + Math.random() * 30;
+      if (index >= 9) {
+        height = 80 + Math.random() * 18;
+        bar.style.background = 'linear-gradient(to top, #f43f5e, #a855f7)';
+      } else {
+        bar.style.background = 'linear-gradient(to top, #a855f7, #38bdf8)';
+      }
+      bar.style.height = `${height}%`;
+    });
+  });
+}
+
+/* ==========================================================================
+   8. INTERACTIVE ELA (ERROR LEVEL ANALYSIS) IMAGE SPLICING TOGGLE
+   ========================================================================== */
+function initElaToggle() {
+  const toggleBtn = document.getElementById('elaToggleBtn');
+  const elaOverlay = document.getElementById('elaHeatmapOverlay');
+  const elaStatus = document.getElementById('elaStatusText');
+
+  if (!toggleBtn || !elaOverlay) return;
+
+  let showingEla = false;
+
+  toggleBtn.addEventListener('click', () => {
+    showingEla = !showingEla;
+    if (showingEla) {
+      elaOverlay.style.opacity = '0.92';
+      toggleBtn.innerText = '📸 View Normal Optical Image';
+      if (elaStatus) {
+        elaStatus.innerHTML = '<span style="color: #f43f5e; font-weight: 700;">⚠️ ELA HEATMAP ACTIVE:</span> Glowing magenta squares spotlight mismatched compression levels where passport photo and date text were spliced.';
+      }
+    } else {
+      elaOverlay.style.opacity = '0';
+      toggleBtn.innerText = '🔬 Reveal ELA Compression Heatmap';
+      if (elaStatus) {
+        elaStatus.innerHTML = '<span style="color: #38bdf8; font-weight: 700;">NORMAL OPTICAL VIEW:</span> Shows original image before microscopic error level analysis.';
+      }
+    }
+  });
+}
+
+/* ==========================================================================
+   9. INTERACTIVE 4-REGIME CORRELATION SELECTOR
+   ========================================================================== */
+function initRegimeSelector() {
+  const cards = document.querySelectorAll('.regime-interactive-card');
+  const readout = document.getElementById('regimeExplanationText');
+
+  if (!cards.length || !readout) return;
+
+  const regimeData = {
+    '1': {
+      title: 'Regime I: Visual Deepfake (Manipulated Video + Real Audio)',
+      badge: 'ASYMMETRIC VISUAL ATTACK',
+      color: '#fb7185',
+      desc: 'The attacker spliced an AI face swap (Roop/FaceFusion) onto authentic camera footage. Optical branch detects missing camera sensor grain and face boundary blending seams. Audio branch confirms authentic human voice. DeepGuard isolates the face tampering without false-flagging the audio.'
+    },
+    '2': {
+      title: 'Regime II: Cloned Voice Dub (Real Video + Cloned Audio)',
+      badge: 'ASYMMETRIC ACOUSTIC ATTACK',
+      color: '#c084fc',
+      desc: 'Authentic camera footage was dubbed with an AI-synthesized voice (CEO wire fraud / fabricated political audio). Camera optical grain is authentic, but acoustic frequency probing detects ultrasonic neural vocoder energy above 16kHz and robotic pitch stability (~0.0009). DeepGuard isolates the audio manipulation.'
+    },
+    '3': {
+      title: 'Regime III: Fully Synthetic (AI Avatar + Cloned Voice)',
+      badge: '100% GENERATIVE MEDIA',
+      color: '#fbbf24',
+      desc: 'Both modalities are computer-generated (e.g. Midjourney portrait animated by Sora or Runway with ElevenLabs speech). Both optical and acoustic pipelines trigger red alerts simultaneously, returning a definitive 99.8% synthetic verdict.'
+    },
+    '4': {
+      title: 'Regime IV: Verified Authentic (Camera Provenance + Human Voice)',
+      badge: 'VERIFIED GENUINE',
+      color: '#34d399',
+      desc: 'Real optical sensor photon noise matches camera ISO profile (Laplacian variance >16.0). Human vocal cords demonstrate natural elasticity and micro-jitter (~0.012). Both branches confirm genuine capture, returning Verified Authentic.'
+    }
+  };
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const regimeId = card.getAttribute('data-regime');
+      cards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+
+      const data = regimeData[regimeId];
+      if (data) {
+        readout.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <strong style="color: ${data.color}; font-size: 16px;">${data.title}</strong>
+            <span style="font-family: var(--font-mono); font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: ${data.color}; border: 1px solid ${data.color}40;">${data.badge}</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.65;">${data.desc}</p>
+        `;
+      }
+    });
+  });
+}
+
+/* ==========================================================================
+   10. DEVELOPER QUICKSTART TERMINAL COPY
    ========================================================================== */
 function initTerminalCopy() {
   const copyBtn = document.getElementById('terminalCopyBtn');
@@ -125,164 +405,25 @@ cd DeepGuard_AI
 }
 
 /* ==========================================================================
-   4. 3D PERSPECTIVE TILT ON HERO VISUAL
+   11. 3D PERSPECTIVE TILT ON CARDS & HERO
    ========================================================================== */
-function initHeroTilt() {
-  const frame = document.getElementById('heroVisualFrame');
-  if (!frame) return;
+function init3DCardTilts() {
+  const tiltElements = document.querySelectorAll('.hero-visual-frame, .bento-card, .method-card');
 
-  frame.addEventListener('mousemove', (e) => {
-    const rect = frame.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
+  tiltElements.forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
 
-    const rotX = -(y / rect.height) * 12;
-    const rotY = (x / rect.width) * 12;
+      const rotX = -(y / rect.height) * 8;
+      const rotY = (x / rect.width) * 8;
 
-    frame.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.01, 1.01, 1.01)`;
-  });
-
-  frame.addEventListener('mouseleave', () => {
-    frame.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-  });
-}
-
-/* ==========================================================================
-   5. INTERACTIVE AUDIO VOCODER SPECTRUM SIMULATOR
-   ========================================================================== */
-function initAudioSim() {
-  const btnHuman = document.getElementById('btnAudioHuman');
-  const btnAi = document.getElementById('btnAudioAi');
-  const graphBars = document.querySelectorAll('.audio-sim-bar');
-  const specText = document.getElementById('audioSimSpecs');
-  const badge = document.getElementById('audioSimBadge');
-
-  if (!btnHuman || !btnAi) return;
-
-  btnHuman.addEventListener('click', () => {
-    btnHuman.classList.add('active');
-    btnAi.classList.remove('active');
-
-    badge.className = 'feature-tag';
-    badge.style.background = 'rgba(16, 185, 129, 0.2)';
-    badge.style.color = '#34d399';
-    badge.innerText = 'NATURAL HUMAN VOCAL CORDS';
-
-    specText.innerHTML = `
-      • Natural Acoustic Roll-off: Smooth decline past 12 kHz.<br>
-      • Human Pitch Jitter: 0.0128 (Micro-vocal cord fluctuation).<br>
-      • Ultrasonic Noise (&gt;16kHz): Natural room ambiance (-78 dB).
-    `;
-
-    // Simulate natural frequency curve (high in lows/mids, smooth drop in high frequencies)
-    graphBars.forEach((bar, index) => {
-      const height = Math.max(10, 85 - index * 6 + (Math.random() * 8));
-      bar.style.height = `${height}%`;
-      bar.style.background = 'linear-gradient(to top, #10b981, #38bdf8)';
+      el.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.01, 1.01, 1.01)`;
     });
-  });
 
-  btnAi.addEventListener('click', () => {
-    btnAi.classList.add('active');
-    btnHuman.classList.remove('active');
-
-    badge.className = 'feature-tag';
-    badge.style.background = 'rgba(244, 63, 94, 0.2)';
-    badge.style.color = '#fb7185';
-    badge.innerText = 'AI NEURAL VOCODER (CLONED VOICE)';
-
-    specText.innerHTML = `
-      • Unnatural Ultrasonic Spike: High energy burst (&gt;16kHz).<br>
-      • Robotic Pitch Jitter: 0.0009 (Unnaturally steady synthetic cords).<br>
-      • Quantization Artifacts: ElevenLabs / Suno AI vocoder signature detected.
-    `;
-
-    // Simulate AI vocoder curve (artificial high frequency energy plateau)
-    graphBars.forEach((bar, index) => {
-      let height = 40 + Math.random() * 30;
-      if (index >= 9) {
-        // High frequency spike (>16kHz)
-        height = 75 + Math.random() * 20;
-        bar.style.background = 'linear-gradient(to top, #f43f5e, #a855f7)';
-      } else {
-        bar.style.background = 'linear-gradient(to top, #a855f7, #38bdf8)';
-      }
-      bar.style.height = `${height}%`;
-    });
-  });
-}
-
-/* ==========================================================================
-   6. INTERACTIVE ELA (ERROR LEVEL ANALYSIS) IMAGE SPLICING TOGGLE
-   ========================================================================== */
-function initElaToggle() {
-  const toggleBtn = document.getElementById('elaToggleBtn');
-  const elaOverlay = document.getElementById('elaHeatmapOverlay');
-  const elaStatus = document.getElementById('elaStatusText');
-
-  if (!toggleBtn || !elaOverlay) return;
-
-  let showingEla = false;
-
-  toggleBtn.addEventListener('click', () => {
-    showingEla = !showingEla;
-    if (showingEla) {
-      elaOverlay.style.opacity = '0.9';
-      toggleBtn.innerText = '📸 View Normal Optical Image';
-      elaStatus.innerHTML = '<span style="color: #f43f5e; font-weight: 700;">⚠️ ELA HEATMAP ACTIVE:</span> White glowing squares expose mismatched compression levels (Pasted face/text spliced from foreign file).';
-    } else {
-      elaOverlay.style.opacity = '0';
-      toggleBtn.innerText = '🔬 Reveal ELA Compression Heatmap';
-      elaStatus.innerHTML = '<span style="color: #38bdf8; font-weight: 700;">NORMAL VIEW:</span> Shows original image before microscopic error level analysis.';
-    }
-  });
-}
-
-/* ==========================================================================
-   7. INTERACTIVE 4-REGIME CORRELATION SELECTOR
-   ========================================================================== */
-function initRegimeSelector() {
-  const cards = document.querySelectorAll('.regime-interactive-card');
-  const readout = document.getElementById('regimeExplanationText');
-
-  if (!cards.length || !readout) return;
-
-  const regimeData = {
-    '1': {
-      title: 'Regime I: Visual Deepfake (Manipulated Video + Real Audio)',
-      desc: 'The attacker spliced an AI face onto real interview footage. The video has 2D-FFT frequency distortion and boundary edge seams, while the audio is natural human speech. DeepGuard isolates the face tampering without false-flagging the audio.',
-      color: '#fb7185'
-    },
-    '2': {
-      title: 'Regime II: Cloned Voice Dub (Real Video + Cloned Audio)',
-      desc: 'Authentic camera footage was dubbed with an AI-synthesized voice (CEO fraud / fake leaked audio). Camera noise is genuine, but acoustic frequency probing finds neural vocoder spikes above 16kHz and robotic pitch stability. DeepGuard exposes the cloned audio.',
-      color: '#c084fc'
-    },
-    '3': {
-      title: 'Regime III: Fully Synthetic (AI Avatar + Cloned Voice)',
-      desc: 'Both modalities are computer-generated (e.g. Midjourney portrait animated by Sora with Suno/ElevenLabs audio). Both optical and acoustic pipelines trigger red alerts simultaneously, returning a definitive 99.8% synthetic verdict.',
-      color: '#fbbf24'
-    },
-    '4': {
-      title: 'Regime IV: Verified Authentic (Camera Provenance + Human Voice)',
-      desc: 'Real optical sensor photon noise variance matches camera ISO grain. Human vocal cords show organic pitch micro-tremors (~0.012). Both branches confirm genuine capture, returning Verified Authentic.',
-      color: '#34d399'
-    }
-  };
-
-  cards.forEach(card => {
-    card.addEventListener('click', () => {
-      const regimeId = card.getAttribute('data-regime');
-      cards.forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-
-      const data = regimeData[regimeId];
-      if (data) {
-        readout.innerHTML = `
-          <strong style="color: ${data.color}; font-size: 15px; display: block; margin-bottom: 6px;">${data.title}</strong>
-          <span style="color: var(--text-secondary);">${data.desc}</span>
-        `;
-      }
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
     });
   });
 }

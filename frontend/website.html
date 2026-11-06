@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DeepGuard AI | Enterprise Multimodal Deepfake &amp; Synthetic Media Forensic Intelligence Platform</title>
-  <meta name="description" content="State-of-the-art multimodal deepfake detection platform. Cross-correlates optical camera sensor physics, ultrasonic neural vocoders, and Whisper phoneme synchrony. Architect: Mohan Abhishek Gupta." />
+  <meta name="description" content="Production-grade multimodal deepfake detection platform. Cross-correlates optical camera sensor physics, ultrasonic neural vocoders, and Whisper phoneme synchrony. Architect: Mohan Abhishek Gupta." />
 
   <!-- Favicon / App Icon -->
   <link rel="icon" type="image/png" href="assets/DeepGuard_AI_App_logo.png">
@@ -22,9 +22,9 @@
       display: flex;
       align-items: flex-end;
       gap: 5px;
-      height: 120px;
+      height: 125px;
       padding: 12px;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.5);
       border-radius: var(--radius-sm);
       border: 1px solid rgba(255, 255, 255, 0.08);
       margin: 16px 0;
@@ -37,64 +37,82 @@
       transition: height 0.4s ease, background 0.4s ease;
     }
     .btn-sim-toggle {
-      padding: 7px 16px;
+      padding: 8px 18px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-secondary);
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .btn-sim-toggle.active {
-      background: rgba(56, 189, 248, 0.2);
-      border-color: var(--accent-cyan);
-      color: #ffffff;
-    }
-    .regime-interactive-card {
-      background: rgba(0,0,0,0.4);
-      padding: 14px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
       cursor: pointer;
       transition: all 0.25s ease;
     }
-    .regime-interactive-card:hover, .regime-interactive-card.selected {
+    .btn-sim-toggle.active {
+      background: rgba(56, 189, 248, 0.22);
       border-color: var(--accent-cyan);
-      background: rgba(0, 245, 212, 0.08);
-      transform: translateY(-2px);
-    }
-    .benchmark-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13.5px;
-    }
-    .benchmark-table th {
-      padding: 14px;
-      text-align: left;
-      font-size: 11px;
-      font-family: var(--font-mono);
-      color: var(--text-muted);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      letter-spacing: 0.8px;
-    }
-    .benchmark-table td {
-      padding: 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+      box-shadow: 0 0 16px rgba(0, 245, 212, 0.3);
     }
   </style>
 </head>
 <body>
 
   <!-- ======================================================================
-       AMBIENT COSMIC AURORA BACKGROUND
+       0. CINEMATIC BOOT LOADER INTRO OVERLAY
+       ====================================================================== -->
+  <div id="bootIntroOverlay">
+    <div class="boot-box">
+      <img src="assets/DeepGuard_AI_App_logo.png" alt="DeepGuard Logo" class="boot-logo-glow">
+      <h2 class="boot-title">DEEPGUARD AI <span style="font-size: 14px; color: var(--accent-cyan);">v2.4</span></h2>
+      <p class="boot-subtitle">ENTERPRISE TRI-SPECTRAL FORENSIC PLATFORM</p>
+      
+      <div class="boot-progress-bar">
+        <div class="boot-progress-fill" id="bootProgressFill"></div>
+      </div>
+      <div class="boot-status-text" id="bootStatusText">Initiating quantum forensic kernel...</div>
+      
+      <div style="margin-top: 24px; font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); letter-spacing: 1px;">
+        LEAD ARCHITECT: MOHAN ABHISHEK GUPTA &bull; PATENT PENDING
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       AMBIENT COSMIC AURORA & MOUSE SPOTLIGHT
        ====================================================================== -->
   <div class="cosmic-background">
     <div class="aurora-blob aurora-1"></div>
     <div class="aurora-blob aurora-2"></div>
     <div class="aurora-blob aurora-3"></div>
     <div class="grid-mesh"></div>
+  </div>
+  <div class="cursor-spotlight" id="cursorSpotlight"></div>
+
+  <!-- ======================================================================
+       RIGHT-SIDE HUD SCENE NAVIGATOR DOTS
+       ====================================================================== -->
+  <div class="scene-hud-nav">
+    <button class="scene-dot-btn active" data-scene="genesis">
+      <span class="scene-dot-tooltip">01 // Genesis</span>
+    </button>
+    <button class="scene-dot-btn" data-scene="threats">
+      <span class="scene-dot-tooltip">02 // Threat Crisis</span>
+    </button>
+    <button class="scene-dot-btn" data-scene="methodology">
+      <span class="scene-dot-tooltip">03 // Tri-Spectral Tech</span>
+    </button>
+    <button class="scene-dot-btn" data-scene="interactive-lab">
+      <span class="scene-dot-tooltip">04 // Interactive Lab</span>
+    </button>
+    <button class="scene-dot-btn" data-scene="regimes">
+      <span class="scene-dot-tooltip">05 // 4-Regime Matrix</span>
+    </button>
+    <button class="scene-dot-btn" data-scene="benchmarks">
+      <span class="scene-dot-tooltip">06 // Benchmarks</span>
+    </button>
+    <button class="scene-dot-btn" data-scene="quickstart">
+      <span class="scene-dot-tooltip">07 // Terminal Setup</span>
+    </button>
   </div>
 
   <div class="site-wrapper">
@@ -103,7 +121,7 @@
          STICKY GLASS NAVIGATION BAR
          ====================================================================== -->
     <header class="site-header">
-      <a href="#overview" class="brand-combo">
+      <a href="#genesis" class="brand-combo">
         <div class="brand-icon-box">
           <img src="assets/DeepGuard_AI_App_logo.png" alt="DeepGuard AI Icon" class="brand-icon-img">
         </div>
@@ -113,12 +131,13 @@
         </div>
       </a>
 
-      <!-- Smooth Scroll Menu -->
+      <!-- Smooth Navigation Links -->
       <nav class="header-nav">
-        <a href="#overview" class="nav-item active">Overview</a>
-        <a href="#threats" class="nav-item">The Threats</a>
+        <a href="#genesis" class="nav-item active">Genesis</a>
+        <a href="#threats" class="nav-item">The Crisis</a>
+        <a href="#methodology" class="nav-item">Tri-Spectral Core</a>
         <a href="#interactive-lab" class="nav-item">Interactive Lab</a>
-        <a href="#tri-spectral" class="nav-item">Methodology</a>
+        <a href="#regimes" class="nav-item">4-Regimes</a>
         <a href="#benchmarks" class="nav-item">Benchmarks</a>
         <a href="#quickstart" class="nav-item">Quickstart</a>
       </nav>
@@ -132,394 +151,418 @@
     </header>
 
     <!-- ======================================================================
-         SECTION 1: HERO SHOWCASE STAGE
+         UNBLUR STAGE WRAPPER (7 FULL-SCREEN SCENES)
          ====================================================================== -->
-    <section class="hero-stage" id="overview">
-      <div class="hero-pill-badge">
-        <span class="pulse-dot"></span>
-        <span>ENTERPRISE FORENSIC CORE • PATENT PENDING</span>
-      </div>
+    <div class="unblur-stage" id="unblurStage">
 
-      <h1 class="hero-headline">
-        Detect Any Deepfake Across <br>
-        <span class="gradient-title-word">Video, Audio &amp; Spliced Images</span> In Real Time.
-      </h1>
-
-      <p class="hero-subtitle">
-        DeepGuard AI exposes synthetic media tampering through physical optical camera sensor physics, ultrasonic neural vocoders (&gt;16kHz), and cross-modal phoneme synchronization.
-      </p>
-
-      <!-- Hero Call-To-Action Group -->
-      <div class="hero-button-row">
-        <a href="console.html" class="btn-hero-launch">
-          <span>⚡ LAUNCH WEB CONSOLE</span>
-          <span style="font-size: 18px;">&rarr;</span>
-        </a>
-        <a href="#interactive-lab" class="btn-hero-terminal">
-          <span>🔬 Explore Interactive Lab</span>
-          <span>&darr;</span>
-        </a>
-        <a href="#quickstart" class="btn-hero-terminal">
-          <span>⌨️ Terminal Quickstart</span>
-        </a>
-      </div>
-
-      <!-- Hero Visual Graphic with 3D Tilt and Scanner Laser -->
-      <div class="hero-visual-frame" id="heroVisualFrame">
-        <div class="hero-visual-inner">
-          <div class="hero-telemetry-tag tag-tl">
-            <span>📷</span> <span>OPTICAL SENSOR GRAIN: CONFIRMED</span>
+      <!-- ====================================================================
+           SCENE 1: GENESIS & THE QUANTUM HORIZON
+           ==================================================================== -->
+      <section class="scene-deck-section scene-active" id="genesis">
+        <div class="hero-stage">
+          <div class="hero-pill-badge">
+            <span class="pulse-dot"></span>
+            <span>ENTERPRISE FORENSIC CORE &bull; PATENT PENDING</span>
           </div>
-          <div class="hero-scanner-laser"></div>
-          <img src="assets/DeepGuard_AI_Main_Page_logo_Hero.png" alt="DeepGuard AI Main Architecture Hero" class="hero-visual-img">
-          <div class="hero-telemetry-tag tag-br">
-            <span>🎙️</span> <span>VOCODER NOISE FLOOR: -88 dB (AUTHENTIC)</span>
-          </div>
-        </div>
-      </div>
 
-      <!-- Key Performance Metrics Strip -->
-      <div class="stats-ribbon">
-        <div class="stat-box">
-          <div class="stat-number">99.4%</div>
-          <div class="stat-desc">Cross-Modal Accuracy Across Tested Benchmarks</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-number">&lt;420ms</div>
-          <div class="stat-desc">Parallel Tri-Spectral Inference Latency</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-number">4 Regimes</div>
-          <div class="stat-desc">Asymmetric Cross-Modal Tampering Matrix</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-number">SHA-256</div>
-          <div class="stat-desc">Tamper-Evident Cryptographic Audit Certificates</div>
-        </div>
-      </div>
-    </section>
+          <h1 class="hero-headline">
+            Detect Any Deepfake Across <br>
+            <span class="gradient-title-word">Video, Audio &amp; Spliced Images</span> In Real Time.
+          </h1>
 
-    <!-- ======================================================================
-         SECTION 2: THE SYNTHETIC MEDIA THREAT CRISIS
-         ====================================================================== -->
-    <section class="section-block" id="threats">
-      <div class="section-head">
-        <span class="section-tag">THE DIGITAL THREAT LANDSCAPE</span>
-        <h2 class="section-title">Why Single-Modality Detectors Fail Against Modern Deepfakes</h2>
-        <p class="section-lede">
-          Generative AI tools no longer create isolated fakes. Attackers mix authentic video with cloned audio, or paste AI faces onto genuine bodies. DeepGuard AI is engineered to catch the asymmetric tampering that fools conventional security tools.
-        </p>
-      </div>
-
-      <div class="threat-grid">
-        
-        <!-- Threat Card 1: Visual Deepfakes -->
-        <div class="threat-card">
-          <div class="threat-badge red">🎭</div>
-          <h3 class="threat-title">Visual Face Swaps &amp; Diffusion</h3>
-          <p class="threat-desc">
-            Diffusion models (Midjourney, Stable Diffusion, FaceFusion) synthesize realistic faces that trick the human eye. However, they destroy natural camera photon noise and create microscopic boundary seams along jawlines and foreheads.
+          <p class="hero-subtitle">
+            Generative AI has broken traditional media verification. DeepGuard AI restores trust through an immutable tri-spectral engine cross-correlating camera sensor photon noise, ultrasonic neural vocoder frequencies (&gt;16kHz), and cross-modal phoneme synchronization.
           </p>
-          <div class="threat-tags">
-            <span class="threat-tag-pill">Face Swaps</span>
-            <span class="threat-tag-pill">Boundary Seams</span>
-            <span class="threat-tag-pill">2D-FFT Checkerboard</span>
+
+          <!-- Hero Action Button Group -->
+          <div class="hero-button-row">
+            <a href="console.html" class="btn-hero-launch">
+              <span>⚡ LAUNCH LIVE FORENSIC CONSOLE</span>
+              <span style="font-size: 18px;">&rarr;</span>
+            </a>
+            <a href="#interactive-lab" class="btn-hero-terminal">
+              <span>🔬 Explore Interactive Lab</span>
+              <span>&darr;</span>
+            </a>
+            <a href="#quickstart" class="btn-hero-terminal">
+              <span>⌨️ Quickstart Terminal</span>
+            </a>
+          </div>
+
+          <!-- Hero Visual Frame with Holographic Laser & 3D Tilt -->
+          <div class="hero-visual-frame" id="heroVisualFrame">
+            <div class="hero-visual-inner">
+              <div class="hero-telemetry-tag tag-tl">
+                <span>📷</span> <span>OPTICAL SENSOR GRAIN: CONFIRMED</span>
+              </div>
+              <div class="hero-scanner-laser"></div>
+              <img src="assets/DeepGuard_AI_Main_Page_logo_Hero.png" alt="DeepGuard AI Architecture Hero" class="hero-visual-img">
+              <div class="hero-telemetry-tag tag-br">
+                <span>🎙️</span> <span>VOCODER NOISE FLOOR: -88 dB (AUTHENTIC)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Metrics Ribbon -->
+          <div class="stats-ribbon">
+            <div class="stat-box">
+              <div class="stat-number">99.4%</div>
+              <div class="stat-desc">Multimodal Cross-Correlation Accuracy</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number">&lt;420ms</div>
+              <div class="stat-desc">Parallel Tri-Spectral Inference Latency</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number">4 Regimes</div>
+              <div class="stat-desc">Asymmetric Cross-Modal Tampering Matrix</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number">SHA-256</div>
+              <div class="stat-desc">Courtroom-Admissible Cryptographic Audits</div>
+            </div>
           </div>
         </div>
+      </section>
 
-        <!-- Threat Card 2: Cloned Voice Audio -->
-        <div class="threat-card">
-          <div class="threat-badge purple">🎙️</div>
-          <h3 class="threat-title">AI Voice Clones &amp; Audio Dubs</h3>
-          <p class="threat-desc">
-            Neural vocoders (ElevenLabs, Suno, Udio) clone executive and celebrity voices from 3-second samples. These leave high-frequency energy spikes above 16 kHz and lack natural human vocal cord micro-tremors (pitch jitter).
+      <!-- ====================================================================
+           SCENE 2: THE DIGITAL THREAT LANDSCAPE
+           ==================================================================== -->
+      <section class="scene-deck-section" id="threats">
+        <div class="scene-head">
+          <span class="scene-tag">THE SYNTHETIC MEDIA THREAT CRISIS</span>
+          <h2 class="scene-title">Why Single-Modality Detectors Fail Against Modern Deepfakes</h2>
+          <p class="scene-lede">
+            Modern synthetic media attacks are rarely simple. Generative diffusion models and voice cloning systems allow threat actors to orchestrate asymmetric attacks that easily bypass single-vector security scanners.
           </p>
-          <div class="threat-tags">
-            <span class="threat-tag-pill">Voice Clones</span>
-            <span class="threat-tag-pill">&gt;16kHz Vocoder Spill</span>
-            <span class="threat-tag-pill">Pitch Jitter Loss</span>
-          </div>
         </div>
 
-        <!-- Threat Card 3: Spliced Images & Fake Documents -->
-        <div class="threat-card">
-          <div class="threat-badge cyan">✂️</div>
-          <h3 class="threat-title">Image Splicing &amp; Fake Documents</h3>
-          <p class="threat-desc">
-            Digital photo alterations and spliced ID passports create mismatched JPEG compression grids. DeepGuard uses Error Level Analysis (ELA) to spotlight regions saved at differing compression surfaces.
-          </p>
-          <div class="threat-tags">
-            <span class="threat-tag-pill">ELA Heatmap</span>
-            <span class="threat-tag-pill">EXIF Provenance</span>
-            <span class="threat-tag-pill">Sensor Grain Audit</span>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         SECTION 3: INTERACTIVE MORPHING & SLIDING TABS LAB (GOD LEVEL CORE)
-         ====================================================================== -->
-    <section class="section-block" id="interactive-lab">
-      <div class="section-head">
-        <span class="section-tag">DEEPGUARD INTERACTIVE LAB</span>
-        <h2 class="section-title">Interactive Forensic Simulation Lab</h2>
-        <p class="section-lede">
-          Experience how DeepGuard AI dismantles synthetic deception. Click between the tabs below to inspect real-time interactive simulations of each forensic modality.
-        </p>
-      </div>
-
-      <div class="morph-showcase">
-        
-        <!-- Tab Switcher Bar with Morphing Effect -->
-        <div class="morph-tab-bar">
-          <button class="morph-tab-btn active" data-target="tabVisual">
-            <span>📹</span> <span>Visual Optics &amp; Face Swaps</span>
-          </button>
-          <button class="morph-tab-btn" data-target="tabAudio">
-            <span>🎙️</span> <span>Ultrasonic Vocoder Sound</span>
-          </button>
-          <button class="morph-tab-btn" data-target="tabEla">
-            <span>📸</span> <span>Image Splicing &amp; ELA</span>
-          </button>
-          <button class="morph-tab-btn" data-target="tabMatrix">
-            <span>🧩</span> <span>Cross-Modal Disagreement</span>
-          </button>
-          <button class="morph-tab-btn" data-target="tabCert">
-            <span>📜</span> <span>Cryptographic Audit JSON</span>
-          </button>
-        </div>
-
-        <!-- Morphing Card Viewport -->
-        <div class="morph-viewport">
+        <div class="threat-bento-grid">
           
-          <!-- TAB 1: VISUAL OPTICS WITH INTERACTIVE SLIDER -->
-          <div class="morph-card active" id="tabVisual">
-            <div class="tab-visual-box">
-              <div class="face-slider-container" id="faceSliderContainer">
-                <!-- Authentic Background Layer -->
-                <div class="face-slider-img-layer face-half-authentic">
+          <!-- Threat 1: Visual Deepfakes -->
+          <div class="bento-card threat-red">
+            <div class="bento-badge red">🎭</div>
+            <h3 class="bento-title">Visual Face Swaps &amp; Diffusion</h3>
+            <p class="bento-desc">
+              State-of-the-art tools (Roop, FaceFusion, Midjourney, Stable Diffusion, Sora) synthesize photorealistic faces. While human eyes cannot distinguish these fakes, the generative process completely destroys natural camera sensor photon noise and leaves sharp mathematical boundary seams along the hairline, jaw, and neck.
+            </p>
+            <div class="bento-tags">
+              <span class="bento-tag-pill">Face Swaps</span>
+              <span class="bento-tag-pill">Diffusion Smoothing</span>
+              <span class="bento-tag-pill">2D-FFT Grid Spikes</span>
+            </div>
+            <div class="bento-stat-footer">&bull; Attacking Identity, Video Calls &amp; Politics</div>
+          </div>
+
+          <!-- Threat 2: Audio Clones -->
+          <div class="bento-card threat-purple">
+            <div class="bento-badge purple">🎙️</div>
+            <h3 class="bento-title">AI Voice Clones &amp; Audio Dubs</h3>
+            <p class="bento-desc">
+              Neural vocoders (ElevenLabs, Suno v3.5, Udio, VALL-E) clone human speech and studio vocals from brief 3-second reference recordings. These neural generators introduce abnormal high-frequency energy spikes above 16,000 Hz and exhibit robotic pitch stability (~0.0009) devoid of natural vocal fold micro-tremors.
+            </p>
+            <div class="bento-tags">
+              <span class="bento-tag-pill">Voice Clones</span>
+              <span class="bento-tag-pill">&gt;16kHz Vocoder Spill</span>
+              <span class="bento-tag-pill">Pitch Jitter Loss</span>
+            </div>
+            <div class="bento-stat-footer">&bull; Fueling CEO Fraud, Banking Scams &amp; Extortion</div>
+          </div>
+
+          <!-- Threat 3: Image Splicing -->
+          <div class="bento-card threat-cyan">
+            <div class="bento-badge cyan">✂️</div>
+            <h3 class="bento-title">Image Splicing &amp; Fake Documents</h3>
+            <p class="bento-desc">
+              Digital photo manipulations, forged KYC passports, and altered legal records paste foreign pixels into genuine photos. DeepGuard utilizes Error Level Analysis (ELA) to compute differential JPEG compression surfaces, revealing exactly where foreign images or dates were spliced into the original file.
+            </p>
+            <div class="bento-tags">
+              <span class="bento-tag-pill">ELA Heatmap</span>
+              <span class="bento-tag-pill">EXIF Provenance</span>
+              <span class="bento-tag-pill">Quantization Disparity</span>
+            </div>
+            <div class="bento-stat-footer">&bull; Targeting Passports, Contracts &amp; KYC Verification</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SCENE 3: TRI-SPECTRAL FORENSIC METHODOLOGY
+           ==================================================================== -->
+      <section class="scene-deck-section" id="methodology">
+        <div class="scene-head">
+          <span class="scene-tag">DEEPGUARD CORE INNOVATION</span>
+          <h2 class="scene-title">How the Tri-Spectral Inspection Engine Works</h2>
+          <p class="scene-lede">
+            DeepGuard AI executes three concurrent forensic inspection branches simultaneously, feeding their evidence matrices into a temporal correlation engine to expose asymmetric tampering.
+          </p>
+        </div>
+
+        <div class="methodology-tri-grid">
+          
+          <!-- Branch 1 -->
+          <div class="method-card" style="border-top: 3px solid var(--accent-cyan);">
+            <div class="method-branch-num">BRANCH 01 // OPTICS</div>
+            <h3 class="method-title">Camera Optical Sensor Physics</h3>
+            <ul class="method-points">
+              <li class="method-point-item">
+                <span class="method-bullet">&check;</span>
+                <span><strong>Microscopic Photon Noise:</strong> Laplacian variance checks real camera lens grain vs AI airbrushed smoothing.</span>
+              </li>
+              <li class="method-point-item">
+                <span class="method-bullet">&check;</span>
+                <span><strong>2D-FFT Spatial Frequencies:</strong> Detects mathematical checkerboard grid spikes from generative upsampling.</span>
+              </li>
+              <li class="method-point-item">
+                <span class="method-bullet">&check;</span>
+                <span><strong>Face Seam Boundary:</strong> Ratio testing catches deepfake cut-and-paste edges around faces.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Branch 2 -->
+          <div class="method-card" style="border-top: 3px solid var(--accent-purple);">
+            <div class="method-branch-num" style="color: var(--accent-purple);">BRANCH 02 // ACOUSTICS</div>
+            <h3 class="method-title">Ultrasonic Neural Vocoders</h3>
+            <ul class="method-points">
+              <li class="method-point-item">
+                <span class="method-bullet" style="color: var(--accent-purple);">&check;</span>
+                <span><strong>High-Frequency Energy (&gt;16kHz):</strong> Scans ultrasonic sound frequencies where AI vocoders leave digital noise.</span>
+              </li>
+              <li class="method-point-item">
+                <span class="method-bullet" style="color: var(--accent-purple);">&check;</span>
+                <span><strong>Vocal Pitch Jitter:</strong> Human vocal cords fluctuate naturally (score ~0.012), while AI voices are unnaturally robotic (~0.001).</span>
+              </li>
+              <li class="method-point-item">
+                <span class="method-bullet" style="color: var(--accent-purple);">&check;</span>
+                <span><strong>AI Watermarks:</strong> Scans audio containers for Suno, Udio, and synthetic generator tags.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Branch 3 -->
+          <div class="method-card" style="border-top: 3px solid var(--accent-blue);">
+            <div class="method-branch-num" style="color: var(--accent-blue);">BRANCH 03 // LINGUISTICS</div>
+            <h3 class="method-title">Whisper AI Speech Synchrony</h3>
+            <ul class="method-points">
+              <li class="method-point-item">
+                <span class="method-bullet" style="color: var(--accent-blue);">&check;</span>
+                <span><strong>Multilingual ASR:</strong> Transcribes spoken words across English, Telugu, Hindi, and regional languages.</span>
+              </li>
+              <li class="method-point-item">
+                <span class="method-bullet" style="color: var(--accent-blue);">&check;</span>
+                <span><strong>Phoneme Alignment:</strong> Checks if spoken words synchronize with acoustic vocal resonance.</span>
+              </li>
+              <li class="method-point-item">
+                <span class="method-bullet" style="color: var(--accent-blue);">&check;</span>
+                <span><strong>Linguistic Confidence:</strong> Verifies natural speech flow and sentence continuity.</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SCENE 4: INTERACTIVE FORENSIC SIMULATION LAB
+           ==================================================================== -->
+      <section class="scene-deck-section" id="interactive-lab">
+        <div class="scene-head">
+          <span class="scene-tag">HANDS-ON SIMULATION</span>
+          <h2 class="scene-title">Interactive Forensic Simulation Lab</h2>
+          <p class="scene-lede">
+            Experience how DeepGuard AI inspects microscopic signals interactively. Click through the tabs below to test each forensic modality.
+          </p>
+        </div>
+
+        <div class="morph-showcase">
+          
+          <!-- Morphing Tab Switcher -->
+          <div class="morph-tab-bar">
+            <button class="morph-tab-btn active" data-target="tabVisual">
+              <span>📹</span> <span>Visual Optics &amp; Face Swaps</span>
+            </button>
+            <button class="morph-tab-btn" data-target="tabAudio">
+              <span>🎙️</span> <span>Ultrasonic Vocoder Sound</span>
+            </button>
+            <button class="morph-tab-btn" data-target="tabEla">
+              <span>📸</span> <span>Image Splicing &amp; ELA</span>
+            </button>
+            <button class="morph-tab-btn" data-target="tabCert">
+              <span>📜</span> <span>Cryptographic Audit JSON</span>
+            </button>
+          </div>
+
+          <div class="morph-viewport">
+            
+            <!-- TAB 1: VISUAL OPTICS SLIDER -->
+            <div class="morph-card active" id="tabVisual">
+              <div class="tab-visual-box">
+                <div class="face-slider-container" id="faceSliderContainer">
+                  <div class="face-slider-img-layer face-half-authentic">
+                    <div style="text-align: center; padding: 20px;">
+                      <div style="font-size: 42px; margin-bottom: 8px;">🧑‍💼</div>
+                      <div style="font-size: 13px; font-weight: 700; color: #34d399;">GENUINE OPTICAL SENSOR CAPTURE</div>
+                      <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">&bull; Natural ISO Sensor Photon Grain<br>&bull; Laplacian Variance: 146.4<br>&bull; Seamless Boundary Transition</div>
+                    </div>
+                  </div>
+                  <div class="face-slider-img-layer face-half-synthetic" id="sliderSynthLayer" style="clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);">
+                    <div style="text-align: center; padding: 20px;">
+                      <div style="font-size: 42px; margin-bottom: 8px;">🎭</div>
+                      <div style="font-size: 13px; font-weight: 700; color: #fb7185;">AI DEEPFAKE FACE SWAP</div>
+                      <div style="font-size: 11px; color: #fecdd3; margin-top: 4px;">&bull; Destroyed Sensor Grain (Airbrushed)<br>&bull; Boundary Edge Seam Detected<br>&bull; 2D-FFT Checkerboard Artifacts</div>
+                    </div>
+                  </div>
+                  <div class="slider-divider-line" id="sliderDivider" style="left: 50%;">
+                    <div class="slider-handle-pill">&harr;</div>
+                  </div>
+                </div>
+                <div style="text-align: center; margin-top: 12px; font-size: 12px; color: var(--text-muted);">
+                  &larr; Drag slider left or right to inspect optical differences &rarr;
+                </div>
+              </div>
+
+              <div class="tab-info-side">
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 8px;">OPTICAL SENSOR ANALYSIS</div>
+                <h3>Microscopic Camera Physics &amp; Edge Seams</h3>
+                <p>
+                  Real camera sensors imprint a subtle, microscopic Gaussian photon distribution known as sensor noise. When deepfake tools (Roop, SimSwap, FaceFusion) paste an AI face, they airbrush away this grain and introduce sharp blending boundary seams.
+                </p>
+                <ul class="tab-spec-list">
+                  <li class="tab-spec-item">
+                    <span class="tab-spec-icon">&check;</span>
+                    <span><strong>Laplacian Texture Variance:</strong> Identifies AI smoothing vs true optical noise.</span>
+                  </li>
+                  <li class="tab-spec-item">
+                    <span class="tab-spec-icon">&check;</span>
+                    <span><strong>2D-FFT Spectral Analysis:</strong> Highlights grid spikes from generative upsamplers.</span>
+                  </li>
+                  <li class="tab-spec-item">
+                    <span class="tab-spec-icon">&check;</span>
+                    <span><strong>Facial Boundary Ratio:</strong> Catches pixel anomalies along boundary cutlines.</span>
+                  </li>
+                </ul>
+                <a href="console.html" class="nav-btn-console" style="display: inline-flex;">⚡ Test With Your Own Media &rarr;</a>
+              </div>
+            </div>
+
+            <!-- TAB 2: AUDIO VOCODER SPECTRUM -->
+            <div class="morph-card" id="tabAudio">
+              <div class="tab-visual-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <span style="font-size: 12px; font-weight: 700; color: #ffffff;">ACOUSTIC SPECTRUM SIMULATOR</span>
+                  <span class="feature-tag" id="audioSimBadge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px;">NATURAL HUMAN VOCAL CORDS</span>
+                </div>
+                
+                <div class="audio-bars-container">
+                  <div class="audio-sim-bar" style="height: 85%;"></div>
+                  <div class="audio-sim-bar" style="height: 78%;"></div>
+                  <div class="audio-sim-bar" style="height: 72%;"></div>
+                  <div class="audio-sim-bar" style="height: 65%;"></div>
+                  <div class="audio-sim-bar" style="height: 58%;"></div>
+                  <div class="audio-sim-bar" style="height: 50%;"></div>
+                  <div class="audio-sim-bar" style="height: 42%;"></div>
+                  <div class="audio-sim-bar" style="height: 35%;"></div>
+                  <div class="audio-sim-bar" style="height: 28%;"></div>
+                  <div class="audio-sim-bar" style="height: 20%;"></div>
+                  <div class="audio-sim-bar" style="height: 14%;"></div>
+                  <div class="audio-sim-bar" style="height: 10%;"></div>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 14px;">
+                  <button class="btn-sim-toggle active" id="btnAudioHuman">Natural Voice Mode</button>
+                  <button class="btn-sim-toggle" id="btnAudioAi">AI Clone (Vocoder) Mode</button>
+                </div>
+
+                <div id="audioSimSpecs" style="margin-top: 14px; font-size: 12.5px; color: var(--text-secondary); background: rgba(0,0,0,0.4); padding: 14px; border-radius: 8px; line-height: 1.6;">
+                  &bull; <strong>Natural Acoustic Roll-off:</strong> Smooth continuous analog attenuation past 12 kHz.<br>
+                  &bull; <strong>Biomechanical Pitch Jitter:</strong> 0.0128 (Normal human vocal fold vibration variance).<br>
+                  &bull; <strong>Ultrasonic Noise Floor (&gt;16kHz):</strong> -78.4 dB (Clean analog decay, zero AI quantization spikes).
+                </div>
+              </div>
+
+              <div class="tab-info-side">
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-bottom: 8px;">ULTRASONIC ACOUSTICS</div>
+                <h3>Neural Vocoders &amp; Vocal Cord Micro-Tremors</h3>
+                <p>
+                  Human vocal cords possess natural biomechanical elasticity, producing pitch variations known as jitter. Generative voice systems (ElevenLabs, Suno, VALL-E) render unnaturally mechanical pitch stability while leaking energy spikes past 16 kHz.
+                </p>
+                <ul class="tab-spec-list">
+                  <li class="tab-spec-item">
+                    <span class="tab-spec-icon">&check;</span>
+                    <span><strong>High-Frequency Ultrasonic Probing:</strong> Scans frequencies above 16,000 Hz.</span>
+                  </li>
+                  <li class="tab-spec-item">
+                    <span class="tab-spec-icon">&check;</span>
+                    <span><strong>Pitch Jitter Variance:</strong> Measures biomechanical pitch fluctuation.</span>
+                  </li>
+                  <li class="tab-spec-item">
+                    <span class="tab-spec-icon">&check;</span>
+                    <span><strong>Synthetic Watermark Sniffing:</strong> Checks for AI audio generator metadata signatures.</span>
+                  </li>
+                </ul>
+                <a href="console.html" class="nav-btn-console" style="display: inline-flex;">⚡ Test Audio Files in Console &rarr;</a>
+              </div>
+            </div>
+
+            <!-- TAB 3: IMAGE SPLICING & ELA -->
+            <div class="morph-card" id="tabEla">
+              <div class="tab-visual-box">
+                <div style="position: relative; width: 100%; height: 260px; border-radius: 8px; overflow: hidden; background: #070c18; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1);">
                   <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 40px; margin-bottom: 8px;">🧑‍💼</div>
-                    <div style="font-size: 13px; font-weight: 700; color: #34d399;">GENUINE OPTICAL CAPTURE</div>
-                    <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">• Natural ISO Sensor Photon Grain<br>• Laplacian Variance: 146.4<br>• No Blending Boundary Seam</div>
+                    <div style="font-size: 44px; margin-bottom: 10px;">📄</div>
+                    <div style="font-size: 14px; font-weight: 700; color: #ffffff;">OFFICIAL ID / DOCUMENT TAMPERING AUDIT</div>
+                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">Passport photo area replaced with synthetic headshot</div>
+                  </div>
+
+                  <div id="elaHeatmapOverlay" style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.75) 0%, rgba(168, 85, 247, 0.4) 40%, transparent 70%); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; display: flex; align-items: center; justify-content: center;">
+                    <div style="border: 2px dashed #f43f5e; padding: 12px; border-radius: 6px; background: rgba(0,0,0,0.7); font-family: var(--font-mono); font-size: 11px; color: #fb7185;">
+                      ⚠️ COMPRESSION MISMATCH DETECTED (ELA DELTA &gt; 24.2)
+                    </div>
                   </div>
                 </div>
-                <!-- Synthetic Cloned Face Layer (Clipped by slider) -->
-                <div class="face-slider-img-layer face-half-synthetic" id="sliderSynthLayer" style="clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);">
-                  <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 40px; margin-bottom: 8px;">🎭</div>
-                    <div style="font-size: 13px; font-weight: 700; color: #fb7185;">AI DEEPFAKE FACE SWAP</div>
-                    <div style="font-size: 11px; color: #fecdd3; margin-top: 4px;">• Destroyed Sensor Grain (Airbrushed)<br>• Boundary Edge Seam Detected<br>• 2D-FFT Checkerboard Artifacts</div>
-                  </div>
-                </div>
-                <!-- Interactive Drag Handle Line -->
-                <div class="slider-divider-line" id="sliderDivider" style="left: 50%;">
-                  <div class="slider-handle-pill">&harr;</div>
-                </div>
-              </div>
-              <div style="text-align: center; margin-top: 12px; font-size: 12px; color: var(--text-muted);">
-                &larr; Drag slider left or right to inspect optical differences &rarr;
-              </div>
-            </div>
 
-            <div class="tab-info-side">
-              <div style="display: inline-block; font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 8px;">OPTICAL SENSOR ANALYSIS</div>
-              <h3>Microscopic Camera Physics &amp; Edge Seams</h3>
-              <p>
-                Real smartphone and DSLR lenses produce microscopic photon distribution variance. When deepfake tools (Roop, SimSwap, FaceFusion) paste an AI face, they airbrush away this grain and introduce sharp blending boundary seams.
-              </p>
-              <ul class="tab-spec-list">
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Laplacian Texture Variance:</strong> Identifies AI smoothing vs true optical noise.</span>
-                </li>
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>2D-FFT Spectral Analysis:</strong> Highlights grid spikes from generative upsamplers.</span>
-                </li>
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Facial Boundary Ratio:</strong> Catches pixel anomalies along boundary cutlines.</span>
-                </li>
-              </ul>
-              <a href="console.html" class="nav-btn-console" style="display: inline-flex;">⚡ Test With Your Own Images &rarr;</a>
-            </div>
-          </div>
-
-          <!-- TAB 2: AUDIO VOCODER WITH INTERACTIVE FREQUENCY SIMULATOR -->
-          <div class="morph-card" id="tabAudio">
-            <div class="tab-visual-box">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <span style="font-size: 12px; font-weight: 700; color: #ffffff;">ACOUSTIC SPECTRUM SIMULATOR</span>
-                <span class="feature-tag" id="audioSimBadge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 10px; font-weight: 700;">NATURAL HUMAN VOCAL CORDS</span>
-              </div>
-              
-              <!-- Frequency Bars Simulator -->
-              <div class="audio-bars-container">
-                <div class="audio-sim-bar" style="height: 85%;"></div>
-                <div class="audio-sim-bar" style="height: 78%;"></div>
-                <div class="audio-sim-bar" style="height: 72%;"></div>
-                <div class="audio-sim-bar" style="height: 65%;"></div>
-                <div class="audio-sim-bar" style="height: 58%;"></div>
-                <div class="audio-sim-bar" style="height: 50%;"></div>
-                <div class="audio-sim-bar" style="height: 42%;"></div>
-                <div class="audio-sim-bar" style="height: 35%;"></div>
-                <div class="audio-sim-bar" style="height: 28%;"></div>
-                <div class="audio-sim-bar" style="height: 20%;"></div>
-                <div class="audio-sim-bar" style="height: 14%;"></div>
-                <div class="audio-sim-bar" style="height: 10%;"></div>
-              </div>
-
-              <!-- Switch Controls -->
-              <div style="display: flex; gap: 10px; justify-content: center; margin-top: 14px;">
-                <button class="btn-sim-toggle active" id="btnAudioHuman">Natural Voice Mode</button>
-                <button class="btn-sim-toggle" id="btnAudioAi">AI Clone (Vocoder) Mode</button>
-              </div>
-
-              <div id="audioSimSpecs" style="margin-top: 14px; font-size: 12px; color: var(--text-secondary); background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px;">
-                • Natural Acoustic Roll-off: Smooth decline past 12 kHz.<br>
-                • Human Pitch Jitter: 0.0128 (Micro-vocal cord fluctuation).<br>
-                • Ultrasonic Noise (&gt;16kHz): Natural room ambiance (-78 dB).
-              </div>
-            </div>
-
-            <div class="tab-info-side">
-              <div style="display: inline-block; font-family: var(--font-mono); font-size: 11px; color: var(--accent-purple); font-weight: 700; margin-bottom: 8px;">ULTRASONIC ACOUSTICS</div>
-              <h3>Neural Vocoders &amp; Vocal Cord Micro-Tremors</h3>
-              <p>
-                Human vocal cords possess natural elasticity, producing subtle pitch variations ("jitter"). Generative voice systems (ElevenLabs, Suno, VALL-E) render unnaturally mechanical pitch stability while leaking energy spikes past 16 kHz.
-              </p>
-              <ul class="tab-spec-list">
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>High-Frequency Ultrasonic Probing:</strong> Scans frequencies above 16,000 Hz.</span>
-                </li>
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Pitch Jitter Variance:</strong> Measures biomechanical pitch fluctuation.</span>
-                </li>
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Synthetic Watermark Sniffing:</strong> Checks for AI audio generator metadata signatures.</span>
-                </li>
-              </ul>
-              <a href="console.html" class="nav-btn-console" style="display: inline-flex;">⚡ Test Audio Files Now &rarr;</a>
-            </div>
-          </div>
-
-          <!-- TAB 3: IMAGE SPLICING & ELA -->
-          <div class="morph-card" id="tabEla">
-            <div class="tab-visual-box">
-              <div style="position: relative; width: 100%; height: 260px; border-radius: 8px; overflow: hidden; background: #070c18; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1);">
-                <div style="text-align: center; padding: 20px;">
-                  <div style="font-size: 40px; margin-bottom: 10px;">📄</div>
-                  <div style="font-size: 14px; font-weight: 700; color: #ffffff;">OFFICIAL ID / DOCUMENT TAMPERING AUDIT</div>
-                  <div style="font-size: 12px; color: var(--text-secondary); margin-top: 6px;">Passport photo area replaced with synthetic headshot</div>
-                </div>
-
-                <!-- Simulated ELA Heatmap Overlay -->
-                <div id="elaHeatmapOverlay" style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(244, 63, 94, 0.75) 0%, rgba(168, 85, 247, 0.4) 40%, transparent 70%); opacity: 0; transition: opacity 0.3s ease; pointer-events: none; display: flex; align-items: center; justify-content: center;">
-                  <div style="border: 2px dashed #f43f5e; padding: 12px; border-radius: 6px; background: rgba(0,0,0,0.7); font-family: var(--font-mono); font-size: 11px; color: #fb7185;">
-                    ⚠️ COMPRESSION MISMATCH DETECTED (ELA DELTA &gt; 24.2)
-                  </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;">
+                  <button class="btn-sim-toggle" id="elaToggleBtn" style="background: rgba(56, 189, 248, 0.2); border-color: var(--accent-cyan); color: #ffffff;">
+                    🔬 Reveal ELA Compression Heatmap
+                  </button>
+                  <span id="elaStatusText" style="font-size: 11px; color: var(--text-secondary);">Click button to reveal hidden compression anomalies.</span>
                 </div>
               </div>
 
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;">
-                <button class="btn-sim-toggle" id="elaToggleBtn" style="background: rgba(56, 189, 248, 0.2); border-color: var(--accent-cyan); color: #ffffff;">
-                  🔬 Reveal ELA Compression Heatmap
-                </button>
-                <span id="elaStatusText" style="font-size: 11px; color: var(--text-secondary);">Click button to reveal hidden compression anomalies.</span>
+              <div class="tab-info-side">
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 8px;">DOCUMENT FORENSICS</div>
+                <h3>Error Level Analysis (ELA) &amp; Hardware Provenance</h3>
+                <p>
+                  When a document or image is modified in Photoshop or generative inpainting, the edited region undergoes a different level of compression than the original background. ELA amplifies these variances to expose splicing instantly.
+                </p>
+                <ul class="tab-spec-list">
+                  <li class="tab-spec-item">
+                    <span class="tab-spec-icon">&check;</span>
+                    <span><strong>Compression Gradient Mapping:</strong> Highlights pasted text, altered dates, or swapped faces.</span>
+                  </li>
+                  <li class="tab-spec-item">
+                    <span class="tab-spec-icon">&check;</span>
+                    <span><strong>Hardware EXIF Provenance:</strong> Verifies camera model, lens aperture, and shutter timing.</span>
+                  </li>
+                  <li class="tab-spec-item">
+                    <span class="tab-spec-icon">&check;</span>
+                    <span><strong>Color Space Quantization:</strong> Discovers foreign color profile mismatches.</span>
+                  </li>
+                </ul>
+                <a href="console.html" class="nav-btn-console" style="display: inline-flex;">⚡ Audit Photos &amp; Documents &rarr;</a>
               </div>
             </div>
 
-            <div class="tab-info-side">
-              <div style="display: inline-block; font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 8px;">DOCUMENT FORENSICS</div>
-              <h3>Error Level Analysis (ELA) &amp; Hardware Provenance</h3>
-              <p>
-                When a document or image is modified in Photoshop or generative inpainting, the edited region undergoes a different level of compression than the original background. ELA amplifies these variances to expose splicing instantly.
-              </p>
-              <ul class="tab-spec-list">
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Compression Gradient Mapping:</strong> Highlights pasted text, altered dates, or swapped faces.</span>
-                </li>
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Hardware EXIF Provenance:</strong> Verifies camera model, lens aperture, and shutter timing.</span>
-                </li>
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Color Space Quantization:</strong> Discovers foreign color profile mismatches.</span>
-                </li>
-              </ul>
-              <a href="console.html" class="nav-btn-console" style="display: inline-flex;">⚡ Audit Documents &amp; Photos &rarr;</a>
-            </div>
-          </div>
-
-          <!-- TAB 4: CROSS-MODAL DISAGREEMENT MATRIX -->
-          <div class="morph-card" id="tabMatrix">
-            <div class="tab-visual-box">
-              <div style="font-size: 12px; font-weight: 700; color: #ffffff; margin-bottom: 12px;">SELECT A TAMPERING REGIME TO SIMULATE CORRELATION</div>
-              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                <div class="regime-interactive-card selected" data-regime="1">
-                  <strong style="color: #fb7185; font-size: 12px;">Regime I: Visual Deepfake</strong>
-                  <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Fake face on real body &amp; real voice.</div>
+            <!-- TAB 4: CRYPTOGRAPHIC AUDIT CERTIFICATE -->
+            <div class="morph-card" id="tabCert">
+              <div class="tab-visual-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                  <span style="font-size: 12px; font-weight: 700; color: #ffffff;">FORENSIC CERTIFICATE (CRYPTOGRAPHIC JSON)</span>
+                  <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan);">SHA-256 HASH VERIFIED</span>
                 </div>
-                <div class="regime-interactive-card" data-regime="2">
-                  <strong style="color: #c084fc; font-size: 12px;">Regime II: Cloned Voice Dub</strong>
-                  <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Real video + synthesized AI speech.</div>
-                </div>
-                <div class="regime-interactive-card" data-regime="3">
-                  <strong style="color: #fbbf24; font-size: 12px;">Regime III: Fully Synthetic</strong>
-                  <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">AI avatar + AI voice clone.</div>
-                </div>
-                <div class="regime-interactive-card" data-regime="4">
-                  <strong style="color: #34d399; font-size: 12px;">Regime IV: Verified Authentic</strong>
-                  <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">Genuine camera lens &amp; vocal cords.</div>
-                </div>
-              </div>
-
-              <div id="regimeExplanationText" style="margin-top: 14px; padding: 14px; background: rgba(0,0,0,0.4); border-radius: 8px; border-left: 3px solid #fb7185; font-size: 12.5px;">
-                <strong style="color: #fb7185; font-size: 15px; display: block; margin-bottom: 6px;">Regime I: Visual Deepfake (Manipulated Video + Real Audio)</strong>
-                <span style="color: var(--text-secondary);">The attacker spliced an AI face onto real interview footage. The video has 2D-FFT frequency distortion and boundary edge seams, while the audio is natural human speech. DeepGuard isolates the face tampering without false-flagging the audio.</span>
-              </div>
-            </div>
-
-            <div class="tab-info-side">
-              <div style="display: inline-block; font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 8px;">MULTI-MODAL INNOVATION</div>
-              <h3>The Cross-Modal Disagreement Engine</h3>
-              <p>
-                Conventional deepfake detectors make one single guess for the entire file. When faced with asymmetric attacks (e.g., authentic video with fake audio), they hallucinate. DeepGuard cross-references evidence across modalities to catch the exact tampering regime.
-              </p>
-              <ul class="tab-spec-list">
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Modality Isolation:</strong> Prevents authentic video from masking cloned audio scams.</span>
-                </li>
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Whisper Phoneme Sync:</strong> Checks whether vocal resonance aligns with mouth movement.</span>
-                </li>
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Mathematical Consensus:</strong> Weighted Bayesian aggregation across all branches.</span>
-                </li>
-              </ul>
-              <a href="console.html" class="nav-btn-console" style="display: inline-flex;">⚡ Launch Live Scanner &rarr;</a>
-            </div>
-          </div>
-
-          <!-- TAB 5: CRYPTOGRAPHIC AUDIT CERTIFICATE -->
-          <div class="morph-card" id="tabCert">
-            <div class="tab-visual-box">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <span style="font-size: 12px; font-weight: 700; color: #ffffff;">FORENSIC CERTIFICATE (CRYPTOGRAPHIC JSON)</span>
-                <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan);">SHA-256 HASH VERIFIED</span>
-              </div>
-              <pre style="background: #020408; padding: 16px; border-radius: 8px; font-family: var(--font-mono); font-size: 11px; color: #a5f3fc; overflow-x: auto; max-height: 220px; line-height: 1.5; border: 1px solid rgba(255,255,255,0.08);">
+                <pre style="background: #020408; padding: 16px; border-radius: 8px; font-family: var(--font-mono); font-size: 11px; color: #a5f3fc; overflow-x: auto; max-height: 220px; line-height: 1.5; border: 1px solid rgba(255,255,255,0.08);">
 {
   "system": "DeepGuard AI Forensic Platform v2.4",
   "project_lead": "Mohan Abhishek Gupta",
@@ -535,228 +578,220 @@
     "speech_whisper_coherence": 0.92
   }
 }</pre>
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 10px;">
-                Tamper-evident certificate generated directly for courtrooms, newsrooms, and security audits.
+                <div style="font-size: 11px; color: var(--text-muted); margin-top: 10px;">
+                  Tamper-evident certificate generated directly for courtrooms, newsrooms, and security audits.
+                </div>
+              </div>
+
+              <div class="tab-info-side">
+                <div style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 8px;">CHAIN OF CUSTODY</div>
+                <h3>Tamper-Evident SHA-256 Certificates</h3>
+                <p>
+                  Every analysis job generates an unalterable forensic certificate containing SHA-256 media checksums, measured telemetric indicators, and architectural attribution.
+                </p>
+                <ul class="tab-spec-list">
+                  <li class="tab-spec-item">
+                    <span class="tab-spec-icon">&check;</span>
+                    <span><strong>Courtroom-Admissible Chain of Custody:</strong> Cryptographic integrity for legal evidence.</span>
+                  </li>
+                  <li class="tab-spec-item">
+                    <span class="tab-spec-icon">&check;</span>
+                    <span><strong>Zero-Knowledge Privacy:</strong> Raw media is processed ephemerally and never stored permanently.</span>
+                  </li>
+                </ul>
+                <a href="console.html" class="nav-btn-console" style="display: inline-flex;">⚡ Inspect Forensic Output in Console &rarr;</a>
               </div>
             </div>
 
-            <div class="tab-info-side">
-              <div style="display: inline-block; font-family: var(--font-mono); font-size: 11px; color: var(--accent-cyan); font-weight: 700; margin-bottom: 8px;">CHAIN OF CUSTODY</div>
-              <h3>Tamper-Evident SHA-256 Certificates</h3>
-              <p>
-                Every analysis job generates an unalterable forensic certificate containing SHA-256 media checksums, measured telemetric indicators, and architectural attribution.
-              </p>
-              <ul class="tab-spec-list">
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Courtroom-Admissible Chain of Custody:</strong> Cryptographic integrity for legal evidence.</span>
-                </li>
-                <li class="tab-spec-item">
-                  <span class="tab-spec-icon">&check;</span>
-                  <span><strong>Zero-Knowledge Privacy:</strong> Raw media is processed ephemerally and never stored permanently.</span>
-                </li>
-              </ul>
-              <a href="console.html" class="nav-btn-console" style="display: inline-flex;">⚡ Inspect Forensic Output in Console &rarr;</a>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SCENE 5: CROSS-MODAL DISAGREEMENT MATRIX (4 REGIMES)
+           ==================================================================== -->
+      <section class="scene-deck-section" id="regimes">
+        <div class="scene-head">
+          <span class="scene-tag">THE MULTI-MODAL BREAKTHROUGH</span>
+          <h2 class="scene-title">The Cross-Modal Disagreement Matrix</h2>
+          <p class="scene-lede">
+            Traditional detectors evaluate an entire media asset with a single unimodal guess. When faced with asymmetric attacks (e.g. authentic video with cloned audio), they fail catastrophically. DeepGuard analyzes all 4 tampering regimes.
+          </p>
+        </div>
+
+        <div class="regimes-container">
+          
+          <div class="regimes-quad-grid">
+            <div class="regime-interactive-card selected" data-regime="1">
+              <strong style="color: #fb7185; font-size: 13.5px; display: block; margin-bottom: 4px;">Regime I: Visual Deepfake</strong>
+              <div style="font-size: 11.5px; color: var(--text-secondary);">Manipulated video + genuine voice. Deepfake face pasted onto real interview.</div>
+            </div>
+            <div class="regime-interactive-card" data-regime="2">
+              <strong style="color: #c084fc; font-size: 13.5px; display: block; margin-bottom: 4px;">Regime II: Cloned Voice Dub</strong>
+              <div style="font-size: 11.5px; color: var(--text-secondary);">Genuine video + cloned speech. AI voice dubbed over authentic camera footage.</div>
+            </div>
+            <div class="regime-interactive-card" data-regime="3">
+              <strong style="color: #fbbf24; font-size: 13.5px; display: block; margin-bottom: 4px;">Regime III: Fully Synthetic</strong>
+              <div style="font-size: 11.5px; color: var(--text-secondary);">AI avatar + AI voice. 100% computer generated avatar and synthesized audio.</div>
+            </div>
+            <div class="regime-interactive-card" data-regime="4">
+              <strong style="color: #34d399; font-size: 13.5px; display: block; margin-bottom: 4px;">Regime IV: Verified Authentic</strong>
+              <div style="font-size: 11.5px; color: var(--text-secondary);">Real camera sensor noise + natural human vocal cords confirmed.</div>
             </div>
           </div>
 
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         SECTION 4: TRI-SPECTRAL FORENSIC METHODOLOGY
-         ====================================================================== -->
-    <section class="section-block" id="tri-spectral">
-      <div class="section-head">
-        <span class="section-tag">CORE ARCHITECTURE</span>
-        <h2 class="section-title">The DeepGuard Tri-Spectral Engine</h2>
-        <p class="section-lede">
-          DeepGuard AI executes three concurrent forensic inspection branches simultaneously, feeding their evidence matrices into a temporal correlation engine.
-        </p>
-      </div>
-
-      <div class="threat-grid">
-        
-        <!-- Branch 1 -->
-        <div class="threat-card" style="border-color: rgba(56, 189, 248, 0.3);">
-          <div class="threat-badge cyan">🔬</div>
-          <h3 class="threat-title">1. Camera Optics Physics</h3>
-          <p class="threat-desc">
-            • <strong>Microscopic Photon Noise:</strong> Laplacian variance checks real camera lens grain vs AI airbrushed smoothing.<br>
-            • <strong>2D-FFT Spatial Frequencies:</strong> Detects mathematical checkerboard grid spikes from generative upsampling.<br>
-            • <strong>Face Seam Boundary:</strong> Ratio testing catches deepfake cut-and-paste edges around faces.
-          </p>
-        </div>
-
-        <!-- Branch 2 -->
-        <div class="threat-card" style="border-color: rgba(168, 85, 247, 0.3);">
-          <div class="threat-badge purple">🔊</div>
-          <h3 class="threat-title">2. Ultrasonic Vocoders</h3>
-          <p class="threat-desc">
-            • <strong>High-Frequency Energy (&gt;16kHz):</strong> Scans ultrasonic sound frequencies where AI vocoders leave digital noise.<br>
-            • <strong>Vocal Pitch Jitter:</strong> Human vocal cords fluctuate naturally (score ~0.012), while AI voices are unnaturally robotic (~0.001).<br>
-            • <strong>AI Watermarks:</strong> Scans audio containers for Suno, Udio, and synthetic generator tags.
-          </p>
-        </div>
-
-        <!-- Branch 3 -->
-        <div class="threat-card" style="border-color: rgba(0, 245, 212, 0.3);">
-          <div class="threat-badge cyan">📝</div>
-          <h3 class="threat-title">3. Whisper AI Speech</h3>
-          <p class="threat-desc">
-            • <strong>Multilingual ASR:</strong> Transcribes spoken words across English, Telugu, Hindi, and regional languages.<br>
-            • <strong>Phoneme Alignment:</strong> Checks if spoken words synchronize with acoustic vocal resonance.<br>
-            • <strong>Linguistic Confidence:</strong> Verifies natural speech flow and sentence continuity.
-          </p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         SECTION 5: EMPIRICAL BENCHMARKS & EVALUATION
-         ====================================================================== -->
-    <section class="section-block" id="benchmarks">
-      <div class="section-head">
-        <span class="section-tag">EMPIRICAL ACCURACY &amp; RIGOR</span>
-        <h2 class="section-title">Standardized Benchmark Performance</h2>
-        <p class="section-lede">
-          DeepGuard AI was evaluated across standardized forensic datasets (FaceForensics++ c23/c40, ASVspoof 2021 DF) and contemporary generative engines (Google Veo, Midjourney, Suno v3.5, ElevenLabs).
-        </p>
-      </div>
-
-      <div class="morph-showcase" style="padding: 20px;">
-        <table class="benchmark-table">
-          <thead>
-            <tr>
-              <th>Inspection Modality / Regime</th>
-              <th>Benchmark Dataset</th>
-              <th style="text-align: center;">Precision</th>
-              <th style="text-align: center;">Recall</th>
-              <th style="text-align: center;">F1-Score</th>
-              <th style="text-align: center;">AUC-ROC</th>
-              <th style="text-align: right;">Equal Error Rate (EER)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Visual Branch (2D-FFT / Laplacian)</strong></td>
-              <td>FaceForensics++ (c23/c40)</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.1%</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">98.4%</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">98.7%</td>
-              <td style="text-align: center; color: #ffffff; font-weight: 700;">0.995</td>
-              <td style="text-align: right; color: #34d399; font-weight: 700;">1.6%</td>
-            </tr>
-            <tr>
-              <td><strong>Acoustic Branch (Vocoder &amp; Jitter)</strong></td>
-              <td>ASVspoof 2021 DF</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">98.7%</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.2%</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">98.9%</td>
-              <td style="text-align: center; color: #ffffff; font-weight: 700;">0.997</td>
-              <td style="text-align: right; color: #34d399; font-weight: 700;">1.2%</td>
-            </tr>
-            <tr>
-              <td><strong>Cross-Modal Disagreement Engine</strong></td>
-              <td>Chimeric Audio-Visual Dubs</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.4%</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">98.8%</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.1%</td>
-              <td style="text-align: center; color: #ffffff; font-weight: 700;">0.998</td>
-              <td style="text-align: right; color: #34d399; font-weight: 700;">0.8%</td>
-            </tr>
-            <tr>
-              <td><strong>Generative Music &amp; Voice Synthesis</strong></td>
-              <td>Suno / Udio Extended Suite</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.6%</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.1%</td>
-              <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.3%</td>
-              <td style="text-align: center; color: #ffffff; font-weight: 700;">0.999</td>
-              <td style="text-align: right; color: #34d399; font-weight: 700;">0.5%</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- ======================================================================
-         SECTION 6: DEVELOPER QUICKSTART TERMINAL BLOCK
-         ====================================================================== -->
-    <section class="section-block" id="quickstart">
-      <div class="section-head">
-        <span class="section-tag">DEPLOYMENT &amp; SETUP</span>
-        <h2 class="section-title">Launch DeepGuard Locally in 60 Seconds</h2>
-        <p class="section-lede">
-          Production-grade architecture ready for forensic researchers, examiners, and verification teams. Run natively with our orchestration server.
-        </p>
-      </div>
-
-      <div class="terminal-wrapper">
-        <div class="terminal-header">
-          <div class="terminal-dots">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
+          <div class="regime-banner-readout" id="regimeExplanationText">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <strong style="color: #fb7185; font-size: 16px;">Regime I: Visual Deepfake (Manipulated Video + Real Audio)</strong>
+              <span style="font-family: var(--font-mono); font-size: 10px; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: #fb7185; border: 1px solid #fb718540;">ASYMMETRIC VISUAL ATTACK</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.65;">
+              The attacker spliced an AI face swap (Roop/FaceFusion) onto authentic camera footage. Optical branch detects missing camera sensor grain and face boundary blending seams. Audio branch confirms authentic human voice. DeepGuard isolates the face tampering without false-flagging the audio.
+            </p>
           </div>
-          <span class="terminal-title">bash — DeepGuard AI Setup</span>
-          <button class="terminal-btn-copy" id="terminalCopyBtn">📋 Copy</button>
+
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SCENE 6: EMPIRICAL BENCHMARKS & EVALUATION
+           ==================================================================== -->
+      <section class="scene-deck-section" id="benchmarks">
+        <div class="scene-head">
+          <span class="scene-tag">EMPIRICAL ACCURACY &amp; RIGOR</span>
+          <h2 class="scene-title">Standardized Benchmark Performance</h2>
+          <p class="scene-lede">
+            DeepGuard AI was evaluated across standardized forensic datasets (FaceForensics++ c23/c40, ASVspoof 2021 DF) and contemporary generative engines (Google Veo, Midjourney, Suno v3.5, ElevenLabs).
+          </p>
         </div>
 
-        <div class="terminal-body">
-          <div class="cmd-comment"># 1. Clone the official repository</div>
-          <div><span class="cmd-keyword">git clone</span> <span class="cmd-arg">https://github.com/MohanAbhishek29/DeepGuard_AI.git</span></div>
-          <div><span class="cmd-keyword">cd</span> <span class="cmd-arg">DeepGuard_AI</span></div>
-          <br>
-          <div class="cmd-comment"># 2. Launch Local Forensic Engine &amp; Command Center UI</div>
-          <div><span class="cmd-keyword">./run_server.bat</span></div>
-          <br>
-          <div class="cmd-comment"># &rarr; Command Center opens directly at http://127.0.0.1:8000/dashboard/console.html</div>
+        <div class="benchmark-table-box">
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>Inspection Modality / Regime</th>
+                <th>Benchmark Dataset</th>
+                <th style="text-align: center;">Precision</th>
+                <th style="text-align: center;">Recall</th>
+                <th style="text-align: center;">F1-Score</th>
+                <th style="text-align: center;">AUC-ROC</th>
+                <th style="text-align: right;">Equal Error Rate (EER)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Visual Branch (2D-FFT / Laplacian)</strong></td>
+                <td>FaceForensics++ (c23/c40)</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.1%</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">98.4%</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">98.7%</td>
+                <td style="text-align: center; color: #ffffff; font-weight: 700;">0.995</td>
+                <td style="text-align: right; color: #34d399; font-weight: 700;">1.6%</td>
+              </tr>
+              <tr>
+                <td><strong>Acoustic Branch (Vocoder &amp; Jitter)</strong></td>
+                <td>ASVspoof 2021 DF</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">98.7%</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.2%</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">98.9%</td>
+                <td style="text-align: center; color: #ffffff; font-weight: 700;">0.997</td>
+                <td style="text-align: right; color: #34d399; font-weight: 700;">1.2%</td>
+              </tr>
+              <tr>
+                <td><strong>Cross-Modal Disagreement Engine</strong></td>
+                <td>Chimeric Audio-Visual Dubs</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.4%</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">98.8%</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.1%</td>
+                <td style="text-align: center; color: #ffffff; font-weight: 700;">0.998</td>
+                <td style="text-align: right; color: #34d399; font-weight: 700;">0.8%</td>
+              </tr>
+              <tr>
+                <td><strong>Generative Music &amp; Voice Synthesis</strong></td>
+                <td>Suno / Udio Extended Suite</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.6%</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.1%</td>
+                <td style="text-align: center; color: var(--accent-cyan); font-weight: 700;">99.3%</td>
+                <td style="text-align: center; color: #ffffff; font-weight: 700;">0.999</td>
+                <td style="text-align: right; color: #34d399; font-weight: 700;">0.5%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SCENE 7: DEVELOPER QUICKSTART TERMINAL & DEPLOYMENT
+           ==================================================================== -->
+      <section class="scene-deck-section" id="quickstart">
+        <div class="scene-head">
+          <span class="scene-tag">DEPLOYMENT &amp; SETUP</span>
+          <h2 class="scene-title">Launch DeepGuard Locally in 60 Seconds</h2>
+          <p class="scene-lede">
+            Production-grade pipeline ready for forensic researchers, examiners, and verification teams. Run natively with our orchestration server.
+          </p>
         </div>
 
-        <div style="padding: 0 24px 20px;">
+        <div class="terminal-wrapper">
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+            </div>
+            <span class="terminal-title">bash &mdash; DeepGuard AI Setup</span>
+            <button class="terminal-btn-copy" id="terminalCopyBtn">📋 Copy</button>
+          </div>
+
+          <div class="terminal-body">
+            <div class="cmd-comment"># 1. Clone the official repository</div>
+            <div><span class="cmd-keyword">git clone</span> <span class="cmd-arg">https://github.com/MohanAbhishek29/DeepGuard_AI.git</span></div>
+            <div><span class="cmd-keyword">cd</span> <span class="cmd-arg">DeepGuard_AI</span></div>
+            <br>
+            <div class="cmd-comment"># 2. Launch Local Forensic Engine &amp; Command Center UI</div>
+            <div><span class="cmd-keyword">./run_server.bat</span></div>
+            <br>
+            <div class="cmd-comment"># &rarr; Command Center opens directly at http://127.0.0.1:8000/dashboard/console.html</div>
+          </div>
+
           <div class="terminal-roadmap-note">
             💡 <strong>Upcoming Roadmap:</strong> Dedicated Desktop &amp; Mobile applications are in active development. Once released, this terminal block will transition to direct one-click Download App buttons.
           </div>
         </div>
-      </div>
-    </section>
 
-    <!-- ======================================================================
-         SECTION 7: GRAND FINALE CALL-TO-ACTION (CTA)
-         ====================================================================== -->
-    <div class="grand-cta-card">
-      <h2 class="grand-cta-title">Ready to Inspect Suspicious Media?</h2>
-      <p class="grand-cta-sub">
-        Upload your video, audio, or image directly to the DeepGuard Cyber Forensic Command Center to obtain instant multi-spectral verdicts and evidence telemetry.
-      </p>
-      <a href="console.html" class="btn-hero-launch" style="font-size: 16px; padding: 18px 42px;">
-        <span>🚀 LAUNCH CYBER FORENSIC CONSOLE NOW</span>
-        <span style="font-size: 20px;">&rarr;</span>
-      </a>
-    </div>
-
-    <!-- ======================================================================
-         SITE FOOTER
-         ====================================================================== -->
-    <footer class="site-footer">
-      <div class="footer-left">
-        <img src="assets/DeepGuard_AI_App_logo.png" alt="Logo" class="footer-logo">
-        <div>
-          <strong>DeepGuard AI</strong> &copy; 2026 Mohan Abhishek Gupta. All Rights Reserved.<br>
-          <span style="font-size: 11px; color: var(--text-muted);">Lead Architect: Mohan Abhishek Gupta • Team: Tunga Durga Sai Prasad, Harsha Paladi, Vinay Rayi</span>
+        <!-- Grand Finale CTA Card -->
+        <div class="grand-cta-card">
+          <h2 class="grand-cta-title">Ready to Inspect Suspicious Media?</h2>
+          <p class="grand-cta-sub">
+            Upload your video, audio, or image directly to the DeepGuard Cyber Forensic Command Center to obtain instant multi-spectral verdicts and evidence telemetry.
+          </p>
+          <a href="console.html" class="btn-hero-launch" style="font-size: 16px; padding: 18px 42px;">
+            <span>🚀 LAUNCH CYBER FORENSIC CONSOLE NOW</span>
+            <span style="font-size: 20px;">&rarr;</span>
+          </a>
         </div>
-      </div>
 
-      <div class="footer-links">
-        <span>Confidential &amp; Patent Pending</span> &bull; 
-        <a href="console.html" style="color: var(--accent-cyan); font-weight: 700; margin-left: 8px;">⚡ Open Web Console</a>
-      </div>
-    </footer>
+        <!-- Site Footer -->
+        <footer class="site-footer">
+          <div class="footer-left">
+            <img src="assets/DeepGuard_AI_App_logo.png" alt="Logo" class="footer-logo">
+            <div>
+              <strong>DeepGuard AI</strong> &copy; 2026 Mohan Abhishek Gupta. All Rights Reserved.<br>
+              <span style="font-size: 11px; color: var(--text-muted);">Lead Architect: Mohan Abhishek Gupta &bull; Team: Tunga Durga Sai Prasad, Harsha Paladi, Vinay Rayi</span>
+            </div>
+          </div>
 
-  </div>
+          <div class="footer-links">
+            <span>Confidential &amp; Patent Pending</span> &bull; 
+            <a href="console.html" style="color: var(--accent-cyan); font-weight: 700; margin-left: 8px;">⚡ Open Web Console</a>
+          </div>
+        </footer>
+      </section>
+
+    </div><!-- End unblur-stage -->
+
+  </div><!-- End site-wrapper -->
 
   <script src="js/website.js"></script>
 </body>
