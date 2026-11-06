@@ -1485,25 +1485,57 @@ header {
   flex-grow: 1;
 }
 
-
-/* ── Electric Blue Laser Comet Cursor (Style 7) ────────────────────────── */
-.laser-cursor-core {
+/* ── Electric Blue Laser Comet Cursor ────────────────────────────────────── */
+.laser-cursor-dot {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 7px;
-  height: 7px;
+  top: 0; left: 0;
+  width: 7px; height: 7px;
   background: #00f5ff;
   border-radius: 50%;
   pointer-events: none;
   z-index: 999999;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px #00f5ff, 0 0 20px #00d2ff, 0 0 35px rgba(0, 245, 255, 0.75);
-  transition: width 0.15s ease, height 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 0 10px #00f5ff, 0 0 20px #00d2ff, 0 0 35px rgba(0, 245, 255, 0.8);
+  transition: width 0.15s ease, height 0.15s ease, background 0.15s ease;
 }
-.laser-cursor-core.laser-hover {
-  width: 14px;
-  height: 14px;
+
+.laser-cursor-ring {
+  position: fixed;
+  top: 0; left: 0;
+  width: 28px; height: 28px;
+  border: 1.5px solid rgba(0, 245, 255, 0.55);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 999998;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 15px rgba(0, 245, 255, 0.25);
+  transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.laser-cursor-dot.active-hover {
+  width: 13px; height: 13px;
   background: #38bdf8;
-  box-shadow: 0 0 16px #00f5ff, 0 0 32px #38bdf8, 0 0 50px rgba(0, 245, 255, 0.95);
+  box-shadow: 0 0 16px #00f5ff, 0 0 32px #38bdf8, 0 0 45px rgba(0, 245, 255, 0.95);
+}
+
+.laser-cursor-ring.active-hover {
+  width: 46px; height: 46px;
+  border-color: #00f5ff;
+  box-shadow: 0 0 24px rgba(0, 245, 255, 0.45);
+}
+
+.laser-spark {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999997;
+  border-radius: 50%;
+  background: #00f5ff;
+  box-shadow: 0 0 8px #00f5ff, 0 0 16px #38bdf8;
+  transform: translate(-50%, -50%);
+  animation: sparkFade 0.35s ease-out forwards;
+}
+
+@keyframes sparkFade {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.1); }
 }
