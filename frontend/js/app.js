@@ -63,104 +63,100 @@ function clearLiveLogs() {
   }
 }
 
-// Electric Blue Laser Comet Cursor (Style 7 in Blue — Zero Canvas, Zero Layout Shift)
+// Electric Blue Laser Comet Cursor (Exact Style 07 from Cursor Matrix Showcase)
 function initCyberCursor() {
-  // Remove any leftover canvas elements to eliminate empty space completely
-  const badCanvas = document.getElementById('laserCanvas');
-  if (badCanvas) badCanvas.remove();
-  const badCore = document.getElementById('laserCore');
-  if (badCore) badCore.remove();
+  const laserCanvas = document.getElementById('laserCanvas');
+  const laser = document.getElementById('c7Laser');
+  if (!laserCanvas || !laser) return;
 
-  let dot = document.getElementById('laserCursorDot');
-  let ring = document.getElementById('laserCursorRing');
-
-  if (!dot) {
-    dot = document.createElement('div');
-    dot.id = 'laserCursorDot';
-    dot.className = 'laser-cursor-dot';
-    document.body.appendChild(dot);
-  }
-  if (!ring) {
-    ring = document.createElement('div');
-    ring.id = 'laserCursorRing';
-    ring.className = 'laser-cursor-ring';
-    document.body.appendChild(ring);
-  }
-
-  // Hide old elements if present
-  const oldDot = document.getElementById('cyberCursorDot');
-  const oldRing = document.getElementById('cyberCursorRing');
-  if (oldDot) oldDot.style.display = 'none';
-  if (oldRing) oldRing.style.display = 'none';
-
+  const ctx = laserCanvas.getContext('2d');
+  let particles = [];
   let mx = -100, my = -100;
-  let rx = -100, ry = -100;
-  let lastSparkTime = 0;
 
-  window.addEventListener('mousemove', (e) => {
+  function resizeCanvas() {
+    laserCanvas.width = window.innerWidth;
+    laserCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  document.addEventListener('mousemove', (e) => {
     mx = e.clientX;
     my = e.clientY;
-    dot.style.left = mx + 'px';
-    dot.style.top = my + 'px';
+    laser.style.left = mx + 'px';
+    laser.style.top = my + 'px';
 
-    // Spawn micro spark trail throttled to 35ms (ultra smooth, zero lag, zero canvas)
-    const now = performance.now();
-    if (now - lastSparkTime > 35) {
-      lastSparkTime = now;
-      const spark = document.createElement('div');
-      spark.className = 'laser-spark';
-      const size = Math.random() * 4 + 2;
-      spark.style.width = size + 'px';
-      spark.style.height = size + 'px';
-      spark.style.left = (mx + (Math.random() - 0.5) * 6) + 'px';
-      spark.style.top = (my + (Math.random() - 0.5) * 6) + 'px';
-      document.body.appendChild(spark);
-
-      setTimeout(() => { spark.remove(); }, 350);
+    // spawn exactly 3 dust particles per move just like cursor showcase
+    for (let i = 0; i < 3; i++) {
+      particles.push({
+        x: mx,
+        y: my,
+        vx: (Math.random() - 0.5) * 2,
+        vy: (Math.random() - 0.5) * 2,
+        life: 1.0,
+        radius: Math.random() * 3 + 1
+      });
     }
   });
 
-  // Click burst (spawns 8 micro electric blue sparks radiating outward)
+  // Click burst (spawns 14 particles outward on click)
   window.addEventListener('click', (e) => {
-    for (let i = 0; i < 8; i++) {
-      const spark = document.createElement('div');
-      spark.className = 'laser-spark';
-      const size = Math.random() * 5 + 3;
-      spark.style.width = size + 'px';
-      spark.style.height = size + 'px';
-      const angle = (Math.PI * 2 / 8) * i;
-      const dist = Math.random() * 16 + 10;
-      spark.style.left = (e.clientX + Math.cos(angle) * dist) + 'px';
-      spark.style.top = (e.clientY + Math.sin(angle) * dist) + 'px';
-      document.body.appendChild(spark);
-      setTimeout(() => { spark.remove(); }, 400);
+    for (let i = 0; i < 14; i++) {
+      const angle = (Math.PI * 2 / 14) * i + (Math.random() - 0.5) * 0.3;
+      const speed = Math.random() * 3.5 + 1.8;
+      particles.push({
+        x: e.clientX,
+        y: e.clientY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        life: 1.0,
+        radius: Math.random() * 3.5 + 1.5
+      });
     }
   });
-
-  // Ring fluid lag animation
-  function renderRing() {
-    rx += (mx - rx) * 0.16;
-    ry += (my - ry) * 0.16;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(renderRing);
-  }
-  renderRing();
 
   // Hover targets
-  const hoverTargets = 'a, button, input, select, textarea, .dropzone, .btn-analyze, .nav-item, .bento-card, .morph-tab-btn, .btn-website-link, .btn-audit, .diag-card, .kpi-card';
+  const hoverTargets = 'a, button, input, select, textarea, .dropzone, .btn-analyze, .nav-item, .bento-card, .morph-tab-btn, .btn-website-link, .btn-audit, .diag-card, .kpi-card, .btn';
   document.addEventListener('mouseover', (e) => {
     if (e.target.closest(hoverTargets)) {
-      dot.classList.add('active-hover');
-      ring.classList.add('active-hover');
+      laser.classList.add('laser-hover');
     }
   });
   document.addEventListener('mouseout', (e) => {
     if (e.target.closest(hoverTargets)) {
-      dot.classList.remove('active-hover');
-      ring.classList.remove('active-hover');
+      laser.classList.remove('laser-hover');
     }
   });
+
+  document.addEventListener('mouseleave', () => {
+    laser.style.opacity = '0';
+  });
+  document.addEventListener('mouseenter', () => {
+    laser.style.opacity = '1';
+  });
+
+  // Render loop with exact showcase physics
+  function renderComet() {
+    ctx.clearRect(0, 0, laserCanvas.width, laserCanvas.height);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= 0.035;
+      if (p.life <= 0) {
+        particles.splice(i, 1);
+        continue;
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius * p.life, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0, 245, 255, ${p.life * 0.85})`;
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = '#00f5ff';
+      ctx.fill();
+    }
+    requestAnimationFrame(renderComet);
+  }
+  renderComet();
 }
 
 function handleFileSelect(files) {

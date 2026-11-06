@@ -1485,57 +1485,44 @@ header {
   flex-grow: 1;
 }
 
-/* ── Electric Blue Laser Comet Cursor ────────────────────────────────────── */
-.laser-cursor-dot {
-  position: fixed;
-  top: 0; left: 0;
-  width: 7px; height: 7px;
-  background: #00f5ff;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 999999;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px #00f5ff, 0 0 20px #00d2ff, 0 0 35px rgba(0, 245, 255, 0.8);
-  transition: width 0.15s ease, height 0.15s ease, background 0.15s ease;
+/* ── Electric Blue Laser Comet Cursor (Exact Style 07 from Cursor Matrix) ── */
+#laserCanvas {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  pointer-events: none !important;
+  z-index: 999998 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  display: block !important;
 }
 
-.laser-cursor-ring {
-  position: fixed;
-  top: 0; left: 0;
-  width: 28px; height: 28px;
-  border: 1.5px solid rgba(0, 245, 255, 0.55);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 999998;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 15px rgba(0, 245, 255, 0.25);
-  transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+.c7-laser {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 8px !important;
+  height: 8px !important;
+  background: #00f5ff !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  transform: translate(-50%, -50%) !important;
+  box-shadow: 0 0 14px #00f5ff, 0 0 28px #38bdf8, 0 0 42px rgba(0, 245, 255, 0.7) !important;
+  z-index: 999999 !important;
+  transition: width 0.15s ease, height 0.15s ease, box-shadow 0.15s ease !important;
 }
 
-.laser-cursor-dot.active-hover {
-  width: 13px; height: 13px;
-  background: #38bdf8;
-  box-shadow: 0 0 16px #00f5ff, 0 0 32px #38bdf8, 0 0 45px rgba(0, 245, 255, 0.95);
+.c7-laser.laser-hover {
+  width: 14px !important;
+  height: 14px !important;
+  box-shadow: 0 0 20px #00f5ff, 0 0 35px #38bdf8, 0 0 50px rgba(0, 245, 255, 0.95) !important;
 }
 
-.laser-cursor-ring.active-hover {
-  width: 46px; height: 46px;
-  border-color: #00f5ff;
-  box-shadow: 0 0 24px rgba(0, 245, 255, 0.45);
-}
-
-.laser-spark {
-  position: fixed;
-  pointer-events: none;
-  z-index: 999997;
-  border-radius: 50%;
-  background: #00f5ff;
-  box-shadow: 0 0 8px #00f5ff, 0 0 16px #38bdf8;
-  transform: translate(-50%, -50%);
-  animation: sparkFade 0.35s ease-out forwards;
-}
-
-@keyframes sparkFade {
-  0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.1); }
+@media (pointer: fine) {
+  body, a, button, input, select, textarea, .dropzone, .btn-analyze, .nav-item, .bento-card, .morph-tab-btn, .btn-website-link, .btn-audit, .kpi-card, .btn {
+    cursor: none !important;
+  }
 }
