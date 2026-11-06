@@ -62,6 +62,10 @@ async def console_redirect():
 async def website_redirect():
     return RedirectResponse(url="/dashboard/website.html", status_code=303)
 
+@app.get("/cursors", tags=["System Health"], summary="Interactive Cursor Style Matrix Redirect")
+async def cursors_redirect():
+    return RedirectResponse(url="/dashboard/cursor_showcase.html", status_code=303)
+
 @app.get("/", tags=["System Health"], summary="Root Health Check & Dashboard Redirect")
 async def root(request: Request):
     accept_header = request.headers.get("accept", "")

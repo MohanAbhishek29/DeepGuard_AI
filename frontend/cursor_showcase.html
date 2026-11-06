@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepGuard AI | Interactive Cursor Style Showcase</title>
+  <link rel="icon" type="image/png" href="assets/DeepGuard_AI_App_logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --bg: #07080c;
+      --card-bg: #0d0f17;
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #00f5b4;
+      --accent-blue: #38bdf8;
+      --accent-orange: #f97316;
+      --accent-purple: #c084fc;
+      --text: #f0f0f5;
+      --text-dim: #9494a8;
+      --text-muted: #5e5e74;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', sans-serif;
+      --display: 'Outfit', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 36px 36px;
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      padding: 40px 24px;
+      cursor: none; /* cursor managed dynamically by JS */
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* Top Bar */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .header-logo {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .title {
+      font-family: var(--display);
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .nav-btn {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .nav-btn.primary {
+      background: rgba(0, 245, 180, 0.1);
+      border-color: rgba(0, 245, 180, 0.4);
+      color: var(--accent);
+    }
+    .nav-btn.primary:hover {
+      background: var(--accent);
+      color: #060608;
+    }
+
+    /* Active Indicator Banner */
+    .active-banner {
+      background: #0d0f17;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .active-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .active-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(0, 245, 180, 0.12);
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+    .active-title {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .active-desc {
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    /* Grid of Cursors */
+    .cursor-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 1100px) {
+      .cursor-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .cursor-grid { grid-template-columns: 1fr; }
+    }
+
+    .cursor-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .cursor-card:hover {
+      border-color: rgba(0, 245, 180, 0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+    .cursor-card.selected {
+      border-color: var(--accent);
+      background: #111522;
+      box-shadow: 0 0 24px rgba(0, 245, 180, 0.15);
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cursor-number {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(0, 245, 180, 0.1);
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cursor-card.selected .cursor-number {
+      background: var(--accent);
+      color: #060608;
+    }
+    .cursor-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .cursor-preview-box {
+      height: 110px;
+      background: #06070a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cursor-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .cursor-desc {
+      font-size: 12.5px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+    .card-btn {
+      margin-top: auto;
+      padding: 9px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      font-size: 12.5px;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .cursor-card.selected .card-btn {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #060608;
+      font-weight: 700;
+    }
+
+    /* Testing Playground Area */
+    .playground {
+      background: #0d0f17;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-top: 32px;
+    }
+    .playground-title {
+      font-family: var(--display);
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .playground-sub {
+      font-size: 13.5px;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+    }
+    .playground-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .test-target {
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 13.5px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .tt-primary { background: var(--accent); color: #060608; }
+    .tt-secondary { background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.35); color: var(--accent-blue); }
+    .tt-danger { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #ef4444; }
+    .test-card-box {
+      flex: 1; min-width: 200px;
+      background: #06070a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      font-size: 13px;
+    }
+
+    /* ======================================================================
+       CURSOR IMPLEMENTATION ENGINES (CSS & CANVAS)
+       ====================================================================== */
+
+    /* Generic Base Host Elements */
+    #cursorRoot {
+      position: fixed;
+      top: 0; left: 0;
+      pointer-events: none;
+      z-index: 99999;
+    }
+
+    /* Style 1: Crosshair Reticle */
+    .c1-core {
+      position: fixed;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 10px var(--accent);
+    }
+    .c1-reticle {
+      position: fixed;
+      width: 34px; height: 34px;
+      border: 1px solid rgba(0, 245, 180, 0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform 0.12s ease, width 0.2s, height 0.2s, border-color 0.2s;
+    }
+    .c1-reticle::before, .c1-reticle::after {
+      content: '';
+      position: absolute;
+      background: var(--accent);
+    }
+    .c1-reticle::before {
+      top: -4px; left: 50%; width: 1px; height: 8px; transform: translateX(-50%);
+    }
+    .c1-reticle::after {
+      top: 50%; left: -4px; width: 8px; height: 1px; transform: translateY(-50%);
+    }
+
+    /* Style 2: Inverted Magnetic Lens */
+    .c2-lens {
+      position: fixed;
+      width: 36px; height: 36px;
+      background: #ffffff;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+      transition: width 0.2s ease, height 0.2s ease;
+    }
+
+    /* Style 3: Minimalist Magnetic Dot */
+    .c3-dot {
+      position: fixed;
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 14px var(--accent);
+      transition: transform 0.05s ease, width 0.2s, height 0.2s, background 0.2s;
+    }
+
+    /* Style 4: Hexagonal Quantum Target */
+    .c4-hex {
+      position: fixed;
+      width: 32px; height: 32px;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      border: 1px dashed var(--accent-blue);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      animation: hexSpin 8s linear infinite;
+    }
+    .c4-core {
+      position: fixed;
+      width: 5px; height: 5px;
+      background: var(--accent-blue);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+    }
+    @keyframes hexSpin {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Style 5: Sonar Radar Ping */
+    .c5-ping {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+    }
+    .c5-wave {
+      position: fixed;
+      width: 8px; height: 8px;
+      border: 1.5px solid #10b981;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      animation: sonarPing 1.6s ease-out infinite;
+    }
+    @keyframes sonarPing {
+      0% { width: 8px; height: 8px; opacity: 1; }
+      100% { width: 48px; height: 48px; opacity: 0; }
+    }
+
+    /* Style 6: Corner Target Lock-On [ ┌ ┐ └ ┘ ] */
+    .c6-center {
+      position: fixed;
+      width: 4px; height: 4px;
+      background: var(--accent-orange);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+    }
+    .c6-box {
+      position: fixed;
+      width: 26px; height: 26px;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s;
+    }
+    .c6-tl { position: absolute; top: 0; left: 0; width: 6px; height: 6px; border-top: 2px solid var(--accent-orange); border-left: 2px solid var(--accent-orange); }
+    .c6-tr { position: absolute; top: 0; right: 0; width: 6px; height: 6px; border-top: 2px solid var(--accent-orange); border-right: 2px solid var(--accent-orange); }
+    .c6-bl { position: absolute; bottom: 0; left: 0; width: 6px; height: 6px; border-bottom: 2px solid var(--accent-orange); border-left: 2px solid var(--accent-orange); }
+    .c6-br { position: absolute; bottom: 0; right: 0; width: 6px; height: 6px; border-bottom: 2px solid var(--accent-orange); border-right: 2px solid var(--accent-orange); }
+
+    /* Style 7: Laser Pointer with Particle Trail Canvas */
+    #laserCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 99998;
+    }
+    .c7-laser {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: #ff0055;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 16px #ff0055, 0 0 30px #ff0055;
+    }
+
+    /* Style 8: Biometric Iris / Scanning Reticle */
+    .c8-iris {
+      position: fixed;
+      width: 36px; height: 36px;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      border: 1px dashed var(--accent-purple);
+      border-radius: 50%;
+      animation: irisOscillate 4s ease-in-out infinite alternate;
+    }
+    .c8-core {
+      position: fixed;
+      width: 5px; height: 5px;
+      background: var(--accent-purple);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+    }
+    @keyframes irisOscillate {
+      0% { transform: translate(-50%, -50%) rotate(0deg) scale(0.9); }
+      100% { transform: translate(-50%, -50%) rotate(180deg) scale(1.15); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Cursor Elements Host -->
+  <div id="cursorHost"></div>
+  <canvas id="laserCanvas" style="display: none;"></canvas>
+
+  <div class="container">
+    
+    <!-- Top Header -->
+    <header class="header">
+      <div class="header-left">
+        <img src="assets/DeepGuard_AI_App_logo.png" alt="Logo" class="header-logo">
+        <div>
+          <h1 class="title">Cursor Design Matrix</h1>
+          <p class="subtitle">Click any cursor style below to activate and test live on this page.</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="console.html" class="nav-btn primary">⬡ Forensic Console</a>
+        <a href="website.html" class="nav-btn">🌐 Official Website</a>
+      </div>
+    </header>
+
+    <!-- Active Style Callout -->
+    <div class="active-banner">
+      <div class="active-info">
+        <span class="active-badge" id="activeStyleBadge">STYLE 01 ACTIVE</span>
+        <div>
+          <div class="active-title" id="activeStyleTitle">Precision Cyber Crosshair Reticle</div>
+          <div class="active-desc" id="activeStyleDesc">Military & forensic HUD sight with cardinal tick marks. Rotates and snaps onto target elements.</div>
+        </div>
+      </div>
+      <div style="font-family: var(--mono); font-size: 11px; color: var(--accent);">
+        MOVE MOUSE TO TEST ⚡
+      </div>
+    </div>
+
+    <!-- 8 Numbered Cursors Grid -->
+    <div class="cursor-grid">
+      
+      <!-- Option 1 -->
+      <div class="cursor-card selected" onclick="selectCursor(1)">
+        <div class="card-top">
+          <div class="cursor-number">01</div>
+          <span class="cursor-tag">Forensic HUD</span>
+        </div>
+        <div class="cursor-preview-box">
+          <div style="width: 26px; height: 26px; border: 1.5px solid var(--accent); border-radius: 50%; position: relative;">
+            <div style="width: 4px; height: 4px; background: var(--accent); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+            <div style="width: 1px; height: 6px; background: var(--accent); position: absolute; top: -3px; left: 50%; transform: translateX(-50%);"></div>
+            <div style="width: 6px; height: 1px; background: var(--accent); position: absolute; top: 50%; left: -3px; transform: translateY(-50%);"></div>
+          </div>
+        </div>
+        <div class="cursor-name">Cyber Crosshair Reticle</div>
+        <div class="cursor-desc">Military & forensic inspection scope. Micro-center dot with cardinal ticks and lag smoothing.</div>
+        <div class="card-btn">Active Style</div>
+      </div>
+
+      <!-- Option 2 -->
+      <div class="cursor-card" onclick="selectCursor(2)">
+        <div class="card-top">
+          <div class="cursor-number">02</div>
+          <span class="cursor-tag">Studio Invert</span>
+        </div>
+        <div class="cursor-preview-box">
+          <div style="width: 32px; height: 32px; background: #ffffff; border-radius: 50%; mix-blend-mode: difference; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: #000;">
+            +/-
+          </div>
+        </div>
+        <div class="cursor-name">Inverted Magnetic Lens</div>
+        <div class="cursor-desc">Translucent difference lens that dynamically inverts text, buttons, and pixels underneath. Modern editorial feel.</div>
+        <div class="card-btn">Click to Test</div>
+      </div>
+
+      <!-- Option 3 -->
+      <div class="cursor-card" onclick="selectCursor(3)">
+        <div class="card-top">
+          <div class="cursor-number">03</div>
+          <span class="cursor-tag">Linear Minimal</span>
+        </div>
+        <div class="cursor-preview-box">
+          <div style="width: 7px; height: 7px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 12px var(--accent);"></div>
+        </div>
+        <div class="cursor-name">Minimalist Magnetic Dot</div>
+        <div class="cursor-desc">Ultra-clean, zero lag precision dot (Linear / Vercel style). Expands into an elegant pill on clickable elements.</div>
+        <div class="card-btn">Click to Test</div>
+      </div>
+
+      <!-- Option 4 -->
+      <div class="cursor-card" onclick="selectCursor(4)">
+        <div class="card-top">
+          <div class="cursor-number">04</div>
+          <span class="cursor-tag">Quantum Sci-Fi</span>
+        </div>
+        <div class="cursor-preview-box">
+          <div style="width: 30px; height: 30px; border: 1.5px dashed var(--accent-blue); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display: flex; align-items: center; justify-content: center;">
+            <div style="width: 4px; height: 4px; background: var(--accent-blue); border-radius: 50%;"></div>
+          </div>
+        </div>
+        <div class="cursor-name">Quantum Hex Target</div>
+        <div class="cursor-desc">Rotating high-tech hexagon ring with 6 corner brackets. Snaps locked when hovering buttons.</div>
+        <div class="card-btn">Click to Test</div>
+      </div>
+
+      <!-- Option 5 -->
+      <div class="cursor-card" onclick="selectCursor(5)">
+        <div class="card-top">
+          <div class="cursor-number">05</div>
+          <span class="cursor-tag">Acoustic Sonar</span>
+        </div>
+        <div class="cursor-preview-box">
+          <div style="position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></div>
+            <div style="position: absolute; width: 24px; height: 24px; border: 1.5px solid #10b981; border-radius: 50%; opacity: 0.6;"></div>
+          </div>
+        </div>
+        <div class="cursor-name">Sonar Radar Ping</div>
+        <div class="cursor-desc">Emits periodic expanding sonar ripple pulses. Perfect fit for multimodal acoustic/audio detection.</div>
+        <div class="card-btn">Click to Test</div>
+      </div>
+
+      <!-- Option 6 -->
+      <div class="cursor-card" onclick="selectCursor(6)">
+        <div class="card-top">
+          <div class="cursor-number">06</div>
+          <span class="cursor-tag">Lock-On Snapper</span>
+        </div>
+        <div class="cursor-preview-box">
+          <div style="width: 26px; height: 26px; position: relative;">
+            <div style="position: absolute; top: 0; left: 0; width: 5px; height: 5px; border-top: 2px solid var(--accent-orange); border-left: 2px solid var(--accent-orange);"></div>
+            <div style="position: absolute; top: 0; right: 0; width: 5px; height: 5px; border-top: 2px solid var(--accent-orange); border-right: 2px solid var(--accent-orange);"></div>
+            <div style="position: absolute; bottom: 0; left: 0; width: 5px; height: 5px; border-bottom: 2px solid var(--accent-orange); border-left: 2px solid var(--accent-orange);"></div>
+            <div style="position: absolute; bottom: 0; right: 0; width: 5px; height: 5px; border-bottom: 2px solid var(--accent-orange); border-right: 2px solid var(--accent-orange);"></div>
+            <div style="position: absolute; top: 50%; left: 50%; width: 4px; height: 4px; background: var(--accent-orange); border-radius: 50%; transform: translate(-50%, -50%);"></div>
+          </div>
+        </div>
+        <div class="cursor-name">Corner Target Lock-On</div>
+        <div class="cursor-desc">4 floating L-brackets that hover around pointer and snap onto the 4 corners of any hovered card or button.</div>
+        <div class="card-btn">Click to Test</div>
+      </div>
+
+      <!-- Option 7 -->
+      <div class="cursor-card" onclick="selectCursor(7)">
+        <div class="card-top">
+          <div class="cursor-number">07</div>
+          <span class="cursor-tag">Laser Particle</span>
+        </div>
+        <div class="cursor-preview-box">
+          <div style="width: 8px; height: 8px; background: #ff0055; border-radius: 50%; box-shadow: 0 0 16px #ff0055, 0 0 24px #ff0055;"></div>
+        </div>
+        <div class="cursor-name">Neon Laser Comet</div>
+        <div class="cursor-desc">Intense glowing crimson laser with trailing fading spark particles that follow mouse motion in real time.</div>
+        <div class="card-btn">Click to Test</div>
+      </div>
+
+      <!-- Option 8 -->
+      <div class="cursor-card" onclick="selectCursor(8)">
+        <div class="card-top">
+          <div class="cursor-number">08</div>
+          <span class="cursor-tag">Biometric Scan</span>
+        </div>
+        <div class="cursor-preview-box">
+          <div style="width: 32px; height: 32px; border: 1.5px dashed var(--accent-purple); border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center;">
+            <div style="width: 4px; height: 4px; background: var(--accent-purple); border-radius: 50%;"></div>
+          </div>
+        </div>
+        <div class="cursor-name">Biometric Iris Scanner</div>
+        <div class="cursor-desc">Segmented rotating optical reticle that oscillates like an authentic biometric retina / iris identification scan.</div>
+        <div class="card-btn">Click to Test</div>
+      </div>
+
+    </div>
+
+    <!-- Live Testing Playground Area -->
+    <div class="playground">
+      <div class="playground-title">🎯 Interactive Hover &amp; Click Playground</div>
+      <div class="playground-sub">Hover and click across different elements below to see how the active cursor reacts dynamically!</div>
+      
+      <div class="playground-row">
+        <button class="test-target tt-primary">⚡ Primary Forensic Action</button>
+        <button class="test-target tt-secondary">🎙️ Audio Spectrum Wave</button>
+        <button class="test-target tt-danger">🚨 Flagged Deepfake Alert</button>
+        <a href="#" class="nav-btn">Standard Text Link</a>
+        
+        <div class="test-card-box">
+          <strong style="color: var(--accent);">Target Bounding Box</strong>
+          <div style="color: var(--text-dim); margin-top: 4px; font-size: 12px;">Move mouse over this card to test magnetic snap and lock-on effects.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let activeStyle = 1;
+    let mx = -100, my = -100;
+    let lagX = -100, lagY = -100;
+    let isHovering = false;
+    let particles = [];
+
+    const host = document.getElementById('cursorHost');
+    const laserCanvas = document.getElementById('laserCanvas');
+    let ctx = laserCanvas.getContext('2d');
+
+    function resizeCanvas() {
+      laserCanvas.width = window.innerWidth;
+      laserCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+      if (activeStyle === 7) {
+        // add laser particle
+        for (let i = 0; i < 3; i++) {
+          particles.push({
+            x: mx,
+            y: my,
+            vx: (Math.random() - 0.5) * 2,
+            vy: (Math.random() - 0.5) * 2,
+            life: 1.0,
+            radius: Math.random() * 3 + 1
+          });
+        }
+      }
+    });
+
+    // Hover state tracking
+    document.querySelectorAll('button, a, .cursor-card, .test-card-box').forEach(el => {
+      el.addEventListener('mouseenter', () => { isHovering = true; updateHoverEffect(true); });
+      el.addEventListener('mouseleave', () => { isHovering = false; updateHoverEffect(false); });
+    });
+
+    function selectCursor(num) {
+      activeStyle = num;
+      document.querySelectorAll('.cursor-card').forEach((c, idx) => {
+        if (idx + 1 === num) {
+          c.classList.add('selected');
+          c.querySelector('.card-btn').innerText = 'Active Style';
+        } else {
+          c.classList.remove('selected');
+          c.querySelector('.card-btn').innerText = 'Click to Test';
+        }
+      });
+
+      const titles = [
+        'Cyber Crosshair Reticle',
+        'Inverted Magnetic Lens',
+        'Minimalist Magnetic Dot',
+        'Quantum Hex Target',
+        'Sonar Radar Ping',
+        'Corner Target Lock-On',
+        'Neon Laser Comet',
+        'Biometric Iris Scanner'
+      ];
+      const descs = [
+        'Military & forensic inspection scope. Micro-center dot with cardinal ticks and lag smoothing.',
+        'Translucent difference lens that dynamically inverts text, buttons, and pixels underneath. Modern editorial feel.',
+        'Ultra-clean, zero lag precision dot (Linear / Vercel style). Expands into an elegant pill on clickable elements.',
+        'Rotating high-tech hexagon ring with 6 corner brackets. Snaps locked when hovering buttons.',
+        'Emits periodic expanding sonar ripple pulses. Perfect fit for multimodal acoustic/audio detection.',
+        '4 floating L-brackets that hover around pointer and snap onto the 4 corners of any hovered card or button.',
+        'Intense glowing crimson laser with trailing fading spark particles that follow mouse motion in real time.',
+        'Segmented rotating optical reticle that oscillates like an authentic biometric retina / iris identification scan.'
+      ];
+
+      document.getElementById('activeStyleBadge').innerText = `STYLE 0${num} ACTIVE`;
+      document.getElementById('activeStyleTitle').innerText = titles[num - 1];
+      document.getElementById('activeStyleDesc').innerText = descs[num - 1];
+
+      renderCursorElements();
+    }
+
+    function renderCursorElements() {
+      host.innerHTML = '';
+      laserCanvas.style.display = (activeStyle === 7) ? 'block' : 'none';
+
+      if (activeStyle === 1) {
+        host.innerHTML = `
+          <div class="c1-core" id="c1Core"></div>
+          <div class="c1-reticle" id="c1Ring"></div>
+        `;
+      } else if (activeStyle === 2) {
+        host.innerHTML = `<div class="c2-lens" id="c2Lens"></div>`;
+      } else if (activeStyle === 3) {
+        host.innerHTML = `<div class="c3-dot" id="c3Dot"></div>`;
+      } else if (activeStyle === 4) {
+        host.innerHTML = `
+          <div class="c4-core" id="c4Core"></div>
+          <div class="c4-hex" id="c4Hex"></div>
+        `;
+      } else if (activeStyle === 5) {
+        host.innerHTML = `
+          <div class="c5-ping" id="c5Ping"></div>
+          <div class="c5-wave" id="c5Wave"></div>
+        `;
+      } else if (activeStyle === 6) {
+        host.innerHTML = `
+          <div class="c6-center" id="c6Center"></div>
+          <div class="c6-box" id="c6Box">
+            <div class="c6-tl"></div><div class="c6-tr"></div>
+            <div class="c6-bl"></div><div class="c6-br"></div>
+          </div>
+        `;
+      } else if (activeStyle === 7) {
+        host.innerHTML = `<div class="c7-laser" id="c7Laser"></div>`;
+      } else if (activeStyle === 8) {
+        host.innerHTML = `
+          <div class="c8-core" id="c8Core"></div>
+          <div class="c8-iris" id="c8Iris"></div>
+        `;
+      }
+    }
+
+    function updateHoverEffect(hovering) {
+      if (activeStyle === 1) {
+        const ring = document.getElementById('c1Ring');
+        if (ring) {
+          ring.style.width = hovering ? '48px' : '34px';
+          ring.style.height = hovering ? '48px' : '34px';
+          ring.style.borderColor = hovering ? '#00f5b4' : 'rgba(0, 245, 180, 0.4)';
+        }
+      } else if (activeStyle === 2) {
+        const lens = document.getElementById('c2Lens');
+        if (lens) {
+          lens.style.width = hovering ? '56px' : '36px';
+          lens.style.height = hovering ? '56px' : '36px';
+        }
+      } else if (activeStyle === 3) {
+        const dot = document.getElementById('c3Dot');
+        if (dot) {
+          dot.style.width = hovering ? '18px' : '7px';
+          dot.style.height = hovering ? '18px' : '7px';
+          dot.style.background = hovering ? 'rgba(0, 245, 180, 0.4)' : '#00f5b4';
+        }
+      } else if (activeStyle === 4) {
+        const hex = document.getElementById('c4Hex');
+        if (hex) {
+          hex.style.width = hovering ? '46px' : '32px';
+          hex.style.height = hovering ? '46px' : '32px';
+          hex.style.borderColor = hovering ? '#38bdf8' : 'rgba(56, 189, 248, 0.5)';
+        }
+      } else if (activeStyle === 6) {
+        const box = document.getElementById('c6Box');
+        if (box) {
+          box.style.width = hovering ? '42px' : '26px';
+          box.style.height = hovering ? '42px' : '26px';
+        }
+      }
+    }
+
+    // Animation loop
+    function animate() {
+      // lag calculation
+      lagX += (mx - lagX) * 0.16;
+      lagY += (my - lagY) * 0.16;
+
+      if (activeStyle === 1) {
+        const core = document.getElementById('c1Core');
+        const ring = document.getElementById('c1Ring');
+        if (core) { core.style.left = mx + 'px'; core.style.top = my + 'px'; }
+        if (ring) { ring.style.left = lagX + 'px'; ring.style.top = lagY + 'px'; }
+      } else if (activeStyle === 2) {
+        const lens = document.getElementById('c2Lens');
+        if (lens) { lens.style.left = lagX + 'px'; lens.style.top = lagY + 'px'; }
+      } else if (activeStyle === 3) {
+        const dot = document.getElementById('c3Dot');
+        if (dot) { dot.style.left = mx + 'px'; dot.style.top = my + 'px'; }
+      } else if (activeStyle === 4) {
+        const core = document.getElementById('c4Core');
+        const hex = document.getElementById('c4Hex');
+        if (core) { core.style.left = mx + 'px'; core.style.top = my + 'px'; }
+        if (hex) { hex.style.left = lagX + 'px'; hex.style.top = lagY + 'px'; }
+      } else if (activeStyle === 5) {
+        const ping = document.getElementById('c5Ping');
+        const wave = document.getElementById('c5Wave');
+        if (ping) { ping.style.left = mx + 'px'; ping.style.top = my + 'px'; }
+        if (wave) { wave.style.left = mx + 'px'; wave.style.top = my + 'px'; }
+      } else if (activeStyle === 6) {
+        const center = document.getElementById('c6Center');
+        const box = document.getElementById('c6Box');
+        if (center) { center.style.left = mx + 'px'; center.style.top = my + 'px'; }
+        if (box) { box.style.left = lagX + 'px'; box.style.top = lagY + 'px'; }
+      } else if (activeStyle === 7) {
+        const laser = document.getElementById('c7Laser');
+        if (laser) { laser.style.left = mx + 'px'; laser.style.top = my + 'px'; }
+        
+        // draw particles
+        ctx.clearRect(0, 0, laserCanvas.width, laserCanvas.height);
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.life -= 0.04;
+          if (p.life <= 0) {
+            particles.splice(i, 1);
+            continue;
+          }
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius * p.life, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 0, 85, ${p.life * 0.8})`;
+          ctx.fill();
+        }
+      } else if (activeStyle === 8) {
+        const core = document.getElementById('c8Core');
+        const iris = document.getElementById('c8Iris');
+        if (core) { core.style.left = mx + 'px'; core.style.top = my + 'px'; }
+        if (iris) { iris.style.left = lagX + 'px'; iris.style.top = lagY + 'px'; }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    renderCursorElements();
+    animate();
+  </script>
+</body>
+</html>
