@@ -44,6 +44,7 @@ class VisionEvidence(BaseModel):
     face_detected: bool
     timestamps: List[float] = Field(default_factory=list)
     artifacts: List[str] = Field(default_factory=list)
+    diagnostic_metrics: Dict[str, Any] = Field(default_factory=dict)
 
 class AudioEvidence(BaseModel):
     score: float = Field(..., ge=0.0, le=1.0, description="Synthetic voice / spoof probability")

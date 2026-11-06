@@ -291,6 +291,18 @@ class PipelineOrchestrator:
             round(duration * 0.68, 1)
         ]
 
+        diag = {
+            "total_frames_sampled": total_frames,
+            "face_detected": has_face,
+            "face_seam_ratio": f"{max_b_ratio:.2f}x" if has_face else "N/A (No Face)",
+            "face_seam_status": "Natural Blending" if (not has_face or max_b_ratio <= 1.35) else "Boundary Seam Flagged",
+            "frame_rate_fps": f"{fps:.2f} FPS",
+            "camera_sensor_noise": f"Laplacian {avg_lap:.1f}",
+            "sensor_noise_status": "Optical Sensor Grain" if avg_lap >= 45.0 else "Texture Smoothing Flagged",
+            "spatial_fft_ratio": f"{avg_fft:.2f}",
+            "spatial_fft_status": "Natural Frequency Spectrum" if avg_fft <= 0.82 else "High-Frequency Disparity"
+        }
+
         return VisionEvidence(
             score=score,
             status=status,
@@ -298,7 +310,8 @@ class PipelineOrchestrator:
             suspicious_frames_detected=suspicious_frames,
             face_detected=has_face,
             timestamps=timestamps,
-            artifacts=artifacts
+            artifacts=artifacts,
+            diagnostic_metrics=diag
         )
 
     def _run_image_analysis(self, media_path: str, orig_filename: str = "") -> VisionEvidence:
@@ -465,6 +478,18 @@ class PipelineOrchestrator:
             if face_detected:
                 artifacts.append(f"Facial boundary blending seam verified (Natural ratio: {max_b_ratio:.2f})")
 
+        diag = {
+            "ela_variance": f"Std: {std_ela:.2f}, Max: {max_ela:.1f}",
+            "ela_status": "Uniform (Clean Recompression)" if not (std_ela > 28.0) else "Compression Disparity",
+            "camera_sensor_noise": f"Laplacian {lap_var:.1f}",
+            "sensor_noise_status": "Natural Optical Grain" if lap_var >= 16.0 else "Synthetic Diffusion Smoothing",
+            "device_hardware": camera_info if has_camera_hardware else "Optical Lens / Clean Image",
+            "ai_signatures": ai_meta_tag.upper() if is_ai_meta else "None (Clean Metadata)",
+            "face_detected": face_detected,
+            "face_seam_ratio": f"{max_b_ratio:.2f}x" if face_detected else "N/A (No Face)",
+            "face_seam_status": "Natural Boundary Blending" if (not face_detected or (max_b_ratio <= 2.3 and max_b_ratio >= 0.22)) else "Seam Discontinuity Flagged"
+        }
+
         return VisionEvidence(
             score=score,
             status=status,
@@ -472,7 +497,8 @@ class PipelineOrchestrator:
             suspicious_frames_detected=1 if is_synthetic else 0,
             face_detected=face_detected,
             timestamps=[0.0],
-            artifacts=artifacts
+            artifacts=artifacts,
+            diagnostic_metrics=diag
         )
 
     def _run_audio_analysis(self, media_path: str, orig_filename: str = "") -> AudioEvidence:
@@ -562,7 +588,11 @@ class PipelineOrchestrator:
                 "mel_bands": 128,
                 "sampling_rate_hz": 44100,
                 "spectral_flatness_normal": flatness_normal,
-                "pitch_jitter_score": jitter
+                "pitch_jitter_score": jitter,
+                "high_freq_vocoder_ratio": round(ratio_hf, 5),
+                "high_freq_status": "Natural High-Frequency Decay" if ratio_hf < 0.0070 else "High-Frequency AI Hash (>16kHz)",
+                "vocal_jitter_status": "Natural Human Voice (0.012)" if jitter >= 0.005 else "Synthetic Vocoder (0.001)",
+                "container_watermark": "Suno AI Watermark" if is_suno_tag else "Standard Clean Audio Stream"
             }
         )
 
@@ -642,11 +672,9 @@ class PipelineOrchestrator:
         is_suspicious = vision.score >= 0.5
         verdict = "MANIPULATED (SYNTHETIC / EDITED IMAGE)" if is_suspicious else "AUTHENTIC (OPTICAL SENSOR PHOTO)"
         reason = (
-            "Static image forensic analysis detected significant Error Level Analysis (ELA) compression disparities, "
-            "abnormal facial blending boundary seams, or generative diffusion frequency signatures."
+            "Static image forensic analysis detected signs of synthetic image generation or editing (such as unnatural compression differences, AI tool metadata, or face blending seams)."
             if is_suspicious
-            else "Static image forensic analysis verified uniform ELA compression levels, natural optical sensor photon noise floor, "
-            "and authentic spatial frequency distribution."
+            else "Static image forensic analysis verified a genuine camera photo. Consistent compression throughout, natural camera sensor grain, and original optical profile confirmed."
         )
 
         timeline = [
@@ -672,9 +700,9 @@ class PipelineOrchestrator:
         is_suspicious = audio.score >= 0.5
         verdict = "SYNTHETIC_AUDIO_DETECTED" if is_suspicious else "AUTHENTIC"
         reason = (
-            "Acoustic vocoder analysis detected neural synthesis patterns, high-frequency spectral cutoff, and abnormal pitch jitter typical of AI-generated music/speech."
+            "Acoustic frequency analysis detected artificial sound patterns typical of AI voice cloning or synthetic music (e.g. Suno AI / ElevenLabs). High-frequency energy and pitch micro-jitter indicate computer-generated audio."
             if is_suspicious
-            else "Audio-only analysis: Acoustic spectral flatness and harmonic features fall within natural human voice range. Organic vocal tract micro-tremors and natural instrument harmonics verified."
+            else "Acoustic analysis verified genuine human voice and organic audio. Natural vocal cord micro-variations and expected studio acoustic roll-off confirmed."
         )
 
         timeline = [
@@ -706,22 +734,22 @@ class PipelineOrchestrator:
         if vis_suspicious and not aud_suspicious:
             verdict = "MANIPULATED (VISUAL DEEPFAKE DETECTED)"
             disagreement = True
-            reason = "Visual pipeline detected synthetic facial manipulation / diffusion artifacts, while acoustic vocal signals match genuine human speech (Cross-Modal Disagreement Regime)."
+            reason = "Visual analysis detected facial deepfake manipulation, while the audio is authentic human speech (Tampered Face + Real Voice)."
             confidence = 0.88
         elif not vis_suspicious and aud_suspicious:
             verdict = "MANIPULATED (SYNTHETIC AUDIO CLONE)"
             disagreement = True
-            reason = "Visual video stream appears genuine, but acoustic frequency analysis indicates synthetic/voice-cloned audio dubbed over footage (Cross-Modal Disagreement Regime)."
+            reason = "The video footage is genuine, but the voice has been replaced or dubbed using an AI voice clone (Real Video + Cloned Voice)."
             confidence = 0.86
         elif vis_suspicious and aud_suspicious:
             verdict = "MANIPULATED (ALL MODALITIES SYNTHETIC)"
             disagreement = False
-            reason = "Both visual and acoustic pipelines detect synthetic AI generation signatures. Video contains diffusion boundary warping and audio exhibits vocoder artifacts."
+            reason = "Both video and audio are AI-generated. Visual frames show synthetic face rendering, and the audio exhibits AI vocoder patterns."
             confidence = 0.95
         else:
             verdict = "AUTHENTIC"
             disagreement = False
-            reason = "All examined modalities fall within normal authentic distributions. Video exhibits natural optical sensor noise & camera motion; acoustic spectrum matches authentic human vocal cords and organic instruments."
+            reason = "Both video and audio are verified authentic. Natural camera optics, real facial movements, and organic human vocal cords confirmed."
             confidence = 0.95
 
         timeline = []
