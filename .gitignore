@@ -10,12 +10,13 @@
 extracted_report.txt
 _local_notes/
 
-# Screenshots & raw image dumps in root
+# Screenshots & raw image dumps in root (preserve frontend assets)
 Screenshot*.png
 Screenshot*.jpg
 *.png
 *.jpg
 *.jpeg
+!frontend/assets/**
 
 # Environments & Secrets
 .env

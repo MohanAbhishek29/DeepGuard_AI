@@ -690,3 +690,22 @@ function exportForensicAudit() {
   a.click();
   URL.revokeObjectURL(url);
 }
+
+
+// Sticky Header Active Link Highlight on Scroll
+window.addEventListener('scroll', () => {
+  const sections = ['overview', 'threats', 'methodology', 'benchmarks', 'workspace'];
+  const scrollPos = window.scrollY + 140;
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    const link = document.querySelector(`.nav-center-menu a[href="#${id}"]`);
+    if (el && link) {
+      if (el.offsetTop <= scrollPos && (el.offsetTop + el.offsetHeight) > scrollPos) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    }
+  });
+});
