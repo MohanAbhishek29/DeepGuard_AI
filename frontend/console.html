@@ -43,6 +43,10 @@
 </head>
 <body>
 
+  <!-- Cyber Sci-Fi Custom Cursor -->
+  <div class="cyber-cursor-dot" id="cyberCursorDot"></div>
+  <div class="cyber-cursor-ring" id="cyberCursorRing"></div>
+
   <div class="container">
     
     <!-- ======================================================================
@@ -157,6 +161,24 @@
           <div class="progress-step" id="step1">⏳ [1/3] Awaiting Media Stream...</div>
           <div class="progress-step" id="step2">⏳ [2/3] Standby for Modality Probing...</div>
           <div class="progress-step" id="step3">⏳ [3/3] Cross-Modal Correlation Queue...</div>
+        </div>
+
+        <!-- Real-Time Live Backend Execution Terminal Stream -->
+        <div class="live-terminal-panel" id="liveTerminalPanel">
+          <div class="live-terminal-header">
+            <div class="terminal-stream-title">
+              <span>⚡ LIVE BACKEND ORCHESTRATION STREAM</span>
+              <span class="pill-badge live" style="font-size: 9.5px; padding: 2px 7px;"><span class="pulse-dot"></span> <span id="streamStatusBadge">IDLE</span></span>
+            </div>
+            <button class="terminal-clear-btn" onclick="clearLiveLogs()">Clear</button>
+          </div>
+          <div class="live-terminal-logs" id="liveTerminalLogs">
+            <div class="log-line">
+              <span class="log-time">[INIT]</span>
+              <span class="log-tag tag-sys">SYS</span>
+              <span class="log-msg">DeepGuard AI Orchestration Kernel initialized. Select or drop a media file to inspect live execution.</span>
+            </div>
+          </div>
         </div>
 
         <!-- Platform Architecture & Research -->

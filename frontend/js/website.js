@@ -9,6 +9,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initCyberCursor();
   initCinematicBootLoader();
   initCursorSpotlight();
   initSceneDeckObserver();
@@ -21,6 +22,56 @@ document.addEventListener('DOMContentLoaded', () => {
   initTerminalCopy();
   init3DCardTilts();
 });
+
+/* ==========================================================================
+   0. CUSTOM CYBER SCI-FI CURSOR
+   ========================================================================== */
+function initCyberCursor() {
+  const dot = document.getElementById('cyberCursorDot');
+  const ring = document.getElementById('cyberCursorRing');
+  if (!dot || !ring) return;
+
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let ringX = mouseX;
+  let ringY = mouseY;
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+  });
+
+  function renderRing() {
+    ringX += (mouseX - ringX) * 0.18;
+    ringY += (mouseY - ringY) * 0.18;
+    ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
+    requestAnimationFrame(renderRing);
+  }
+  renderRing();
+
+  const hoverTargets = 'a, button, input, select, textarea, .nav-item, .bento-card, .morph-tab-btn, .regime-interactive-card, .slider-handle-pill, .btn-hero-launch, .btn-hero-terminal, .scene-dot-btn';
+  
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest(hoverTargets)) {
+      ring.classList.add('cursor-hover');
+    }
+  });
+
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest(hoverTargets)) {
+      ring.classList.remove('cursor-hover');
+    }
+  });
+
+  document.addEventListener('mousedown', () => {
+    ring.classList.add('cursor-click');
+  });
+
+  document.addEventListener('mouseup', () => {
+    ring.classList.remove('cursor-click');
+  });
+}
 
 /* ==========================================================================
    1. CINEMATIC BOOT LOADER & UNBLUR SEQUENCE
