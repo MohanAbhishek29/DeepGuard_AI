@@ -116,7 +116,7 @@ class PipelineOrchestrator:
             try:
                 import subprocess, json
                 cmd = ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_streams", "-show_format", media_path]
-                res = subprocess.run(cmd, capture_output=True)
+                res = subprocess.run(cmd, capture_output=True, timeout=5)
                 if res.returncode == 0:
                     data = json.loads(res.stdout.decode("utf-8", errors="ignore"))
                     fmt = data.get("format", {})
@@ -514,7 +514,7 @@ class PipelineOrchestrator:
         try:
             import subprocess, json
             cmd = ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_streams", "-show_format", media_path]
-            res = subprocess.run(cmd, capture_output=True)
+            res = subprocess.run(cmd, capture_output=True, timeout=5)
             if res.returncode == 0:
                 data = json.loads(res.stdout.decode("utf-8", errors="ignore"))
                 fmt = data.get("format", {})
@@ -535,8 +535,8 @@ class PipelineOrchestrator:
             import numpy as np
             import subprocess
             ss = "10" if duration > 20 else "0"
-            pcm_cmd = ["ffmpeg", "-v", "quiet", "-ss", ss, "-t", "10", "-i", media_path, "-f", "s16le", "-ac", "1", "-ar", "44100", "-"]
-            pcm_res = subprocess.run(pcm_cmd, capture_output=True)
+            pcm_cmd = ["ffmpeg", "-nostdin", "-v", "quiet", "-ss", ss, "-t", "10", "-i", media_path, "-f", "s16le", "-ac", "1", "-ar", "44100", "-"]
+            pcm_res = subprocess.run(pcm_cmd, capture_output=True, timeout=5)
             samples = np.frombuffer(pcm_res.stdout, dtype=np.int16).astype(np.float32)
             if len(samples) > 44100:
                 fft_vals = np.abs(np.fft.rfft(samples))

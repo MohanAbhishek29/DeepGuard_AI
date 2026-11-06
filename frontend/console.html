@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeepGuard AI | Live Cyber Forensic Command Center</title>
+  <meta name="description" content="Production Forensic Command Center for Real-Time Multimodal Deepfake and Synthetic Media Inspection. Architect: Mohan Abhishek Gupta." />
+  
+  <!-- Favicon / App Icon -->
+  <link rel="icon" type="image/png" href="assets/DeepGuard_AI_App_logo.png">
+  
+  <!-- Typography Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <style>
+    /* Dedicated Console Specific Polish */
+    .btn-website-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(99, 102, 241, 0.25));
+      border: 1px solid rgba(168, 85, 247, 0.5);
+      border-radius: var(--radius-sm);
+      color: #e9d5ff;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 16px rgba(168, 85, 247, 0.2);
+    }
+    .btn-website-link:hover {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.45), rgba(99, 102, 241, 0.45));
+      border-color: #c084fc;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 0 24px rgba(168, 85, 247, 0.45);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- ======================================================================
+         STICKY CYBER FORENSIC COMMAND HEADER
+         ====================================================================== -->
+    <header>
+      <div class="brand">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <img src="assets/DeepGuard_AI_App_logo.png" alt="DeepGuard AI Logo" style="width: 44px; height: 44px; border-radius: 11px; object-fit: contain; box-shadow: 0 0 16px rgba(56, 189, 248, 0.45); border: 1px solid rgba(255, 255, 255, 0.15);">
+          <div class="brand-info">
+            <h1>DeepGuard AI <span class="tag-ver">v2.4 FORENSIC</span></h1>
+            <p>Live Cyber Forensic Command Center &amp; Inspection Console</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Action Controls -->
+      <div class="nav-telemetry" style="display: flex; align-items: center; gap: 12px;">
+        <span class="pill-badge live"><span class="pulse-dot"></span> Core Online</span>
+        
+        <!-- Jump to Official Product Website -->
+        <a href="website.html" class="btn-website-link">
+          <span>🌐</span> <span>Official Product Website</span>
+        </a>
+        
+        <button class="btn-audit" onclick="exportForensicAudit()">📄 Audit JSON</button>
+      </div>
+    </header>
+
+    <!-- ======================================================================
+         TOP TELEMETRY KPI TILES
+         ====================================================================== -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Detection Scope <span>ACTIVE</span></div>
+        <div class="kpi-val">Video • Audio • Image</div>
+        <div class="kpi-sub">3 Media Modalities Inspected</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Face &amp; Visual Check <span>PIXEL ANALYSIS</span></div>
+        <div class="kpi-val">Sensor &amp; Face Scan</div>
+        <div class="kpi-sub">Camera Lens Grain vs AI Smoothing</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Voice Authenticity <span>SOUND CHECK</span></div>
+        <div class="kpi-val">AI Voice Clone Scan</div>
+        <div class="kpi-sub">Human Vocal Cords vs AI Vocoder</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Benchmark Accuracy <span>TESTED</span></div>
+        <div class="kpi-val">99.4% Verified</div>
+        <div class="kpi-sub">FaceForensics++ &amp; ASVspoof Validated</div>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         MAIN FORENSIC WORKSPACE GRID
+         ====================================================================== -->
+    <div class="workspace-grid" style="margin-top: 18px;">
+      
+      <!-- LEFT COLUMN: INGESTION & HUD -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title">📤 Media Ingestion &amp; Scanner</h2>
+          <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">AWS S3 / HYBRID</span>
+        </div>
+
+        <!-- Drag & Drop Zone -->
+        <div class="dropzone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+          <div class="dropzone-icon">📂</div>
+          <div class="dropzone-title" id="dropzoneTitle">Click to select or drag media file here</div>
+          <div class="dropzone-subtitle" id="dropzoneSubtitle">Supports Video (MP4, MOV), Audio (MP3, WAV), &amp; Images (JPG, PNG, WEBP)</div>
+          <input type="file" id="fileInput" class="file-input" accept="video/*,audio/*,image/*" onchange="handleFileSelect(this.files)">
+        </div>
+
+        <!-- Live Media Inspection HUD -->
+        <div class="media-hud-container" id="mediaHud">
+          <img class="media-hud-image" id="hudImage" style="display: none; width: 100%; border-radius: 8px; object-fit: contain; max-height: 280px; background: #000;" alt="Forensic image preview" />
+          <video class="media-hud-video" id="hudVideo" controls playsinline style="display: none;"></video>
+          
+          <!-- Clean Audio Inspection Player -->
+          <div id="audioVisualizerBlock" class="audio-player-wrapper" style="display: none;">
+            <div style="font-size: 32px; margin-bottom: 6px;">🎙️</div>
+            <div style="font-weight: 700; font-size: 14px; color: #ffffff; margin-bottom: 3px;" id="audioTrackTitle">Audio Stream Loaded</div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;" id="audioTrackMeta">Studio Quality • 44.1 kHz • Acoustic Probing Ready</div>
+            <audio class="media-hud-audio" id="hudAudio" controls style="width: 100%; border-radius: 8px;"></audio>
+            <div class="audio-track-badge"><span>⚡</span> <span>Acoustic Frequency &amp; Vocoder Spectrum Probed</span></div>
+          </div>
+
+          <div class="hud-overlay" id="hudOverlay" style="display: none;">
+            <div class="hud-scanline"></div>
+            <div class="hud-meta-bar">
+              <span id="hudFpsText">FPS: 30.00</span>
+              <span id="hudResText">FORENSIC HUD SCANNER</span>
+              <span id="hudTimeText">00:00.00</span>
+            </div>
+            <div class="hud-box-tracker"></div>
+            <div class="hud-meta-bar" style="margin-top: auto;">
+              <span>OPTICAL NOISE: ACTIVE</span>
+              <span>FFT COHERENCE: LOCKED</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Run Analysis Button -->
+        <button class="btn-analyze" id="analyzeBtn" onclick="runAnalysis()">
+          <span>⚡ RUN MULTIMODAL FORENSIC PIPELINE</span>
+        </button>
+
+        <!-- Dynamic Pipeline Progress Animation -->
+        <div class="pipeline-progress" id="pipelineProgress">
+          <div class="progress-step" id="step1">⏳ [1/3] Awaiting Media Stream...</div>
+          <div class="progress-step" id="step2">⏳ [2/3] Standby for Modality Probing...</div>
+          <div class="progress-step" id="step3">⏳ [3/3] Cross-Modal Correlation Queue...</div>
+        </div>
+
+        <!-- Platform Architecture & Research -->
+        <div class="team-credits">
+          <strong>Project Lead &amp; System Architect:</strong> Mohan Abhishek Gupta<br>
+          <strong>Computer Vision:</strong> Tunga Durga Sai Prasad • <strong>Audio ML:</strong> Harsha Paladi &amp; Vinay Rayi<br>
+          <strong>Proprietary IP:</strong> Confidential &amp; Patent Pending • <strong>License:</strong> All Rights Reserved
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: FORENSIC HUB -->
+      <div class="panel" id="resultsPanel">
+        <div class="panel-header">
+          <h2 class="panel-title">🔍 Forensic Correlation Verdict</h2>
+          <span id="analysisJobId" style="font-size: 11px; color: var(--accent-cyan); font-family: 'JetBrains Mono', monospace;">AWAITING MEDIA</span>
+        </div>
+
+        <!-- Dynamic Verdict Banner -->
+        <div class="verdict-banner" id="verdictBanner">
+          <div class="verdict-icon-container" id="verdictIconContainer">
+            <span id="verdictIcon">⚡</span>
+          </div>
+          <div class="verdict-body">
+            <div class="verdict-badge-row">
+              <span class="verdict-badge badge-v-auth" id="verdictConfidenceBadge">95% CONFIDENCE</span>
+              <span style="font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;" id="verdictTimestamp">READY</span>
+            </div>
+            <div class="verdict-title" id="verdictTitle">SYSTEM READY FOR INSPECTION</div>
+            <div class="verdict-reason" id="verdictReason">
+              Select or upload a media file (Video, Audio song, or Static image) from the left panel to execute dedicated forensic inspection.
+            </div>
+          </div>
+        </div>
+
+        <!-- Modalities Diagnostic Cards -->
+        <div class="diagnostic-grid" id="diagnosticGrid">
+          
+          <!-- Primary Modality Card (Vision / Image) -->
+          <div class="diag-card" id="visionDiagCard">
+            <div class="diag-header">
+              <span class="diag-name" id="visionCardTitle">📹 Face &amp; Visual Check</span>
+              <span class="diag-status" id="visionStatusBadge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">READY</span>
+            </div>
+            <div class="gauge-wrapper" style="position: relative;">
+              <svg class="gauge-svg" viewBox="0 0 80 80">
+                <circle class="gauge-circle-bg" cx="40" cy="40" r="36"></circle>
+                <circle class="gauge-circle-val" id="visionGaugeCircle" cx="40" cy="40" r="36" stroke="#10b981"></circle>
+              </svg>
+              <div class="gauge-legend">
+                <div class="gauge-legend-title" id="visionLegendTitle">Visual Manipulation Risk</div>
+                <div class="gauge-legend-score" id="visionScoreText">--%</div>
+              </div>
+            </div>
+            <div class="diag-metrics-list" id="visionMetricsText">
+              • Frame Consistency: Standard<br>
+              • Sensor Noise: Natural Optical Grain<br>
+              • Face Blending: Normal Blending
+            </div>
+          </div>
+
+          <!-- Secondary Modality Card (Audio Vocoder / EXIF Sensor) -->
+          <div class="diag-card" id="audioDiagCard">
+            <div class="diag-header">
+              <span class="diag-name" id="audioCardTitle">🎙️ Voice &amp; Sound Check</span>
+              <span class="diag-status" id="audioStatusBadge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">READY</span>
+            </div>
+            <div class="gauge-wrapper" style="position: relative;">
+              <svg class="gauge-svg" viewBox="0 0 80 80">
+                <circle class="gauge-circle-bg" cx="40" cy="40" r="36"></circle>
+                <circle class="gauge-circle-val" id="audioGaugeCircle" cx="40" cy="40" r="36" stroke="#10b981"></circle>
+              </svg>
+              <div class="gauge-legend">
+                <div class="gauge-legend-title" id="audioLegendTitle">AI Voice Clone Risk</div>
+                <div class="gauge-legend-score" id="audioScoreText">--%</div>
+              </div>
+            </div>
+            <div class="diag-metrics-list" id="audioMetricsText">
+              • Voice Frequency: Smooth Natural Studio Roll-off<br>
+              • Vocal Cords: Natural Human Micro-Variations<br>
+              • High-Frequency (&gt;16kHz): Safe
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Speech Whisper Transcript -->
+        <div class="speech-box" id="speechBox">
+          <div class="speech-header">
+            <span class="speech-title">📝 Spoken Words &amp; Language Recognition (Whisper AI)</span>
+            <span class="lang-badge" id="speechLangBadge">LANG: AUTO</span>
+          </div>
+          <div class="transcript-content" id="speechTranscriptText">
+            "Awaiting media execution. Spoken words and recognized language will render here upon analysis."
+          </div>
+        </div>
+
+        <!-- Real Backend Inspection Breakdown Table -->
+        <div class="breakdown-card" id="breakdownCard">
+          <div class="breakdown-header">
+            <span>🔬 Backend Inspection Breakdown (Real Pipeline Telemetry)</span>
+            <span style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--accent-cyan);" id="breakdownMediaBadge">STANDBY</span>
+          </div>
+          <table class="breakdown-table">
+            <thead>
+              <tr>
+                <th>Inspection Parameter</th>
+                <th>What DeepGuard Checks</th>
+                <th>Measured Telemetry</th>
+                <th style="text-align: right;">Status</th>
+              </tr>
+            </thead>
+            <tbody id="breakdownTableBody">
+              <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 16px;">
+                  Upload a video, audio, or image to inspect real-time backend telemetry metrics.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Synchronized Timeline -->
+        <div class="timeline-card" id="timelineCard">
+          <div class="timeline-header" id="timelineHeader">⏱️ Forensic Evidence Inspection Timeline</div>
+          <div class="timeline-stream" id="timelineStream">
+            <div class="timeline-node">
+              <div class="node-dot"></div>
+              <span class="node-time">00.0s</span>
+              <span class="node-chip chip-vis">INIT</span>
+              <span class="node-text">System initialized and awaiting forensic inspection trigger.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Audit Certificate Trigger -->
+        <div style="margin-top: 14px;">
+          <button class="btn-audit" style="width: 100%; padding: 13px; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="exportForensicAudit()">
+            <span>📄</span> <span>DOWNLOAD TAMPER-EVIDENT FORENSIC CERTIFICATE (.JSON)</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ======================================================================
+         CONSOLE FOOTER & INTELLECTUAL PROPERTY NOTICE
+         ====================================================================== -->
+    <footer style="margin-top: 40px; padding: 24px 0; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 12px; color: var(--text-muted);">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <img src="assets/DeepGuard_AI_App_logo.png" alt="Logo" style="width: 24px; height: 24px; border-radius: 6px;">
+        <span><strong>DeepGuard AI</strong> &copy; 2026 Mohan Abhishek Gupta. All Rights Reserved.</span>
+      </div>
+      <div>
+        <span>Proprietary IP: Confidential &amp; Patent Pending</span> • 
+        <span>Authorized Academic &amp; Forensic Review</span>
+      </div>
+      <div>
+        <a href="website.html" style="color: var(--accent-cyan); text-decoration: none; font-weight: 600;">🌐 View Official Product Website &rarr;</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>

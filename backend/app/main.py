@@ -54,11 +54,19 @@ frontend_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__fi
 if os.path.exists(frontend_dir):
     app.mount("/dashboard", StaticFiles(directory=frontend_dir, html=True), name="frontend")
 
+@app.get("/console", tags=["System Health"], summary="Direct Forensic Console Redirect")
+async def console_redirect():
+    return RedirectResponse(url="/dashboard/console.html", status_code=303)
+
+@app.get("/website", tags=["System Health"], summary="Official Product Showcase Website Redirect")
+async def website_redirect():
+    return RedirectResponse(url="/dashboard/website.html", status_code=303)
+
 @app.get("/", tags=["System Health"], summary="Root Health Check & Dashboard Redirect")
 async def root(request: Request):
     accept_header = request.headers.get("accept", "")
     if "text/html" in accept_header:
-        return RedirectResponse(url="/dashboard/", status_code=303)
+        return RedirectResponse(url="/dashboard/console.html", status_code=303)
 
     return {
         "status": "online",
@@ -67,7 +75,9 @@ async def root(request: Request):
         "group_code": settings.GROUP_CODE,
         "sih_mapping": settings.SIH_PROBLEM_ID,
         "storage_mode": "AWS S3" if settings.USE_S3_STORAGE else "Local Hybrid Storage",
-        "dashboard_url": "/dashboard/",
+        "console_url": "/dashboard/console.html",
+        "website_url": "/dashboard/website.html",
+        "dashboard_url": "/dashboard/console.html",
         "docs_url": "/docs"
     }
 
