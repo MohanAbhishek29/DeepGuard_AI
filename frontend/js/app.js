@@ -63,52 +63,131 @@ function clearLiveLogs() {
   }
 }
 
-// Custom Cyber Sci-Fi Cursor
+// Electric Blue Laser Comet Cursor (Style 7 in Blue)
 function initCyberCursor() {
-  const dot = document.getElementById('cyberCursorDot');
-  const ring = document.getElementById('cyberCursorRing');
-  if (!dot || !ring) return;
+  let canvas = document.getElementById('laserCanvas');
+  if (!canvas) {
+    canvas = document.createElement('canvas');
+    canvas.id = 'laserCanvas';
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100vw';
+    canvas.style.height = '100vh';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '999998';
+    document.body.appendChild(canvas);
+  }
 
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-  let ringX = mouseX;
-  let ringY = mouseY;
+  let core = document.getElementById('laserCore');
+  if (!core) {
+    core = document.createElement('div');
+    core.id = 'laserCore';
+    core.className = 'laser-cursor-core';
+    document.body.appendChild(core);
+  }
+
+  // Hide old dot/ring if present
+  const oldDot = document.getElementById('cyberCursorDot');
+  const oldRing = document.getElementById('cyberCursorRing');
+  if (oldDot) oldDot.style.display = 'none';
+  if (oldRing) oldRing.style.display = 'none';
+
+  const ctx = canvas.getContext('2d');
+  let mx = -100, my = -100;
+  let particles = [];
+  const bluePalette = [
+    'rgba(0, 245, 255, ',    // electric cyan
+    'rgba(56, 189, 248, ',   // neon sky blue
+    'rgba(96, 165, 250, ',   // luminous blue
+    'rgba(186, 230, 253, '   // bright laser blue spark
+  ];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
 
   window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+    mx = e.clientX;
+    my = e.clientY;
+    core.style.left = mx + 'px';
+    core.style.top = my + 'px';
+
+    // Spawn 2-3 comet trail particles on mouse motion
+    for (let i = 0; i < 3; i++) {
+      particles.push({
+        x: mx + (Math.random() - 0.5) * 4,
+        y: my + (Math.random() - 0.5) * 4,
+        vx: (Math.random() - 0.5) * 2.2,
+        vy: (Math.random() - 0.5) * 2.2,
+        life: 1.0,
+        decay: Math.random() * 0.035 + 0.025,
+        radius: Math.random() * 3.2 + 1.2,
+        colorBase: bluePalette[Math.floor(Math.random() * bluePalette.length)]
+      });
+    }
   });
 
-  function renderRing() {
-    ringX += (mouseX - ringX) * 0.18;
-    ringY += (mouseY - ringY) * 0.18;
-    ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
-    requestAnimationFrame(renderRing);
-  }
-  renderRing();
+  // Click burst (14 particles spray outward in electric blue)
+  window.addEventListener('click', (e) => {
+    for (let i = 0; i < 14; i++) {
+      const angle = (Math.PI * 2 / 14) * i + (Math.random() - 0.5) * 0.3;
+      const speed = Math.random() * 3.5 + 2.0;
+      particles.push({
+        x: e.clientX,
+        y: e.clientY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        life: 1.0,
+        decay: Math.random() * 0.03 + 0.02,
+        radius: Math.random() * 3.5 + 1.5,
+        colorBase: bluePalette[Math.floor(Math.random() * bluePalette.length)]
+      });
+    }
+  });
 
-  const hoverTargets = 'a, button, input, select, textarea, .dropzone, .btn-analyze, .nav-item, .bento-card, .morph-tab-btn, .btn-website-link, .btn-audit';
-  
+  // Interactive hover expansion
+  const hoverTargets = 'a, button, input, select, textarea, .dropzone, .btn-analyze, .nav-item, .bento-card, .morph-tab-btn, .btn-website-link, .btn-audit, .diag-card, .kpi-card';
   document.addEventListener('mouseover', (e) => {
     if (e.target.closest(hoverTargets)) {
-      ring.classList.add('cursor-hover');
+      core.classList.add('laser-hover');
     }
   });
-
   document.addEventListener('mouseout', (e) => {
     if (e.target.closest(hoverTargets)) {
-      ring.classList.remove('cursor-hover');
+      core.classList.remove('laser-hover');
     }
   });
 
-  document.addEventListener('mousedown', () => {
-    ring.classList.add('cursor-click');
-  });
+  // Render loop
+  function renderComet() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  document.addEventListener('mouseup', () => {
-    ring.classList.remove('cursor-click');
-  });
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= p.decay;
+
+      if (p.life <= 0) {
+        particles.splice(i, 1);
+        continue;
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius * p.life, 0, Math.PI * 2);
+      ctx.fillStyle = p.colorBase + (p.life * 0.85) + ')';
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = '#00f5ff';
+      ctx.fill();
+    }
+
+    requestAnimationFrame(renderComet);
+  }
+  renderComet();
 }
 
 function handleFileSelect(files) {

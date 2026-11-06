@@ -440,11 +440,11 @@
     .c7-laser {
       position: fixed;
       width: 8px; height: 8px;
-      background: #ff0055;
+      background: #00f5ff;
       border-radius: 50%;
       pointer-events: none;
       transform: translate(-50%, -50%);
-      box-shadow: 0 0 16px #ff0055, 0 0 30px #ff0055;
+      box-shadow: 0 0 14px #00f5ff, 0 0 28px #38bdf8, 0 0 42px rgba(0, 245, 255, 0.7);
     }
 
     /* Style 8: Biometric Iris / Scanning Reticle */
@@ -616,13 +616,13 @@
       <div class="cursor-card" onclick="selectCursor(7)">
         <div class="card-top">
           <div class="cursor-number">07</div>
-          <span class="cursor-tag">Laser Particle</span>
+          <span class="cursor-tag">Electric Laser</span>
         </div>
         <div class="cursor-preview-box">
-          <div style="width: 8px; height: 8px; background: #ff0055; border-radius: 50%; box-shadow: 0 0 16px #ff0055, 0 0 24px #ff0055;"></div>
+          <div style="width: 8px; height: 8px; background: #00f5ff; border-radius: 50%; box-shadow: 0 0 16px #00f5ff, 0 0 28px #38bdf8;"></div>
         </div>
-        <div class="cursor-name">Neon Laser Comet</div>
-        <div class="cursor-desc">Intense glowing crimson laser with trailing fading spark particles that follow mouse motion in real time.</div>
+        <div class="cursor-name">Electric Blue Laser Comet</div>
+        <div class="cursor-desc">Intense glowing electric blue laser with trailing fading spark dust particles that follow mouse motion in real time.</div>
         <div class="card-btn">Click to Test</div>
       </div>
 
@@ -725,7 +725,7 @@
         'Quantum Hex Target',
         'Sonar Radar Ping',
         'Corner Target Lock-On',
-        'Neon Laser Comet',
+        'Electric Blue Laser Comet',
         'Biometric Iris Scanner'
       ];
       const descs = [
@@ -735,7 +735,7 @@
         'Rotating high-tech hexagon ring with 6 corner brackets. Snaps locked when hovering buttons.',
         'Emits periodic expanding sonar ripple pulses. Perfect fit for multimodal acoustic/audio detection.',
         '4 floating L-brackets that hover around pointer and snap onto the 4 corners of any hovered card or button.',
-        'Intense glowing crimson laser with trailing fading spark particles that follow mouse motion in real time.',
+        'Intense glowing electric blue laser with trailing fading spark dust particles that follow mouse motion in real time.',
         'Segmented rotating optical reticle that oscillates like an authentic biometric retina / iris identification scan.'
       ];
 
@@ -866,14 +866,16 @@
           const p = particles[i];
           p.x += p.vx;
           p.y += p.vy;
-          p.life -= 0.04;
+          p.life -= 0.035;
           if (p.life <= 0) {
             particles.splice(i, 1);
             continue;
           }
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.radius * p.life, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 0, 85, ${p.life * 0.8})`;
+          ctx.fillStyle = `rgba(0, 245, 255, ${p.life * 0.85})`;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = '#00f5ff';
           ctx.fill();
         }
       } else if (activeStyle === 8) {
@@ -886,8 +888,10 @@
       requestAnimationFrame(animate);
     }
 
-    renderCursorElements();
+    // Default to Electric Blue Laser Comet (Style 7)
+    selectCursor(7);
     animate();
   </script>
 </body>
 </html>
+
