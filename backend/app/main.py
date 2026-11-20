@@ -62,15 +62,11 @@ async def console_redirect():
 async def website_redirect():
     return RedirectResponse(url="/dashboard/website.html", status_code=303)
 
-@app.get("/cursors", tags=["System Health"], summary="Interactive Cursor Style Matrix Redirect")
-async def cursors_redirect():
-    return RedirectResponse(url="/dashboard/cursor_showcase.html", status_code=303)
-
-@app.get("/", tags=["System Health"], summary="Root Health Check & Dashboard Redirect")
+@app.get("/", tags=["System Health"], summary="Root Health Check & Showcase Website Redirect")
 async def root(request: Request):
     accept_header = request.headers.get("accept", "")
     if "text/html" in accept_header:
-        return RedirectResponse(url="/dashboard/console.html", status_code=303)
+        return RedirectResponse(url="/dashboard/website.html", status_code=303)
 
     return {
         "status": "online",
@@ -81,7 +77,7 @@ async def root(request: Request):
         "storage_mode": "AWS S3" if settings.USE_S3_STORAGE else "Local Hybrid Storage",
         "console_url": "/dashboard/console.html",
         "website_url": "/dashboard/website.html",
-        "dashboard_url": "/dashboard/console.html",
+        "dashboard_url": "/dashboard/website.html",
         "docs_url": "/docs"
     }
 

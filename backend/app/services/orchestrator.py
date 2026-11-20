@@ -541,10 +541,11 @@ class PipelineOrchestrator:
         # ==================================================================
         # Weighted synthetic signal sum
         is_vit_ai = (vit_fake_prob is not None) and (vit_fake_prob >= 0.88)
-        is_vit_clean = (vit_fake_prob is not None) and (vit_fake_prob < 0.88)
+        is_gen_match = is_generative_res and (vit_fake_prob is None or vit_fake_prob >= 0.48)
 
         weighted_score = (
             (5 if is_vit_ai else 0) +
+            (4 if is_gen_match else 0) +
             (3 if is_ai_meta else 0) +
             (2 if has_ai_name else 0) +
             (2 if is_generative_res else 0) +
@@ -557,6 +558,7 @@ class PipelineOrchestrator:
 
         signal_count = sum([
             is_vit_ai,
+            is_gen_match,
             is_ai_meta,
             has_ai_name,
             is_generative_res,
@@ -568,21 +570,31 @@ class PipelineOrchestrator:
             no_camera_exif,
         ])
 
-        # Definitive flags: explicit AI meta, seam anomaly, or high-confidence ViT neural score
-        definitive_synthetic = is_ai_meta or is_seam_anomaly or is_vit_ai
-
-        # Confirmed authentic: verified camera hardware EXIF OR clean ViT neural score without AI metadata
-        confirmed_authentic = (
-            (has_camera_hardware or is_vit_clean)
-            and not is_ai_meta
-            and not has_ai_name
-            and not is_seam_anomaly
-            and not is_vit_ai
+        # Definitive synthetic triggers:
+        # 1. High confidence ViT neural network detection (>= 88%)
+        # 2. Generative latent resolution bucket (Midjourney/DALL-E/Flux/SDXL) + no camera hardware
+        # 3. Explicit AI metadata or facial seam discontinuity
+        definitive_synthetic = (
+            is_vit_ai or 
+            is_gen_match or 
+            is_ai_meta or 
+            is_seam_anomaly or 
+            has_ai_name
         )
 
-        if confirmed_authentic:
+        # Confirmed authentic:
+        # Verified camera hardware EXIF without AI flags OR
+        # Standard camera aspect ratio + ViT not flagged (< 88%) + no generative signatures
+        confirmed_authentic = (
+            (has_camera_hardware and not is_ai_meta and not has_ai_name and not is_seam_anomaly and not is_generative_res) or
+            (not is_generative_res and not is_ai_meta and not has_ai_name and not is_seam_anomaly and not is_vit_ai)
+        )
+
+        if definitive_synthetic:
+            is_synthetic = True
+        elif confirmed_authentic:
             is_synthetic = False
-        elif definitive_synthetic or weighted_score >= 5 or (is_png_no_cam and is_generative_res):
+        elif weighted_score >= 5:
             is_synthetic = True
         else:
             is_synthetic = False

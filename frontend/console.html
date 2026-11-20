@@ -68,7 +68,7 @@
           <span>🌐</span> <span>Official Product Website</span>
         </a>
         
-        <button id="themeToggleBtn" class="btn-theme-toggle" onclick="toggleTheme()">☀️ Light Mode</button>
+        <span class="pill-badge" style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px;">🏛️ Academic Capstone Edition</span>
         <button class="btn-audit" onclick="exportForensicAudit()">📄 Audit JSON</button>
       </div>
     </header>
@@ -121,13 +121,13 @@
 
         <!-- Live Media Inspection HUD -->
         <div class="media-hud-container" id="mediaHud">
-          <img class="media-hud-image" id="hudImage" style="display: none; width: 100%; border-radius: 8px; object-fit: contain; max-height: 280px; background: #000;" alt="Forensic image preview" />
-          <video class="media-hud-video" id="hudVideo" controls playsinline style="display: none;"></video>
+          <img class="media-hud-image" id="hudImage" style="display: none; width: 100%; border-radius: 8px; object-fit: contain; max-height: 280px; background: #f8fafc; border: 1px solid #e2e8f0;" alt="Forensic image preview" />
+          <video class="media-hud-video" id="hudVideo" controls playsinline style="display: none; background: #f8fafc; border: 1px solid #e2e8f0;"></video>
           
           <!-- Clean Audio Inspection Player -->
           <div id="audioVisualizerBlock" class="audio-player-wrapper" style="display: none;">
             <div style="font-size: 32px; margin-bottom: 6px;">🎙️</div>
-            <div style="font-weight: 700; font-size: 14px; color: #ffffff; margin-bottom: 3px;" id="audioTrackTitle">Audio Stream Loaded</div>
+            <div style="font-weight: 700; font-size: 14px; color: #0f172a; margin-bottom: 3px;" id="audioTrackTitle">Audio Stream Loaded</div>
             <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;" id="audioTrackMeta">Studio Quality • 44.1 kHz • Acoustic Probing Ready</div>
             <audio class="media-hud-audio" id="hudAudio" controls style="width: 100%; border-radius: 8px;"></audio>
             <div class="audio-track-badge"><span>⚡</span> <span>Acoustic Frequency &amp; Vocoder Spectrum Probed</span></div>
@@ -324,7 +324,7 @@
     <!-- ======================================================================
          CONSOLE FOOTER & INTELLECTUAL PROPERTY NOTICE
          ====================================================================== -->
-    <footer style="margin-top: 40px; padding: 24px 0; border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 12px; color: var(--text-muted);">
+    <footer style="margin-top: 40px; padding: 24px 0; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 12px; color: var(--text-muted);">
       <div style="display: flex; align-items: center; gap: 12px;">
         <img src="assets/DeepGuard_AI_App_logo.png" alt="Logo" style="width: 24px; height: 24px; border-radius: 6px;">
         <span><strong>DeepGuard AI</strong> &copy; 2026 Mohan Abhishek Gupta. All Rights Reserved.</span>
@@ -334,7 +334,7 @@
         <span>Authorized Academic &amp; Forensic Review</span>
       </div>
       <div>
-        <a href="website.html" style="color: var(--accent-cyan); text-decoration: none; font-weight: 600;">🌐 View Official Product Website &rarr;</a>
+        <a href="website.html" style="color: var(--primary-blue); text-decoration: none; font-weight: 600;">🌐 View Official Product Website &rarr;</a>
       </div>
     </footer>
 
