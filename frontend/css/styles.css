@@ -1526,3 +1526,156 @@ header {
     /* cursor default */
   }
 }
+
+
+/* ==============================================================================
+   ENTERPRISE LIGHT THEME (EXECUTIVE / ACADEMIC FORENSIC WORKSTATION)
+   ============================================================================== */
+body.theme-light {
+  background-color: #f8fafc !important;
+  background-image: 
+    linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px) !important;
+  color: #0f172a !important;
+}
+
+body.theme-light header {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05) !important;
+}
+
+body.theme-light .brand-info h1 {
+  color: #0f172a !important;
+}
+
+body.theme-light .brand-info p {
+  color: #64748b !important;
+}
+
+body.theme-light .kpi-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04) !important;
+}
+
+body.theme-light .kpi-val {
+  color: #0f172a !important;
+}
+
+body.theme-light .kpi-sub {
+  color: #64748b !important;
+}
+
+body.theme-light .panel {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) !important;
+}
+
+body.theme-light .panel-title {
+  color: #0f172a !important;
+}
+
+body.theme-light .dropzone {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+body.theme-light .dropzone:hover {
+  background: #eff6ff !important;
+  border-color: #3b82f6 !important;
+}
+
+body.theme-light .diag-card {
+  background: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+body.theme-light .diag-title {
+  color: #0f172a !important;
+}
+
+body.theme-light .diag-val {
+  color: #1e293b !important;
+}
+
+body.theme-light .diag-sub {
+  color: #64748b !important;
+}
+
+body.theme-light .pill-badge.live {
+  background: #ecfdf5 !important;
+  color: #059669 !important;
+  border-color: #a7f3d0 !important;
+}
+
+body.theme-light .btn-website-link {
+  background: #eff6ff !important;
+  border-color: #bfdbfe !important;
+  color: #2563eb !important;
+}
+
+body.theme-light .btn-website-link:hover {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+body.theme-light .btn-audit {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+body.theme-light .btn-audit:hover {
+  background: #0f172a !important;
+  color: #ffffff !important;
+}
+
+body.theme-light .btn-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #334155;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+body.theme-light .breakdown-table th {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border-color: #e2e8f0 !important;
+}
+
+body.theme-light .breakdown-table td {
+  border-color: #f1f5f9 !important;
+  color: #1e293b !important;
+}

@@ -828,3 +828,87 @@ section {
     /* cursor default */
   }
 }
+
+
+/* ==============================================================================
+   WEBSITE ENTERPRISE LIGHT THEME
+   ============================================================================== */
+body.theme-light {
+  --black:        #f8fafc;
+  --near-black:   #f1f5f9;
+  --surface:      #ffffff;
+  --surface-2:    #f8fafc;
+  --border:       #e2e8f0;
+  --border-hi:    #cbd5e1;
+  --text:         #0f172a;
+  --text-dim:     #475569;
+  --text-muted:   #64748b;
+  --accent:       #0284c7;
+  --accent-blue:  #2563eb;
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+body.theme-light nav {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 8px rgba(15, 23, 42, 0.05) !important;
+}
+
+body.theme-light .nav-links a {
+  color: #475569 !important;
+}
+
+body.theme-light .nav-links a:hover {
+  color: #0284c7 !important;
+}
+
+body.theme-light .hero-title .solid-line {
+  color: #0f172a !important;
+}
+
+body.theme-light .hero-desc {
+  color: #475569 !important;
+}
+
+body.theme-light .metric-cell {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04) !important;
+}
+
+body.theme-light .metric-num {
+  color: #0f172a !important;
+}
+
+body.theme-light .metric-label {
+  color: #64748b !important;
+}
+
+body.theme-light .section-title {
+  color: #0f172a !important;
+}
+
+body.theme-light .section-body {
+  color: #475569 !important;
+}
+
+body.theme-light .spec-card, body.theme-light .usecase-card, body.theme-light .arch-node, body.theme-light .team-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04) !important;
+}
+
+body.theme-light .spec-title, body.theme-light .arch-title, body.theme-light .team-name {
+  color: #0f172a !important;
+}
+
+body.theme-light .spec-desc, body.theme-light .arch-body, body.theme-light .team-role {
+  color: #475569 !important;
+}
+
+body.theme-light footer {
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #64748b !important;
+}

@@ -232,3 +232,27 @@
   };
 
 })();
+
+
+// Enterprise Light / Dark Theme Controller
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('theme-light');
+  const btn = document.getElementById('themeToggleBtn');
+  if (btn) {
+    btn.innerHTML = isLight ? '☀️ Light Mode' : '🌙 Dark Mode';
+  }
+  localStorage.setItem('deepguard_theme', isLight ? 'light' : 'dark');
+}
+
+(function initTheme() {
+  const saved = localStorage.getItem('deepguard_theme');
+  if (saved === 'dark') {
+    document.body.classList.remove('theme-light');
+    const btn = document.getElementById('themeToggleBtn');
+    if (btn) btn.innerHTML = '🌙 Dark Mode';
+  } else {
+    document.body.classList.add('theme-light');
+    const btn = document.getElementById('themeToggleBtn');
+    if (btn) btn.innerHTML = '☀️ Light Mode';
+  }
+})();
