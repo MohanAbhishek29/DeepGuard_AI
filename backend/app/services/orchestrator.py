@@ -30,6 +30,29 @@ AUDIO_EXTENSIONS = {"mp3", "wav", "flac", "aac", "ogg", "m4a"}
 VIDEO_EXTENSIONS = {"mp4", "avi", "mov", "mkv", "webm"}
 IMAGE_EXTENSIONS = {"jpg", "jpeg", "png", "webp", "bmp", "tiff"}
 
+_vit_processor = None
+_vit_model = None
+
+def _get_vit_detector():
+    """Lazy loader for local Vision Transformer AI image classifier on CPU."""
+    global _vit_processor, _vit_model
+    if _vit_model is None:
+        try:
+            import os
+            os.environ["USE_TF"] = "0"
+            os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+            import torch
+            from transformers import AutoImageProcessor, AutoModelForImageClassification
+            model_id = "capcheck/ai-image-detection"
+            _vit_processor = AutoImageProcessor.from_pretrained(model_id, local_files_only=True)
+            _vit_model = AutoModelForImageClassification.from_pretrained(model_id, local_files_only=True)
+            _vit_model.eval()
+            logger.info("DeepGuard AI: Vision Transformer (ViT) AI detector loaded on CPU.")
+        except Exception as e:
+            logger.debug(f"ViT model offline or not cached: {e}")
+            _vit_model = False
+    return _vit_processor, _vit_model
+
 class PipelineOrchestrator:
     """
     Central Orchestrator for DeepGuard AI Multimodal Detection.
@@ -206,6 +229,28 @@ class PipelineOrchestrator:
                             prev_face = rf
 
                     cap.release()
+                    # Deep Learning ViT Frame Check on video
+                    try:
+                        proc, net = _get_vit_detector()
+                        if proc and net and len(lap_vars) > 0:
+                            import torch
+                            from PIL import Image
+                            # Sample middle frame for ViT inspection
+                            mid_cap = cv2.VideoCapture(media_path)
+                            mid_cap.set(cv2.CAP_PROP_POS_FRAMES, min(count // 2, count - 1))
+                            mret, mframe = mid_cap.read()
+                            mid_cap.release()
+                            if mret and mframe is not None:
+                                rgb_frame = cv2.cvtColor(mframe, cv2.COLOR_BGR2RGB)
+                                pil_frame = Image.fromarray(rgb_frame)
+                                inputs = proc(images=pil_frame, return_tensors="pt")
+                                with torch.no_grad():
+                                    probs = torch.softmax(net(**inputs).logits, dim=-1)[0]
+                                    vit_video_prob = float(probs[1].item())
+                                    if vit_video_prob >= 0.75:
+                                        is_ai_render_video = True
+                    except Exception as e_v:
+                        logger.debug(f"Video ViT check: {e_v}")
             except Exception as e:
                 logger.debug(f"Frame analysis probe error: {e}")
 
@@ -349,11 +394,23 @@ class PipelineOrchestrator:
         camera_info = ""
         is_ai_meta = False
         ai_meta_tag = ""
+        vit_fake_prob = None
 
         # 1. Error Level Analysis (ELA) & EXIF Probe with Pillow
         if media_path and os.path.exists(media_path):
             try:
                 pil_img = Image.open(media_path).convert("RGB")
+                # Deep Learning Vision Transformer (ViT) Inference
+                try:
+                    proc, net = _get_vit_detector()
+                    if proc and net:
+                        import torch
+                        inputs = proc(images=pil_img, return_tensors="pt")
+                        with torch.no_grad():
+                            probs = torch.softmax(net(**inputs).logits, dim=-1)[0]
+                            vit_fake_prob = float(probs[1].item())
+                except Exception as e_vit:
+                    logger.debug(f"Image ViT inference: {e_vit}")
                 
                 # Run ELA
                 buf = io.BytesIO()
@@ -483,7 +540,11 @@ class PipelineOrchestrator:
         # SIGNAL TIER 3 — Composite Bayesian Forensic Decision Engine
         # ==================================================================
         # Weighted synthetic signal sum
+        is_vit_ai = (vit_fake_prob is not None) and (vit_fake_prob >= 0.65)
+        is_vit_clean = (vit_fake_prob is not None) and (vit_fake_prob <= 0.35)
+
         weighted_score = (
+            (4 if is_vit_ai else 0) +
             (3 if is_ai_meta else 0) +
             (2 if has_ai_name else 0) +
             (2 if is_generative_res else 0) +
@@ -508,7 +569,7 @@ class PipelineOrchestrator:
         ])
 
         # Definitive flags: explicit AI meta, seam anomaly, or prompt name
-        definitive_synthetic = is_ai_meta or is_seam_anomaly
+        definitive_synthetic = is_ai_meta or is_seam_anomaly or (vit_fake_prob is not None and vit_fake_prob >= 0.88)
 
         # Confirmed authentic: verified camera hardware EXIF + no AI flags
         confirmed_authentic = (
@@ -531,6 +592,8 @@ class PipelineOrchestrator:
             score = round(0.88 + (prop_seed % 8) / 100.0, 2)
             status = "SUSPICIOUS"
 
+            if is_vit_ai:
+                artifacts.append(f"Deep Learning Vision Transformer flagged synthetic patterns ({vit_fake_prob*100:.1f}% neural confidence)")
             if is_ai_meta:
                 artifacts.append(f"Generative software signature found in metadata ({ai_meta_tag.upper()})")
             if has_ai_name:
@@ -564,6 +627,7 @@ class PipelineOrchestrator:
         diag = {
             "ela_variance": f"Std: {std_ela:.2f}, Max: {max_ela:.1f}",
             "ela_status": "ELA Too Uniform — AI Image (no JPEG chain)" if is_ela_anomaly else ("Uniform Clean Recompression" if not (std_ela > 28.0) else "Compression Disparity"),
+            "neural_vit_confidence": f"{vit_fake_prob*100:.1f}% AI Probability (ViT)" if vit_fake_prob is not None else "Forensic Signals Active",
             "camera_sensor_noise": f"Laplacian {lap_var:.1f}",
             "sensor_noise_status": "Natural Optical Grain" if lap_var >= 25.0 else ("Synthetic Diffusion Smoothing" if lap_var < 25.0 else "Borderline"),
             "device_hardware": camera_info if has_camera_hardware else "No Camera EXIF (AI Image Indicator)",
