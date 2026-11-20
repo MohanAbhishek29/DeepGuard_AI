@@ -37,7 +37,7 @@ body {
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  cursor: none; /* custom cursor active */
+  /* cursor default */
 }
 
 /* ── Custom Cursor ───────────────────────────────────────────────────────── */
@@ -825,6 +825,6 @@ section {
 
 @media (pointer: fine) {
   body, a, button, input, select, textarea, .btn, .nav-btn, .cursor-card, .test-target, .pipeline-step, .arch-node, .team-card, .usecase-card, .sim-btn, .spec-card, .metric-card {
-    cursor: none !important;
+    /* cursor default */
   }
 }

@@ -540,23 +540,23 @@ class PipelineOrchestrator:
         # SIGNAL TIER 3 — Composite Bayesian Forensic Decision Engine
         # ==================================================================
         # Weighted synthetic signal sum
-        is_vit_ai = (vit_fake_prob is not None) and (vit_fake_prob >= 0.65)
-        is_vit_clean = (vit_fake_prob is not None) and (vit_fake_prob <= 0.35)
+        is_vit_ai = (vit_fake_prob is not None) and (vit_fake_prob >= 0.88)
+        is_vit_clean = (vit_fake_prob is not None) and (vit_fake_prob < 0.88)
 
         weighted_score = (
-            (4 if is_vit_ai else 0) +
+            (5 if is_vit_ai else 0) +
             (3 if is_ai_meta else 0) +
             (2 if has_ai_name else 0) +
             (2 if is_generative_res else 0) +
-            (2 if is_png_no_cam else 0) +
+            (1 if is_png_no_cam else 0) +
             (2 if is_ela_anomaly else 0) +
             (2 if is_diffusion_smooth else 0) +
             (2 if is_seam_anomaly else 0) +
-            (1 if is_fft_anomaly else 0) +
-            (1 if no_camera_exif else 0)
+            (1 if is_fft_anomaly else 0)
         )
 
         signal_count = sum([
+            is_vit_ai,
             is_ai_meta,
             has_ai_name,
             is_generative_res,
@@ -568,21 +568,21 @@ class PipelineOrchestrator:
             no_camera_exif,
         ])
 
-        # Definitive flags: explicit AI meta, seam anomaly, or prompt name
-        definitive_synthetic = is_ai_meta or is_seam_anomaly or (vit_fake_prob is not None and vit_fake_prob >= 0.88)
+        # Definitive flags: explicit AI meta, seam anomaly, or high-confidence ViT neural score
+        definitive_synthetic = is_ai_meta or is_seam_anomaly or is_vit_ai
 
-        # Confirmed authentic: verified camera hardware EXIF + no AI flags
+        # Confirmed authentic: verified camera hardware EXIF OR clean ViT neural score without AI metadata
         confirmed_authentic = (
-            has_camera_hardware
+            (has_camera_hardware or is_vit_clean)
             and not is_ai_meta
             and not has_ai_name
             and not is_seam_anomaly
-            and not is_generative_res
+            and not is_vit_ai
         )
 
         if confirmed_authentic:
             is_synthetic = False
-        elif definitive_synthetic or weighted_score >= 4 or (is_png_no_cam and (is_generative_res or is_ela_anomaly)):
+        elif definitive_synthetic or weighted_score >= 5 or (is_png_no_cam and is_generative_res):
             is_synthetic = True
         else:
             is_synthetic = False

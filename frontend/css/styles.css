@@ -1314,7 +1314,7 @@ header {
    ============================================================================== */
 @media (pointer: fine) {
   body, a, button, input, select, textarea, .dropzone, .btn-analyze, .nav-item, .bento-card, .morph-tab-btn {
-    cursor: none !important;
+    /* cursor default */
   }
 }
 
@@ -1523,6 +1523,6 @@ header {
 
 @media (pointer: fine) {
   body, a, button, input, select, textarea, .dropzone, .btn-analyze, .nav-item, .bento-card, .morph-tab-btn, .btn-website-link, .btn-audit, .kpi-card, .btn {
-    cursor: none !important;
+    /* cursor default */
   }
 }
