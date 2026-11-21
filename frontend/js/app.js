@@ -127,7 +127,18 @@ function handleFileSelect(files) {
       document.getElementById('hudFpsText').innerText = 'FPS: 30.00';
       streamLog('READY', `Video stream synced. 30.00 FPS HUD scanline active. Awaiting analysis trigger.`, 'vision');
       setStreamStatus('WAITING');
+    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else {
       // Audio stream
       if (img) img.style.display = 'none';
       video.style.display = 'none';
@@ -261,6 +272,17 @@ async function runAnalysis() {
     step1.innerHTML = '⚡ [1/3] Ingesting audio file & decoding acoustic container...';
     step2.innerHTML = '⏳ [2/3] Scanning high-frequency sounds (>16kHz) for AI voice cloning...';
     step3.innerHTML = '⏳ [3/3] Transcribing spoken words & verifying voice patterns...';
+  } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
+    } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
   } else {
     step1.innerHTML = '⚡ [1/3] Reading video frames & inspecting face movements...';
     step2.innerHTML = '⏳ [2/3] Analyzing audio track for AI voice cloning (>16kHz)...';
@@ -291,7 +313,18 @@ async function runAnalysis() {
       streamLog('AUDIO', `Parsing audio container tags for Suno/Udio/generative watermark signatures...`, 'audio');
       await new Promise(r => setTimeout(r, 220));
       streamLog('AUDIO', `Scanning ultrasonic frequencies (>16,000 Hz) for HiFi-GAN neural vocoder noise...`, 'audio');
+    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else {
       step1.innerHTML = '✅ [1/3] Video Frames & Facial Texture Extracted';
       step2.innerHTML = '⚡ [2/3] Analyzing audio track for AI voice cloning (>16kHz)...';
       streamLog('VISION', `Extracting video frames. Computing 2D-FFT spatial frequency upsampling grid...`, 'vision');
@@ -314,7 +347,18 @@ async function runAnalysis() {
       streamLog('AUDIO', `Computing biomechanical vocal cord pitch micro-jitter variance...`, 'audio');
       await new Promise(r => setTimeout(r, 200));
       streamLog('SPEECH', `Dispatching OpenAI Whisper multilingual ASR for speech phoneme transcription...`, 'speech');
+    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else {
       step2.innerHTML = '✅ [2/3] Audio Track & Speech Frequencies Probed';
       step3.innerHTML = '⚡ [3/3] Comparing face vs voice to detect deepfakes or dubbing...';
       streamLog('AUDIO', `Measuring vocal pitch micro-jitter variance against human harmonic baselines...`, 'audio');
@@ -338,20 +382,31 @@ async function runAnalysis() {
       step3.innerHTML = '✅ [3/3] Camera Sensor Grain & Seam Inspection Complete';
     } else if (isAudio) {
       step3.innerHTML = '✅ [3/3] Speech & Vocal Naturalness Verification Complete';
+    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else {
       step3.innerHTML = '✅ [3/3] Audio-Visual Cross-Modal Match Complete';
     }
 
     lastAnalysisResult = result;
 
     const verdict = result.cross_modal ? result.cross_modal.overall_verdict : 'ANALYSIS_COMPLETE';
-    const isSuspicious = verdict.includes('MANIPULATED') || verdict.includes('SYNTHETIC') || verdict.includes('FLAGGED') || verdict.includes('SUSPICIOUS');
+    const isSuspicious = verdict.includes('MANIPULATED') || verdict.includes('SYNTHETIC') || verdict.includes('FLAGGED') || verdict.includes('SUSPICIOUS') || verdict.includes('AI GENERATED') || verdict.includes('AI_GENERATED') || verdict.includes('DEEPFAKE');
     const category = isSuspicious ? 'flag' : 'verdict';
     const conf = ((result.cross_modal?.confidence_score || 0.95) * 100).toFixed(1);
 
     streamLog(isSuspicious ? 'FLAGGED' : 'VERIFIED', `Verdict Calculated: ${verdict} (Confidence: ${conf}%)`, category);
     streamLog('CERTIFICATE', `Tamper-evident cryptographic SHA-256 certificate signed: ${result.job_id}`, 'sys');
-    setStreamStatus(isSuspicious ? 'FLAGGED' : 'AUTHENTIC');
+    setStreamStatus(isSuspicious ? 'FLAGGED' : 'GENUINE');
 
     setTimeout(() => {
       renderForensics(result);
@@ -392,17 +447,35 @@ function renderForensics(data) {
   const isAudioMode = (selectedFile && selectedFile.type && selectedFile.type.startsWith('audio/')) || (data.audio && !data.vision);
   const isVideoMode = !isImageMode && !isAudioMode;
 
-  if (v.startsWith('AUTHENTIC')) {
+  if (v.startsWith('GENUINE') || v.includes('GENUINE')) {
     banner.className = 'verdict-banner authentic';
     icon.innerText = '✅';
-    title.innerText = isImageMode 
-      ? 'VERIFIED AUTHENTIC PHOTO (GENUINE CAMERA LENS)'
-      : (isAudioMode ? 'VERIFIED AUTHENTIC AUDIO (ORGANIC HUMAN VOICE)' : 'VERIFIED AUTHENTIC MEDIA (GENUINE CAMERA & VOICE)');
+    title.innerText = isImageMode
+      ? 'GENUINE CAMERA PHOTO'
+      : (isAudioMode ? 'GENUINE HUMAN VOICE' : 'GENUINE MEDIA — ALL SIGNALS VERIFIED');
+    confBadge.className = 'verdict-badge badge-v-auth';
+  } else if (v.startsWith('AUTHENTIC')) {
+    banner.className = 'verdict-banner authentic';
+    icon.innerText = '✅';
+    title.innerText = isImageMode
+      ? 'GENUINE CAMERA PHOTO'
+      : (isAudioMode ? 'GENUINE HUMAN VOICE' : 'GENUINE MEDIA — ALL SIGNALS VERIFIED');
     confBadge.className = 'verdict-badge badge-v-auth';
   } else if (v.includes('SYNTHETIC_AUDIO')) {
     banner.className = 'verdict-banner synthetic_audio';
     icon.innerText = '🚨';
     title.innerText = 'AI-CLONED VOICE / SYNTHETIC AUDIO DETECTED (SUNO / ELEVENLABS)';
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
+    } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
     confBadge.className = 'verdict-badge badge-v-fake';
   } else {
     banner.className = 'verdict-banner manipulated';
@@ -411,7 +484,18 @@ function renderForensics(data) {
       title.innerText = 'AI-GENERATED / EDITED IMAGE DETECTED';
     } else if (isAudioMode) {
       title.innerText = 'AI-CLONED VOICE DETECTED';
+    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else {
       title.innerText = v.replaceAll('_', ' ');
     }
     confBadge.className = 'verdict-badge badge-v-fake';
@@ -444,14 +528,25 @@ function renderForensics(data) {
     visCircle.style.strokeDashoffset = offset;
 
     const visStatus = document.getElementById('visionStatusBadge');
-    if (data.vision && data.vision.status === 'SUSPICIOUS') {
+    if (data.vision && data.vision.status === 'AI_GENERATED') {
       visCircle.style.stroke = '#f43f5e';
       visStatus.innerText = 'AI GENERATED / EDITED';
       visStatus.style.background = 'rgba(244, 63, 94, 0.2)';
       visStatus.style.color = '#fb7185';
+    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else {
       visCircle.style.stroke = '#10b981';
-      visStatus.innerText = 'AUTHENTIC PHOTO';
+      visStatus.innerText = 'GENUINE CAMERA PHOTO';
       visStatus.style.background = 'rgba(16, 185, 129, 0.2)';
       visStatus.style.color = '#34d399';
     }
@@ -471,7 +566,7 @@ function renderForensics(data) {
 
     const audCircle = document.getElementById('audioGaugeCircle');
     const audStatus = document.getElementById('audioStatusBadge');
-    const isAuthImage = (data.vision && data.vision.status !== 'SUSPICIOUS');
+    const isAuthImage = (data.vision && data.vision.status !== 'AI_GENERATED');
 
     if (isAuthImage) {
       document.getElementById('audioScoreText').innerText = '96%';
@@ -486,7 +581,18 @@ function renderForensics(data) {
         • AI Tool Signatures: No Midjourney / DALL-E / SD markers<br>
         • Light Distribution: Natural optical light decay verified
       `;
+    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else {
       document.getElementById('audioScoreText').innerText = '14%';
       audCircle.style.strokeDashoffset = 226 - (226 * 14 / 100);
       audCircle.style.stroke = '#f43f5e';
@@ -506,7 +612,7 @@ function renderForensics(data) {
 
     // 4. Detailed Backend Inspection Breakdown Table
     const diag = (data.vision && data.vision.diagnostic_metrics) ? data.vision.diagnostic_metrics : {};
-    const isPass = (data.vision && data.vision.status === 'AUTHENTIC');
+    const isPass = (data.vision && data.vision.status === 'GENUINE');
     const hasCameraExif = diag.device_hardware && !diag.device_hardware.includes('No Camera EXIF');
     const isElaFlagged = diag.ela_status && diag.ela_status.includes('Too Uniform');
     const isFftSpike = diag.fft_status && diag.fft_status.includes('Upsampling');
@@ -558,7 +664,7 @@ function renderForensics(data) {
         <td><strong>Multi-Signal Composite Decision</strong></td>
         <td>Bayesian combination across all independent physical & metadata indicators</td>
         <td><code>${diag.composite_signal_score || 'Evaluation Complete'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${isPass ? 'pill-pass' : 'pill-flag'}">${isPass ? 'AUTHENTIC COMPOSITE ✅' : 'SYNTHETIC COMPOSITE 🚨'}</span></td>
+        <td style="text-align: right;"><span class="status-pill ${isPass ? 'pill-pass' : 'pill-flag'}">${isPass ? 'GENUINE COMPOSITE ✅' : 'AI GENERATED COMPOSITE 🚨'}</span></td>
       </tr>
     `;
 
@@ -587,12 +693,23 @@ function renderForensics(data) {
     audCircle.style.strokeDashoffset = 226 - (226 * aScore / 100);
 
     const audStatus = document.getElementById('audioStatusBadge');
-    if (data.audio && data.audio.status === 'SUSPICIOUS') {
+    if (data.audio && data.audio.status === 'AI_GENERATED') {
       audCircle.style.stroke = '#f43f5e';
       audStatus.innerText = 'AI CLONED VOICE / MUSIC';
       audStatus.style.background = 'rgba(244, 63, 94, 0.2)';
       audStatus.style.color = '#fb7185';
+    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else {
       audCircle.style.stroke = '#10b981';
       audStatus.innerText = 'REAL HUMAN VOICE';
       audStatus.style.background = 'rgba(16, 185, 129, 0.2)';
@@ -614,7 +731,7 @@ function renderForensics(data) {
     }
 
     // Detailed Backend Inspection Breakdown Table
-    const isAudPass = (data.audio && data.audio.status === 'AUTHENTIC');
+    const isAudPass = (data.audio && data.audio.status === 'GENUINE');
     breakdownBody.innerHTML = `
       <tr>
         <td><strong>High-Frequency AI Vocoder (>16kHz)</strong></td>
@@ -669,12 +786,23 @@ function renderForensics(data) {
     visCircle.style.strokeDashoffset = 226 - (226 * vScore / 100);
 
     const visStatus = document.getElementById('visionStatusBadge');
-    if (data.vision && data.vision.status === 'SUSPICIOUS') {
+    if (data.vision && data.vision.status === 'AI_GENERATED') {
       visCircle.style.stroke = '#f43f5e';
       visStatus.innerText = 'FACE MANIPULATED';
       visStatus.style.background = 'rgba(244, 63, 94, 0.2)';
       visStatus.style.color = '#fb7185';
+    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else {
       visCircle.style.stroke = '#10b981';
       visStatus.innerText = 'GENUINE FACE';
       visStatus.style.background = 'rgba(16, 185, 129, 0.2)';
@@ -700,12 +828,23 @@ function renderForensics(data) {
     audCircle.style.strokeDashoffset = 226 - (226 * aScore / 100);
 
     const audStatus = document.getElementById('audioStatusBadge');
-    if (data.audio && data.audio.status === 'SUSPICIOUS') {
+    if (data.audio && data.audio.status === 'AI_GENERATED') {
       audCircle.style.stroke = '#f43f5e';
       audStatus.innerText = 'CLONED VOICE DUB';
       audStatus.style.background = 'rgba(244, 63, 94, 0.2)';
       audStatus.style.color = '#fb7185';
+    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else {
       audCircle.style.stroke = '#10b981';
       audStatus.innerText = 'ORIGINAL VOICE';
       audStatus.style.background = 'rgba(16, 185, 129, 0.2)';
@@ -728,8 +867,8 @@ function renderForensics(data) {
 
     // Detailed Backend Inspection Breakdown Table
     const vDiag = (data.vision && data.vision.diagnostic_metrics) ? data.vision.diagnostic_metrics : {};
-    const isVPass = (data.vision && data.vision.status === 'AUTHENTIC');
-    const isAPass = (data.audio && data.audio.status === 'AUTHENTIC');
+    const isVPass = (data.vision && data.vision.status === 'GENUINE');
+    const isAPass = (data.audio && data.audio.status === 'GENUINE');
 
     breakdownBody.innerHTML = `
       <tr>
@@ -826,7 +965,18 @@ window.addEventListener('scroll', () => {
     if (el && link) {
       if (el.offsetTop <= scrollPos && (el.offsetTop + el.offsetHeight) > scrollPos) {
         link.classList.add('active');
-      } else {
+      } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
+    banner.className = 'verdict-banner manipulated';
+    icon.innerText = '🚨';
+    if (isImageMode) {
+      title.innerText = 'AI GENERATED IMAGE DETECTED';
+    } else if (isAudioMode) {
+      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
+    } else {
+      title.innerText = v.replaceAll('_', ' ');
+    }
+    confBadge.className = 'verdict-badge badge-v-fake';
+  } else {
         link.classList.remove('active');
       }
     }

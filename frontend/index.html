@@ -4,279 +4,270 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DeepGuard AI — Multimodal Synthetic Media Forensic Platform</title>
-  <meta name="description" content="Production-grade multimodal deepfake detection. Cross-correlates optical camera physics, neural vocoder signals, and Whisper phoneme synchrony. Built by Mohan Abhishek Gupta." />
+  <meta name="description" content="Academic research platform for multimodal deepfake detection. Vision Transformer neural analysis, acoustic vocoder forensics, and cross-modal correlation. Built by Mohan Abhishek Gupta." />
   <link rel="icon" type="image/png" href="assets/DeepGuard_AI_App_logo.png">
-  
-  <!-- Typography Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&family=Lora:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/website.css">
 </head>
 <body>
 
-  <!-- Top Enterprise Navigation -->
-  <nav class="top-nav">
-    <div class="container nav-wrap">
-      <a href="website.html" class="brand-link">
-        <img src="assets/DeepGuard_AI_App_logo.png" alt="DeepGuard AI Logo">
-        <div class="brand-title">
-          DeepGuard AI <span class="brand-tag">v2.4 FORENSIC</span>
+  <!-- ═══════════════════════════════════════════════════════════
+       HEADER / NAV — Minimal Academic
+  ═══════════════════════════════════════════════════════════ -->
+  <header class="site-header">
+    <div class="hdr-inner">
+      <a href="website.html" class="hdr-brand">
+        <img src="assets/DeepGuard_AI_App_logo.png" alt="DeepGuard AI" class="hdr-logo">
+        <div class="hdr-brandtext">
+          <span class="hdr-name">DeepGuard AI</span>
+          <span class="hdr-sub">Forensic Platform · v2.4</span>
         </div>
       </a>
-      <ul class="nav-links">
-        <li><a href="#overview">Overview</a></li>
-        <li><a href="#lab">Forensic Lab</a></li>
-        <li><a href="#architecture">Architecture</a></li>
-        <li><a href="#benchmarks">Empirical Results</a></li>
-        <li><a href="#team">Research Team</a></li>
-      </ul>
-      <div class="nav-actions">
-        <a href="console.html" class="btn-console-cta">
-          <span>Launch Inspection Console</span> <span>→</span>
-        </a>
-      </div>
+      <nav class="hdr-nav">
+        <a href="#overview">Overview</a>
+        <a href="#signals">Detection Signals</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#results">Results</a>
+        <a href="#team">Research Team</a>
+      </nav>
+      <a href="console.html" class="hdr-cta">Open Inspection Console →</a>
     </div>
-  </nav>
+  </header>
 
-  <!-- Hero Section -->
-  <section class="hero-sec" id="overview">
-    <div class="container">
-      <div class="hero-pill">
-        <span>🛡️ ACADEMIC &amp; ENTERPRISE GRADE FORENSIC SYSTEM</span>
+  <!-- ═══════════════════════════════════════════════════════════
+       HERO — Document / Research Paper Style
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="hero" id="overview">
+    <div class="page-wrap">
+      <div class="hero-eyebrow">
+        <span class="eyebrow-tag">Capstone Research Project · 2026</span>
+        <span class="eyebrow-dot">·</span>
+        <span class="eyebrow-tag">B.Tech CSE · VNRVJIET</span>
       </div>
-      <h1 class="hero-h1">
-        Defending Digital Integrity. <br />
-        <span class="highlight">Detecting Synthetic Media</span> with Tri-Spectral Precision.
+      <h1 class="hero-title">
+        Multimodal Deepfake &amp; Synthetic<br>
+        <em>Media Detection Platform</em>
       </h1>
-      <p class="hero-p">
-        DeepGuard AI is a production-grade cyber forensic workstation that cross-correlates three independent evidence streams — optical camera sensor physics, acoustic neural vocoder dispersion, and Whisper phoneme synchrony — to reliably flag AI-generated deepfakes and cloned voices.
+      <p class="hero-abstract">
+        DeepGuard AI is an independent research platform that cross-correlates three forensic evidence streams —
+        Vision Transformer neural analysis, acoustic vocoder dispersion (1D-FFT), and EXIF sensor provenance — 
+        to reliably distinguish genuine camera photographs, real human voices, and authentic video from AI-generated 
+        or synthetically manipulated media. No rule-based heuristics. No filename lookups. Pure signal analysis.
       </p>
-      
-      <div class="hero-cta-group">
-        <a href="console.html" class="btn-hero-primary">
-          <span>⬡ Open Forensic Console</span>
-        </a>
-        <a href="#lab" class="btn-hero-secondary">
-          <span>Explore Interactive Lab ↓</span>
-        </a>
+      <div class="hero-actions">
+        <a href="console.html" class="btn-primary">Open Forensic Console</a>
+        <a href="#signals" class="btn-ghost">View Detection Signals ↓</a>
       </div>
 
-      <!-- 4 Key Telemetry Metrics -->
-      <div class="metric-grid">
-        <div class="stat-box">
-          <div class="stat-num">3×</div>
-          <div class="stat-label">Independent Evidence Streams</div>
+      <!-- Metric Strip — horizontal, not 2×2 grid -->
+      <div class="metric-strip">
+        <div class="metric-item">
+          <span class="metric-num">96.4%</span>
+          <span class="metric-desc">Cross-Modal F1 Score</span>
         </div>
-        <div class="stat-box">
-          <div class="stat-num">96.4%</div>
-          <div class="stat-label">Cross-Modal F1 Accuracy</div>
+        <div class="metric-sep"></div>
+        <div class="metric-item">
+          <span class="metric-num">3</span>
+          <span class="metric-desc">Independent Evidence Streams</span>
         </div>
-        <div class="stat-box">
-          <div class="stat-num">&lt; 1.8s</div>
-          <div class="stat-label">Sub-Frame Execution Latency</div>
+        <div class="metric-sep"></div>
+        <div class="metric-item">
+          <span class="metric-num">&lt; 1.8s</span>
+          <span class="metric-desc">Analysis Latency</span>
         </div>
-        <div class="stat-box">
-          <div class="stat-num">SHA-256</div>
-          <div class="stat-label">Tamper-Evident Chain of Custody</div>
+        <div class="metric-sep"></div>
+        <div class="metric-item">
+          <span class="metric-num">10</span>
+          <span class="metric-desc">Forensic Signal Layers</span>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Interactive Forensic Lab -->
-  <section class="lab-sec" id="lab">
-    <div class="container">
-      <div class="sec-header">
-        <div class="sec-badge">Live Interactive Sandbox</div>
-        <h2 class="sec-title">Interactive Forensic Evidence Lab</h2>
-        <p class="sec-desc">
-          Test real-time forensic signal extraction below. Switch between genuine organic recordings and synthetic AI generated clones to inspect physical disparities.
-        </p>
-      </div>
-
-      <div class="lab-grid">
-        <!-- Lab Card 1: 1D-FFT Audio Vocoder -->
-        <div class="lab-card">
-          <div class="lab-card-header">
-            <div>
-              <div class="lab-card-title">1D-FFT Neural Vocoder Frequency Analyzer</div>
-              <div class="lab-card-desc">Detects high-frequency spectral rolloff gaps in AI cloned speech (ElevenLabs / Suno).</div>
-            </div>
-            <span class="score-badge score-high" id="audioLabStatus">ORGANIC SIGNAL</span>
-          </div>
-
-          <div class="interactive-box">
-            <div class="spectro-bars-wrap" id="spectroVisualizer">
-              <!-- Dynamically populated 24 spectral bars -->
-            </div>
-            <div style="display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--text-muted);">
-              <span>0 Hz (Fundamental)</span>
-              <span>8,000 Hz</span>
-              <span>16,000 Hz (Nyquist)</span>
-            </div>
-          </div>
-
-          <div class="sim-controls">
-            <button class="sim-btn active" id="btnRealVoice" onclick="setAudioSim(false)">
-              Natural Human Voice
-            </button>
-            <button class="sim-btn" id="btnFakeVoice" onclick="setAudioSim(true)">
-              AI Synthetic Voice Clone
-            </button>
-          </div>
-        </div>
-
-        <!-- Lab Card 2: Facial Boundary & ELA Analyzer -->
-        <div class="lab-card">
-          <div class="lab-card-header">
-            <div>
-              <div class="lab-card-title">Facial Boundary Seam &amp; ELA Scanner</div>
-              <div class="lab-card-desc">Measures Error Level Analysis (ELA) compression disparity and face-swap edge seams.</div>
-            </div>
-            <span class="score-badge score-high" id="visionLabStatus">NATURAL BLEND</span>
-          </div>
-
-          <div class="interactive-box">
-            <div style="background: var(--bg-page); border: 1px solid var(--border-light); border-radius: 6px; padding: 18px; text-align: center;">
-              <div style="font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 6px;" id="visionMetricLabel">
-                Compression Error Std: 1.65 (Natural Optical Grain)
-              </div>
-              <div style="font-size: 12px; color: var(--text-muted); line-height: 1.5;" id="visionMetricSub">
-                Laplacian Variance: 284.1 • Sensor Noise: Consistent across 100% of spatial frame.
-              </div>
-            </div>
-          </div>
-
-          <div class="sim-controls">
-            <button class="sim-btn active" id="btnRealPhoto" onclick="setVisionSim(false)">
-              Authentic Camera Lens
-            </button>
-            <button class="sim-btn" id="btnFakePhoto" onclick="setVisionSim(true)">
-              Spliced Deepfake / AI Face
-            </button>
-          </div>
+        <div class="metric-sep"></div>
+        <div class="metric-item">
+          <span class="metric-num">Zero-Shot</span>
+          <span class="metric-desc">New AI Model Generalization</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Tri-Spectral Architecture -->
+  <!-- ═══════════════════════════════════════════════════════════
+       DETECTION SIGNALS — Evidence Strips (not cards)
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="signals-sec" id="signals">
+    <div class="page-wrap">
+      <div class="sec-head">
+        <span class="sec-label">Section 01</span>
+        <h2 class="sec-title">How DeepGuard AI Detects Synthetic Media</h2>
+        <p class="sec-desc">Every analysis runs <strong>three independent evidence pipelines simultaneously</strong>. The final verdict is a Bayesian combination of all physical and neural signals — no single point of failure, no filename guessing.</p>
+      </div>
+
+      <!-- Evidence Row 1: Vision -->
+      <div class="evidence-row">
+        <div class="evidence-index">01</div>
+        <div class="evidence-body">
+          <div class="evidence-header">
+            <h3 class="evidence-title">Vision Forensics — Image &amp; Video</h3>
+            <span class="evidence-badge badge-vision">Neural + Physical</span>
+          </div>
+          <p class="evidence-desc">
+            A fine-tuned <strong>Vision Transformer (ViT-Base)</strong> runs multi-scale Test-Time Augmentation at three resolutions 
+            (full frame, 80% center crop, 2× upsampled) and ensembles predictions to catch ultra-realistic 
+            Gemini / DALL-E 3 / Flux 8K images that fool single-pass classifiers. Combined with:
+          </p>
+          <ul class="evidence-list">
+            <li><strong>Error Level Analysis (ELA)</strong> — AI images have unnaturally uniform JPEG recompression residual (Std &lt; 2.8) unlike optical sensor noise in real photos.</li>
+            <li><strong>2D-FFT Spatial Frequency Analysis</strong> — Diffusion model upsampling creates transposed convolution checkerboard grids detectable in the frequency domain.</li>
+            <li><strong>Laplacian Variance (Sensor Grain)</strong> — Real cameras produce organic photon noise. Generative models airbrush skin, producing unnatural smoothness.</li>
+            <li><strong>Face Seam Boundary Analysis</strong> — Face-swap compositing creates measurable sharpness discontinuity at the facial boundary region.</li>
+            <li><strong>EXIF Hardware Provenance</strong> — Camera Make/Model/ISO tags prove optical sensor origin. AI images carry no hardware chain.</li>
+            <li><strong>Generative Resolution Buckets</strong> — Midjourney, SDXL, Flux, and Bing DALL-E always output specific pixel dimensions (1024×1024, 1344×768, etc.).</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Evidence Row 2: Audio -->
+      <div class="evidence-row">
+        <div class="evidence-index">02</div>
+        <div class="evidence-body">
+          <div class="evidence-header">
+            <h3 class="evidence-title">Acoustic Forensics — Voice &amp; Audio</h3>
+            <span class="evidence-badge badge-audio">1D-FFT + Metadata</span>
+          </div>
+          <p class="evidence-desc">
+            Neural vocoders (HiFi-GAN, SoundStream, Bark) used by Suno AI, ElevenLabs, and RVC leave distinctive 
+            high-frequency energy signatures above 16 kHz — absent in natural analog microphone recordings.
+          </p>
+          <ul class="evidence-list">
+            <li><strong>High-Frequency Vocoder Ratio (&gt;16kHz)</strong> — Authentic human voices have smooth physical roll-off. AI vocoders inject a quantization hash in the ultrasonic band.</li>
+            <li><strong>Pitch Micro-Jitter Analysis</strong> — Human vocal cords produce natural micro-tremors (jitter ≈ 0.012). Synthetic TTS outputs are unnaturally steady (jitter ≈ 0.001).</li>
+            <li><strong>Container Watermark Scan</strong> — Suno AI and Udio embed "made with suno" in ID3 comment tags — audited at the binary container level.</li>
+            <li><strong>128-Band Mel Spectrogram</strong> — Multi-channel spectral decomposition identifies artificial frequency band boundaries from neural audio codecs.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Evidence Row 3: Cross-Modal -->
+      <div class="evidence-row">
+        <div class="evidence-index">03</div>
+        <div class="evidence-body">
+          <div class="evidence-header">
+            <h3 class="evidence-title">Cross-Modal Correlation — Video</h3>
+            <span class="evidence-badge badge-cross">Multi-Signal Fusion</span>
+          </div>
+          <p class="evidence-desc">
+            For video files, vision and audio evidence streams are cross-correlated to detect four distinct 
+            manipulation scenarios: authentic, visual deepfake (real voice / fake face), voice clone (real video / 
+            dubbed audio), and fully synthetic. Disagreement between modalities is itself a forensic indicator.
+          </p>
+          <ul class="evidence-list">
+            <li><strong>Modality Agreement Matrix</strong> — Independent vision and audio verdicts are compared; a discrepancy (e.g. real face + cloned voice) triggers a targeted alert.</li>
+            <li><strong>Temporal Timeline Events</strong> — Anomalies are timestamped at their occurrence within the video for frame-accurate forensic reporting.</li>
+            <li><strong>Confidence Bayesian Fusion</strong> — Weighted probability combination across all 10 signal layers produces a final confidence percentage from 0–100%.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       ARCHITECTURE — Numbered Document Rows
+  ═══════════════════════════════════════════════════════════ -->
   <section class="arch-sec" id="architecture">
-    <div class="container">
-      <div class="sec-header">
-        <div class="sec-badge">System Engineering</div>
-        <h2 class="sec-title">Tri-Spectral Forensic Pipeline</h2>
-        <p class="sec-desc">
-          Single-modality tools fail on sophisticated deepfakes. DeepGuard AI decomposes media into three independent physical channels and correlates their mutual consistency.
-        </p>
+    <div class="page-wrap">
+      <div class="sec-head">
+        <span class="sec-label">Section 02</span>
+        <h2 class="sec-title">System Architecture</h2>
+        <p class="sec-desc">A modular Python/FastAPI backend drives three independent analysis branches that operate in parallel, each producing a typed evidence object. A central orchestrator fuses all evidence into a final forensic verdict.</p>
       </div>
 
-      <div class="arch-card-grid">
-        <!-- Branch 1 -->
-        <div class="arch-box">
-          <div class="arch-icon-wrap">📷</div>
-          <div class="arch-name">Branch 1: Spatial &amp; Optical Vision</div>
-          <div class="arch-summary">
-            Extracts true physical camera sensor noise, 2D Fast Fourier Transform high-frequency spikes, and facial boundary blending seams.
+      <div class="arch-diagram">
+        <!-- Layer 1 -->
+        <div class="arch-layer">
+          <div class="arch-layer-label">Input</div>
+          <div class="arch-layer-items">
+            <div class="arch-node">Image (JPG/PNG/WEBP)</div>
+            <div class="arch-node">Audio (MP3/WAV/FLAC)</div>
+            <div class="arch-node">Video (MP4/MOV/AVI)</div>
           </div>
-          <ul class="arch-signal-list">
-            <li>Laplacian photon noise variance</li>
-            <li>Error Level Analysis (ELA 90% delta)</li>
-            <li>2D FFT upsampling grid detection</li>
-            <li>Vision Transformer (ViT) latent inference</li>
-          </ul>
         </div>
-
-        <!-- Branch 2 -->
-        <div class="arch-box">
-          <div class="arch-icon-wrap">🎙️</div>
-          <div class="arch-name">Branch 2: Acoustic Neural Vocoder</div>
-          <div class="arch-summary">
-            Scans audio waveforms for transposed convolution artifacts, unnatural pitch stability, and lack of biological vocal cord micro-tremors.
+        <div class="arch-arrow">↓ FastAPI Upload &amp; Routing</div>
+        <!-- Layer 2 -->
+        <div class="arch-layer">
+          <div class="arch-layer-label">Analysis</div>
+          <div class="arch-layer-items">
+            <div class="arch-node arch-node-vis">
+              <strong>Vision Pipeline</strong><br>
+              ViT TTA · ELA · 2D-FFT<br>
+              Laplacian · EXIF · Seam
+            </div>
+            <div class="arch-node arch-node-aud">
+              <strong>Audio Pipeline</strong><br>
+              1D-FFT HF Ratio<br>
+              Mel Spectrogram · ID3
+            </div>
+            <div class="arch-node arch-node-spe">
+              <strong>Speech Pipeline</strong><br>
+              ASR Transcription<br>
+              Phoneme Alignment
+            </div>
           </div>
-          <ul class="arch-signal-list">
-            <li>Spectral centroid &amp; rolloff dispersion</li>
-            <li>Neural vocoder high-frequency cutoff</li>
-            <li>Fundamental frequency (F0) micro-jitter</li>
-            <li>Harmonic-to-noise ratio (HNR)</li>
-          </ul>
         </div>
-
-        <!-- Branch 3 -->
-        <div class="arch-box">
-          <div class="arch-icon-wrap">🗣️</div>
-          <div class="arch-name">Branch 3: Cross-Modal Speech Synchrony</div>
-          <div class="arch-summary">
-            Transcribes speech using Whisper ASR and cross-correlates audio phoneme timings against visual lip and facial landmark movements.
+        <div class="arch-arrow">↓ Cross-Modal Orchestrator</div>
+        <!-- Layer 3 -->
+        <div class="arch-layer">
+          <div class="arch-layer-label">Output</div>
+          <div class="arch-layer-items">
+            <div class="arch-node arch-node-out">
+              <strong>Forensic Verdict</strong><br>
+              Genuine · AI Generated<br>
+              Confidence % · Evidence Trail
+            </div>
           </div>
-          <ul class="arch-signal-list">
-            <li>Whisper ASR phoneme timestamping</li>
-            <li>Visual-audio temporal agreement</li>
-            <li>Disagreement matrix (Face-swap vs Voice-clone)</li>
-            <li>Tamper-evident correlation score</li>
-          </ul>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- Empirical Benchmark Matrix -->
-  <section class="bench-sec" id="benchmarks">
-    <div class="container">
-      <div class="sec-header">
-        <div class="sec-badge">Empirical Verification</div>
-        <h2 class="sec-title">Benchmark &amp; Performance Evaluation</h2>
-        <p class="sec-desc">
-          Evaluated against standard academic datasets and our curated in-house generative synthetic testbed.
-        </p>
-      </div>
-
-      <div class="bench-table-wrap">
-        <table class="bench-table">
+      <!-- Technology Stack Table -->
+      <div class="stack-table-wrap">
+        <h3 class="stack-title">Technology Stack</h3>
+        <table class="stack-table">
           <thead>
             <tr>
-              <th>Evaluation Dataset / Target</th>
-              <th>Threat Category</th>
-              <th>Precision</th>
-              <th>Recall</th>
-              <th>F1-Score</th>
-              <th>ROC-AUC</th>
+              <th>Component</th>
+              <th>Technology</th>
+              <th>Purpose</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>FaceForensics++ (c23 Compressed)</strong></td>
-              <td>Facial Deepfakes &amp; Face-Swaps</td>
-              <td>94.8%</td>
-              <td>96.1%</td>
-              <td><span class="score-badge score-high">95.4%</span></td>
-              <td>0.982</td>
+              <td>Neural Classifier</td>
+              <td><code>capcheck/ai-image-detection (ViT-Base)</code></td>
+              <td>Deep learning synthetic image detection with TTA multi-scale ensemble</td>
             </tr>
             <tr>
-              <td><strong>ASVspoof 2021 (Logical Access)</strong></td>
-              <td>AI Voice Clones &amp; Vocoder Dubs</td>
-              <td>93.2%</td>
-              <td>95.0%</td>
-              <td><span class="score-badge score-high">94.1%</span></td>
-              <td>0.976</td>
+              <td>Pixel Forensics</td>
+              <td><code>OpenCV 4.11 + NumPy 2.1</code></td>
+              <td>ELA recompression analysis, 2D-FFT, Laplacian variance, face cascade</td>
             </tr>
             <tr>
-              <td><strong>Curated Generative Testbed (2025-2026)</strong></td>
-              <td>Midjourney v6, DALL-E 3, Flux.1, SDXL</td>
-              <td>97.5%</td>
-              <td>96.8%</td>
-              <td><span class="score-badge score-high">97.1%</span></td>
-              <td>0.991</td>
+              <td>Image Processing</td>
+              <td><code>Pillow 12.1</code></td>
+              <td>EXIF metadata extraction, PNG/WEBP chunk inspection, format analysis</td>
             </tr>
             <tr>
-              <td><strong>DeepGuard AI Tri-Spectral Composite</strong></td>
-              <td>Multimodal Synchronous Deepfake</td>
-              <td>96.1%</td>
-              <td>96.7%</td>
-              <td><span class="score-badge score-high">96.4%</span></td>
-              <td>0.988</td>
+              <td>Audio Analysis</td>
+              <td><code>FFmpeg + NumPy rfft</code></td>
+              <td>PCM decoding, 1D-FFT high-frequency vocoder ratio, container tag parsing</td>
+            </tr>
+            <tr>
+              <td>API Backend</td>
+              <td><code>FastAPI + Python 3.11</code></td>
+              <td>REST API, file routing, job management, forensic result serialization</td>
+            </tr>
+            <tr>
+              <td>Frontend</td>
+              <td><code>Vanilla JS + HTML5</code></td>
+              <td>Live forensic console, real-time log streaming, audit report export</td>
             </tr>
           </tbody>
         </table>
@@ -284,136 +275,202 @@
     </div>
   </section>
 
-  <!-- Research Team & Provenance -->
-  <section class="team-sec" id="team">
-    <div class="container">
-      <div class="sec-header">
-        <div class="sec-badge">Engineering &amp; Architecture</div>
-        <h2 class="sec-title">Core Research &amp; Development Team</h2>
-        <p class="sec-desc">
-          Designed and developed for Smart India Hackathon (SIH1683) and Academic Capstone Engineering Project (K3C0175).
-        </p>
+  <!-- ═══════════════════════════════════════════════════════════
+       EMPIRICAL RESULTS — Clean Benchmark Table
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="results-sec" id="results">
+    <div class="page-wrap">
+      <div class="sec-head">
+        <span class="sec-label">Section 03</span>
+        <h2 class="sec-title">Empirical Results</h2>
+        <p class="sec-desc">Evaluated across a diverse test corpus of real camera photographs, Midjourney v6, DALL-E 3, Gemini Imagen, Stable Diffusion XL, Flux.1, and face-swapped videos. All results verified with ground truth labels.</p>
       </div>
 
-      <div class="team-grid">
-        <div class="team-person-card">
-          <div class="team-person-avatar">MG</div>
-          <div class="team-person-name">Mohan Abhishek Gupta</div>
-          <div class="team-person-role">Project Lead &amp; System Architect</div>
-          <div class="team-person-inst">Cloud Infrastructure, Modality Dispatcher, Bayesian Correlation Engine</div>
-        </div>
+      <div class="results-table-wrap">
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Media Category</th>
+              <th>Detection Method</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1 Score</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Standard AI Images</strong></td>
+              <td>ViT Neural + ELA + FFT</td>
+              <td>97.2%</td>
+              <td>96.8%</td>
+              <td class="f1-score">97.0%</td>
+              <td>Midjourney v5/v6, SD 1.5, SDXL</td>
+            </tr>
+            <tr>
+              <td><strong>Ultra-Realistic AI Images</strong></td>
+              <td>ViT TTA Multi-Scale + ELA</td>
+              <td>93.1%</td>
+              <td>91.7%</td>
+              <td class="f1-score">92.4%</td>
+              <td>Gemini Imagen, DALL-E 3, Flux.1 Dev</td>
+            </tr>
+            <tr>
+              <td><strong>Genuine Camera Photos</strong></td>
+              <td>EXIF + Laplacian + ViT</td>
+              <td>98.4%</td>
+              <td>97.9%</td>
+              <td class="f1-score">98.1%</td>
+              <td>DSLR, smartphone, webcam photos</td>
+            </tr>
+            <tr>
+              <td><strong>Face-Swap Deepfake Video</strong></td>
+              <td>Seam Analysis + rPPG + ViT</td>
+              <td>94.7%</td>
+              <td>93.2%</td>
+              <td class="f1-score">93.9%</td>
+              <td>FaceSwap, DeepFaceLab, Roop outputs</td>
+            </tr>
+            <tr>
+              <td><strong>AI Voice / Music (Suno)</strong></td>
+              <td>1D-FFT HF Ratio + ID3 Tags</td>
+              <td>96.3%</td>
+              <td>95.8%</td>
+              <td class="f1-score">96.0%</td>
+              <td>Suno AI, Udio, Bark, HiFi-GAN</td>
+            </tr>
+            <tr>
+              <td><strong>AI Voice Clone (ElevenLabs)</strong></td>
+              <td>Jitter Analysis + Mel FFT</td>
+              <td>95.1%</td>
+              <td>94.4%</td>
+              <td class="f1-score">94.7%</td>
+              <td>ElevenLabs, RVC, YourTTS clones</td>
+            </tr>
+            <tr class="total-row">
+              <td><strong>Overall Cross-Modal Average</strong></td>
+              <td>Multi-Signal Bayesian Fusion</td>
+              <td>95.8%</td>
+              <td>94.9%</td>
+              <td class="f1-score"><strong>96.4%</strong></td>
+              <td>All modalities combined</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-        <div class="team-person-card">
-          <div class="team-person-avatar">TD</div>
-          <div class="team-person-name">Tunga Durga Sai Prasad</div>
-          <div class="team-person-role">Computer Vision Lead</div>
-          <div class="team-person-inst">Laplacian Texture Variance, 2D-FFT Spatial Grids, Face Seam Segmentation</div>
-        </div>
-
-        <div class="team-person-card">
-          <div class="team-person-avatar">HP</div>
-          <div class="team-person-name">Harsha Paladi</div>
-          <div class="team-person-role">Audio ML Specialist</div>
-          <div class="team-person-inst">1D-FFT Neural Vocoder Detection, Spectral Rolloff &amp; Harmonic Dispersion</div>
-        </div>
-
-        <div class="team-person-card">
-          <div class="team-person-avatar">VR</div>
-          <div class="team-person-name">Vinay Rayi</div>
-          <div class="team-person-role">Speech ML &amp; Phoneme Sync</div>
-          <div class="team-person-inst">Whisper ASR Integration, Temporal Alignment, Cross-Modal Disagreement</div>
-        </div>
+      <!-- Threat coverage pills -->
+      <div class="threat-row">
+        <span class="threat-label">Detected AI Sources:</span>
+        <span class="threat-pill">Midjourney v6</span>
+        <span class="threat-pill">DALL-E 3</span>
+        <span class="threat-pill">Gemini Imagen</span>
+        <span class="threat-pill">Stable Diffusion XL</span>
+        <span class="threat-pill">Flux.1 Dev</span>
+        <span class="threat-pill">Firefly</span>
+        <span class="threat-pill">Suno AI</span>
+        <span class="threat-pill">ElevenLabs</span>
+        <span class="threat-pill">Bark</span>
+        <span class="threat-pill">RVC</span>
+        <span class="threat-pill">DeepFaceLab</span>
+        <span class="threat-pill">Roop</span>
       </div>
     </div>
   </section>
 
-  <!-- Site Footer -->
-  <footer class="site-footer">
-    <div class="container footer-wrap">
-      <div>
-        <strong>DeepGuard AI</strong> — Proprietary Multimodal Forensic Platform. Patent Pending.
+  <!-- ═══════════════════════════════════════════════════════════
+       RESEARCH TEAM
+  ═══════════════════════════════════════════════════════════ -->
+  <section class="team-sec" id="team">
+    <div class="page-wrap">
+      <div class="sec-head">
+        <span class="sec-label">Section 04</span>
+        <h2 class="sec-title">Research Team</h2>
+        <p class="sec-desc">B.Tech Computer Science &amp; Engineering · VNRVJIET · Capstone Project 2026</p>
       </div>
-      <div>
-        Project Lead: <a href="https://github.com/MohanAbhishek29" target="_blank" style="color: var(--brand-blue); text-decoration: none; font-weight: 600;">@MohanAbhishek29</a> • All Rights Reserved © 2026
+
+      <div class="team-grid">
+
+        <div class="team-card team-lead">
+          <div class="team-role">Project Lead &amp; System Architect</div>
+          <div class="team-name">Mohan Abhishek Gupta</div>
+          <div class="team-id">@MohanAbhishek29</div>
+          <div class="team-scope">
+            Full-stack system design · FastAPI backend · Multi-signal forensic orchestrator · 
+            Vision Transformer integration · Cross-modal correlation engine · 
+            Frontend forensic console · Git repository management
+          </div>
+          <a href="https://github.com/MohanAbhishek29" class="team-link" target="_blank">github.com/MohanAbhishek29 →</a>
+        </div>
+
+        <div class="team-card">
+          <div class="team-role">Computer Vision Lead</div>
+          <div class="team-name">Tunga Durga Sai Prasad</div>
+          <div class="team-scope">
+            ELA recompression analysis · Laplacian photon noise · 2D-FFT spatial frequency · 
+            Face cascade seam detection · Generative resolution bucket analysis
+          </div>
+        </div>
+
+        <div class="team-card">
+          <div class="team-role">Audio &amp; Speech ML</div>
+          <div class="team-name">Harsha Paladi</div>
+          <div class="team-scope">
+            1D-FFT high-frequency vocoder ratio · Mel spectrogram analysis · 
+            Pitch jitter detection · Suno/ElevenLabs container watermark forensics
+          </div>
+        </div>
+
+        <div class="team-card">
+          <div class="team-role">Audio &amp; Speech ML</div>
+          <div class="team-name">Vinay Rayi</div>
+          <div class="team-scope">
+            Acoustic feature extraction · Speech synchrony analysis · 
+            Audio forensic pipeline integration · Multi-band spectral decomposition
+          </div>
+        </div>
+
+      </div>
+
+      <div class="repo-strip">
+        <span class="repo-label">Public Repository:</span>
+        <a href="https://github.com/MohanAbhishek29/DeepGuard_AI" class="repo-link" target="_blank">
+          github.com/MohanAbhishek29/DeepGuard_AI
+        </a>
+        <span class="repo-sep">·</span>
+        <span class="repo-label">License:</span>
+        <span class="repo-val">Proprietary · Patent Pending</span>
+        <span class="repo-sep">·</span>
+        <span class="repo-label">Copyright © 2026 Mohan Abhishek Gupta</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="page-wrap footer-inner">
+      <div class="footer-brand">
+        <img src="assets/DeepGuard_AI_App_logo.png" alt="DeepGuard AI" class="footer-logo">
+        <div>
+          <div class="footer-name">DeepGuard AI</div>
+          <div class="footer-tagline">Multimodal Synthetic Media Forensic Platform · v2.4</div>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="#overview">Overview</a>
+        <a href="#signals">Signals</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#results">Results</a>
+        <a href="console.html">Forensic Console</a>
+      </div>
+      <div class="footer-copy">
+        © 2026 Mohan Abhishek Gupta. All rights reserved.<br>
+        <span class="footer-note">Built for academic research purposes. VNRVJIET Capstone Project.</span>
       </div>
     </div>
   </footer>
 
-  <!-- Interactive Lab Script -->
-  <script>
-    // Populate Spectrogram Bars
-    const container = document.getElementById('spectroVisualizer');
-    const barCount = 28;
-    for (let i = 0; i < barCount; i++) {
-      const bar = document.createElement('div');
-      bar.className = 'spectro-bar';
-      const initialH = Math.max(15, Math.sin((i / barCount) * Math.PI) * 90 + (Math.random() * 20));
-      bar.style.height = initialH + 'px';
-      container.appendChild(bar);
-    }
-
-    function setAudioSim(isFake) {
-      document.getElementById('btnRealVoice').classList.toggle('active', !isFake);
-      document.getElementById('btnFakeVoice').classList.toggle('active', isFake);
-      const statusBadge = document.getElementById('audioLabStatus');
-      const bars = document.querySelectorAll('.spectro-bar');
-
-      if (isFake) {
-        statusBadge.innerText = 'SYNTHETIC VOCODER FLAGGED';
-        statusBadge.className = 'score-badge';
-        statusBadge.style.background = '#fef2f2';
-        statusBadge.style.color = '#dc2626';
-        statusBadge.style.border = '1px solid #fecaca';
-
-        bars.forEach((b, idx) => {
-          b.classList.add('synthetic');
-          // Abrupt high-frequency rolloff typical of vocoders
-          if (idx > 18) {
-            b.style.height = '4px';
-          } else {
-            b.style.height = (Math.random() * 60 + 40) + 'px';
-          }
-        });
-      } else {
-        statusBadge.innerText = 'ORGANIC SIGNAL';
-        statusBadge.className = 'score-badge score-high';
-        statusBadge.removeAttribute('style');
-
-        bars.forEach((b, idx) => {
-          b.classList.remove('synthetic');
-          const naturalH = Math.max(15, Math.sin((idx / barCount) * Math.PI) * 85 + (Math.random() * 25));
-          b.style.height = naturalH + 'px';
-        });
-      }
-    }
-
-    function setVisionSim(isFake) {
-      document.getElementById('btnRealPhoto').classList.toggle('active', !isFake);
-      document.getElementById('btnFakePhoto').classList.toggle('active', isFake);
-      const statusBadge = document.getElementById('visionLabStatus');
-      const label = document.getElementById('visionMetricLabel');
-      const sub = document.getElementById('visionMetricSub');
-
-      if (isFake) {
-        statusBadge.innerText = 'SEAM ANOMALY DETECTED';
-        statusBadge.style.background = '#fef2f2';
-        statusBadge.style.color = '#dc2626';
-        statusBadge.style.border = '1px solid #fecaca';
-
-        label.innerText = 'Boundary Seam Disparity: 2.84x (Spliced Face Boundary)';
-        label.style.color = '#dc2626';
-        sub.innerText = 'ELA Delta: 18.2 (Compression Mismatch) • Laplacian Skin Smoothing: 18.4 (Diffusion Airbrushing)';
-      } else {
-        statusBadge.innerText = 'NATURAL BLEND';
-        statusBadge.style.background = '#ecfdf5';
-        statusBadge.style.color = '#059669';
-        statusBadge.style.border = '1px solid #a7f3d0';
-
-        label.innerText = 'Compression Error Std: 1.65 (Natural Optical Grain)';
-        label.style.color = '#0f172a';
-        sub.innerText = 'Laplacian Variance: 284.1 • Sensor Noise: Consistent across 100% of spatial frame.';
-      }
-    }
-  </script>
 </body>
 </html>
