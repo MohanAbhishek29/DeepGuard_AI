@@ -115,7 +115,7 @@ function handleFileSelect(files) {
       video.style.display = 'none';
       audioBlock.style.display = 'none';
       overlay.style.display = 'none';
-      streamLog('READY', `Static image preview locked. Awaiting operator trigger: RUN MULTIMODAL FORENSIC PIPELINE.`, 'vision');
+      streamLog('READY', `Static image preview loaded. Click "Run Forensic Verification Pipeline" to evaluate.`, 'vision');
       setStreamStatus('WAITING');
     } else if (selectedFile.type.startsWith('video/')) {
       if (img) img.style.display = 'none';
@@ -256,7 +256,7 @@ async function runAnalysis() {
   const isVideo = !isImage && !isAudio;
 
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> <span>RUNNING FORENSIC PIPELINE...</span>';
+  btn.innerHTML = '<span class="spinner"></span> <span>Evaluating Media Authenticity...</span>';
   progress.style.display = 'block';
 
   // Live Telemetry Stream Start
@@ -418,7 +418,7 @@ async function runAnalysis() {
     alert('Analysis error: ' + err.message);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<span>⚡ RUN MULTIMODAL FORENSIC PIPELINE</span>';
+    btn.innerHTML = '<span>Run Forensic Verification Pipeline</span>';
   }
 }
 
@@ -936,10 +936,17 @@ function exportForensicAudit() {
   }
   const report = {
     platform: "DeepGuard AI Multimodal Forensic Platform",
-    edition: "Enterprise Forensic Core v2.4",
+    edition: "Academic Evaluation Core v2.4",
     architecture: "Multimodal Deepfake Inspection",
     license: "Proprietary — All Rights Reserved (Patent Pending)",
     lead_architect: "Mohan Abhishek Gupta",
+    research_team: [
+      { name: "Mohan Abhishek Gupta", role: "Project Lead & System Architect" },
+      { name: "Tunga Durga Sai Prasad", role: "Computer Vision Lead" },
+      { name: "Harsha Vardhan", role: "Audio & Acoustic Forensics" },
+      { name: "Vinay Rayi", role: "Speech & Multimodal Analysis" },
+      { name: "Bikesh", role: "Data Engineering & Evaluation" }
+    ],
     timestamp: new Date().toISOString(),
     analysis_job: lastAnalysisResult
   };

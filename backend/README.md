@@ -9,9 +9,10 @@
 ## 📌 Architecture Overview
 
 The **DeepGuard AI Backend** is built using **FastAPI** to serve as the central nervous system of the platform. It orchestrates asynchronous analysis jobs across three parallel forensic pipelines:
-1. **Computer Vision Branch** (`src/vision/` - Tunga Durga Sai Prasad)
-2. **Audio ML Branch** (Mel-spectrograms & Voice anti-spoofing)
-3. **Speech / NLP Branch** (OpenAI Whisper ASR)
+1. **Computer Vision Branch** (`src/vision/` — Tunga Durga Sai Prasad)
+2. **Audio ML & Acoustic Forensics** (1D-FFT vocoder & anti-spoofing — Harsha Vardhan)
+3. **Speech / NLP & Audio Integration** (Whisper ASR phoneme synchrony — Vinay Rayi)
+4. **Data Engineering & Evaluation** (Synthetic testbed curation — Bikesh)
 
 And performs **Cross-Modal Evidence Correlation** to expose disagreement cases (e.g. authentic video with cloned audio) on a synchronized timeline.
 

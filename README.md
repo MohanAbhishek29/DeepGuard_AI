@@ -239,10 +239,13 @@ python -m unittest tests/test_cloud_architecture.py tests/test_multimodal_branch
 
 ---
 
-## 👨‍💻 Project Lead & System Architecture
+## 👨‍💻 Research Team & System Architecture
 
-* **Mohan Abhishek Gupta** — *Project Architect & Lead* ([@MohanAbhishek29](https://github.com/MohanAbhishek29))
-* **DeepGuard AI Research & Engineering Team**
+* **Mohan Abhishek Gupta** — *Project Lead & System Architect* ([@MohanAbhishek29](https://github.com/MohanAbhishek29))
+* **Tunga Durga Sai Prasad** — *Computer Vision Lead*
+* **Harsha Vardhan** — *Audio & Acoustic Forensics Lead*
+* **Vinay Rayi** — *Speech & Multimodal Analysis*
+* **Bikesh** — *Data Engineering & Evaluation*
 
 ---
 
