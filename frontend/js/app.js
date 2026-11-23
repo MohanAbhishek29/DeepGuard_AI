@@ -249,41 +249,30 @@ async function runAnalysis() {
   const isAudio = selectedFile.type.startsWith('audio/');
   const isVideo = !isImage && !isAudio;
 
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> <span>Evaluating Media Authenticity...</span>';
-  progress.style.display = 'block';
-
-  // Live Telemetry Stream Start
-  setStreamStatus('ANALYZING');
-  streamLog('DISPATCH', `Initializing DeepGuard Tri-Spectral Core. Spawning parallel inspection workers...`, 'sys');
-
-  // Specific initial status messages per media type (Clear & Faculty Friendly)
-  if (isImage) {
-    step1.innerHTML = '⚡ [1/3] Reading image metadata & checking camera device tags...';
-    step2.innerHTML = '⏳ [2/3] Performing Error Level Analysis (ELA) for image editing...';
-    step3.innerHTML = '⏳ [3/3] Inspecting camera sensor noise & face boundary blending...';
-  } else if (isAudio) {
-    step1.innerHTML = '⚡ [1/3] Ingesting audio file & decoding acoustic container...';
-    step2.innerHTML = '⏳ [2/3] Scanning high-frequency sounds (>16kHz) for AI voice cloning...';
-    step3.innerHTML = '⏳ [3/3] Transcribing spoken words & verifying voice patterns...';
-  } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
-    banner.className = 'verdict-banner manipulated';
-    icon.innerText = '🚨';
-    if (isImageMode) {
-      title.innerText = 'AI GENERATED IMAGE DETECTED';
-    } else if (isAudioMode) {
-      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
-    } else {
-      title.innerText = v.replaceAll('_', ' ');
-    }
-    confBadge.className = 'verdict-badge badge-v-fake';
-  } else {
-    step1.innerHTML = '⚡ [1/3] Reading video frames & inspecting face movements...';
-    step2.innerHTML = '⏳ [2/3] Analyzing audio track for AI voice cloning (>16kHz)...';
-    step3.innerHTML = '⏳ [3/3] Comparing face vs voice to detect deepfakes or dubbing...';
-  }
-
   try {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> <span>Evaluating Media Authenticity...</span>';
+    progress.style.display = 'block';
+
+    // Live Telemetry Stream Start
+    setStreamStatus('ANALYZING');
+    streamLog('DISPATCH', `Initializing DeepGuard Tri-Spectral Core. Spawning parallel inspection workers...`, 'sys');
+
+    // Specific initial status messages per media type (Clear & Faculty Friendly)
+    if (isImage) {
+      step1.innerHTML = '⚡ [1/3] Reading image metadata & checking camera device tags...';
+      step2.innerHTML = '⏳ [2/3] Performing Error Level Analysis (ELA) for image editing...';
+      step3.innerHTML = '⏳ [3/3] Inspecting camera sensor noise & face boundary blending...';
+    } else if (isAudio) {
+      step1.innerHTML = '⚡ [1/3] Ingesting audio file & decoding acoustic container...';
+      step2.innerHTML = '⏳ [2/3] Scanning high-frequency sounds (>16kHz) for AI voice cloning...';
+      step3.innerHTML = '⏳ [3/3] Transcribing spoken words & verifying voice patterns...';
+    } else {
+      step1.innerHTML = '⚡ [1/3] Reading video frames & inspecting face movements...';
+      step2.innerHTML = '⏳ [2/3] Analyzing audio track for AI voice cloning (>16kHz)...';
+      step3.innerHTML = '⏳ [3/3] Comparing face vs voice to detect deepfakes or dubbing...';
+    }
+
     // 1. Upload file
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -741,8 +730,8 @@ function renderForensics(data) {
       <tr>
         <td><strong>Audio-Visual Match (Face vs Voice)</strong></td>
         <td>Verifies whether the person speaking matches the audio track</td>
-        <td><code>${data.cross_modal.disagreement_detected ? 'Mismatch Detected (Dubbing/Swap)' : 'Synchronized Agreement'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${!data.cross_modal.disagreement_detected ? 'pill-pass' : 'pill-flag'}">${!data.cross_modal.disagreement_detected ? 'ALIGNED ✅' : 'MISMATCH 🚨'}</span></td>
+        <td><code>${(data.cross_modal && data.cross_modal.disagreement_detected) ? 'Mismatch Detected (Dubbing/Swap)' : 'Synchronized Agreement'}</code></td>
+        <td style="text-align: right;"><span class="status-pill ${!(data.cross_modal && data.cross_modal.disagreement_detected) ? 'pill-pass' : 'pill-flag'}">${!(data.cross_modal && data.cross_modal.disagreement_detected) ? 'ALIGNED ✅' : 'MISMATCH 🚨'}</span></td>
       </tr>
     `;
 
