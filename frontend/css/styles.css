@@ -41,9 +41,9 @@
   --text-muted: #78716c;
   --text-subtle: #a8a29e;
 
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
 
   --shadow-sm: 0 1px 3px rgba(28, 25, 23, 0.05);
   --shadow-md: 0 4px 12px rgba(28, 25, 23, 0.06);

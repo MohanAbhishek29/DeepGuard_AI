@@ -126,22 +126,13 @@ function handleFileSelect(files) {
       video.src = blobUrl;
       audioBlock.style.display = 'none';
       overlay.style.display = 'flex';
-      document.getElementById('hudResText').innerText = 'VIDEO FORENSIC SCANNER';
-      document.getElementById('hudFpsText').innerText = 'FPS: 30.00';
+      const resEl = document.getElementById('hudResText');
+      if (resEl) resEl.innerText = 'VIDEO FORENSIC SCANNER';
+      const fpsEl = document.getElementById('hudFpsText');
+      if (fpsEl) fpsEl.innerText = 'FPS: 30.00';
       streamLog('READY', `Video stream synced. 30.00 FPS HUD scanline active. Awaiting analysis trigger.`, 'vision');
       setStreamStatus('WAITING');
-    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
-    banner.className = 'verdict-banner manipulated';
-    icon.innerText = '🚨';
-    if (isImageMode) {
-      title.innerText = 'AI GENERATED IMAGE DETECTED';
-    } else if (isAudioMode) {
-      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
-      title.innerText = v.replaceAll('_', ' ');
-    }
-    confBadge.className = 'verdict-badge badge-v-fake';
-  } else {
       // Audio stream
       if (img) img.style.display = 'none';
       video.style.display = 'none';
@@ -316,18 +307,7 @@ async function runAnalysis() {
       streamLog('AUDIO', `Parsing audio container tags for Suno/Udio/generative watermark signatures...`, 'audio');
       await new Promise(r => setTimeout(r, 220));
       streamLog('AUDIO', `Scanning ultrasonic frequencies (>16,000 Hz) for HiFi-GAN neural vocoder noise...`, 'audio');
-    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
-    banner.className = 'verdict-banner manipulated';
-    icon.innerText = '🚨';
-    if (isImageMode) {
-      title.innerText = 'AI GENERATED IMAGE DETECTED';
-    } else if (isAudioMode) {
-      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
-      title.innerText = v.replaceAll('_', ' ');
-    }
-    confBadge.className = 'verdict-badge badge-v-fake';
-  } else {
       step1.innerHTML = '✅ [1/3] Video Frames & Facial Texture Extracted';
       step2.innerHTML = '⚡ [2/3] Analyzing audio track for AI voice cloning (>16kHz)...';
       streamLog('VISION', `Extracting video frames. Computing 2D-FFT spatial frequency upsampling grid...`, 'vision');
@@ -350,18 +330,7 @@ async function runAnalysis() {
       streamLog('AUDIO', `Computing biomechanical vocal cord pitch micro-jitter variance...`, 'audio');
       await new Promise(r => setTimeout(r, 200));
       streamLog('SPEECH', `Dispatching OpenAI Whisper multilingual ASR for speech phoneme transcription...`, 'speech');
-    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
-    banner.className = 'verdict-banner manipulated';
-    icon.innerText = '🚨';
-    if (isImageMode) {
-      title.innerText = 'AI GENERATED IMAGE DETECTED';
-    } else if (isAudioMode) {
-      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
-      title.innerText = v.replaceAll('_', ' ');
-    }
-    confBadge.className = 'verdict-badge badge-v-fake';
-  } else {
       step2.innerHTML = '✅ [2/3] Audio Track & Speech Frequencies Probed';
       step3.innerHTML = '⚡ [3/3] Comparing face vs voice to detect deepfakes or dubbing...';
       streamLog('AUDIO', `Measuring vocal pitch micro-jitter variance against human harmonic baselines...`, 'audio');
@@ -385,18 +354,7 @@ async function runAnalysis() {
       step3.innerHTML = '✅ [3/3] Camera Sensor Grain & Seam Inspection Complete';
     } else if (isAudio) {
       step3.innerHTML = '✅ [3/3] Speech & Vocal Naturalness Verification Complete';
-    } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
-    banner.className = 'verdict-banner manipulated';
-    icon.innerText = '🚨';
-    if (isImageMode) {
-      title.innerText = 'AI GENERATED IMAGE DETECTED';
-    } else if (isAudioMode) {
-      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
     } else {
-      title.innerText = v.replaceAll('_', ' ');
-    }
-    confBadge.className = 'verdict-badge badge-v-fake';
-  } else {
       step3.innerHTML = '✅ [3/3] Audio-Visual Cross-Modal Match Complete';
     }
 
@@ -857,18 +815,7 @@ window.addEventListener('scroll', () => {
     if (el && link) {
       if (el.offsetTop <= scrollPos && (el.offsetTop + el.offsetHeight) > scrollPos) {
         link.classList.add('active');
-      } else if (v.includes('AI_GENERATED') || v.includes('AI GENERATED') || v.includes('DEEPFAKE') || v.includes('VISUAL DEEPFAKE') || v.includes('CLONED VOICE') || v.includes('FULLY AI') || v.includes('MANIPULATED') || v.includes('SYNTHETIC')) {
-    banner.className = 'verdict-banner manipulated';
-    icon.innerText = '🚨';
-    if (isImageMode) {
-      title.innerText = 'AI GENERATED IMAGE DETECTED';
-    } else if (isAudioMode) {
-      title.innerText = 'AI GENERATED AUDIO / CLONED VOICE DETECTED';
-    } else {
-      title.innerText = v.replaceAll('_', ' ');
-    }
-    confBadge.className = 'verdict-badge badge-v-fake';
-  } else {
+      } else {
         link.classList.remove('active');
       }
     }
