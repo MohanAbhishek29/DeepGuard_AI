@@ -10,6 +10,9 @@
 
 let selectedFile = null;
 let lastAnalysisResult = null;
+const API_BASE = (window.location.protocol === 'file:' || (window.location.port !== '8000'))
+  ? 'http://127.0.0.1:8000'
+  : '';
 
 // High-precision live terminal logger
 function formatLogTime() {
@@ -294,7 +297,7 @@ async function runAnalysis() {
     const formData = new FormData();
     formData.append('file', selectedFile);
 
-    const upRes = await fetch('/api/v1/media/upload', { method: 'POST', body: formData });
+    const upRes = await fetch(`${API_BASE}/api/v1/media/upload`, { method: 'POST', body: formData });
     const upData = await upRes.json();
     const fileId = upData.file_id;
 
@@ -370,7 +373,7 @@ async function runAnalysis() {
     setStreamStatus('CORRELATING');
     streamLog('CORRELATE', `Ingesting evidence matrices into Cross-Modal Disagreement Engine...`, 'correlate');
 
-    const anRes = await fetch('/api/v1/analysis/start', {
+    const anRes = await fetch(`${API_BASE}/api/v1/analysis/start`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ file_id: fileId, enabled_modalities: ['vision', 'audio', 'speech'] })

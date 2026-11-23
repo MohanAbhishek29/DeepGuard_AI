@@ -142,8 +142,8 @@ class TestCloudArchitecture(unittest.TestCase):
         # A solid-color synthetic PIL image with no EXIF may be flagged as SUSPICIOUS or AUTHENTIC
         # depending on pixel signal thresholds. We only validate structural pipeline correctness here.
         self.assertIn(data["cross_modal"]["overall_verdict"], [
-            "AUTHENTIC (OPTICAL SENSOR PHOTO)",
-            "MANIPULATED (SYNTHETIC / EDITED IMAGE)"
+            "GENUINE CAMERA PHOTO",
+            "AI GENERATED IMAGE DETECTED"
         ])
         self.assertEqual(data["vision"]["total_frames_analyzed"], 1)
 

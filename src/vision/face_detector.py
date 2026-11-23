@@ -4,7 +4,10 @@ from typing import Any
 import cv2
 import numpy as np
 import torch
-from facenet_pytorch import MTCNN
+try:
+    from facenet_pytorch import MTCNN
+except ImportError:
+    MTCNN = None
 from PIL import Image
 
 logger = logging.getLogger(__name__)
@@ -34,14 +37,21 @@ class FaceDetector:
         self.margin = margin
         self.confidence_threshold = confidence_threshold
 
-        # Initialize primary detector (MTCNN)
-        self.mtcnn = MTCNN(
-            keep_all=True,  # Detect all faces in frame
-            device=self.device,
-            margin=self.margin,
-            post_process=False,
-            min_face_size=40,
-        )
+        # Initialize primary detector (MTCNN) if available
+        if MTCNN is not None:
+            try:
+                self.mtcnn = MTCNN(
+                    keep_all=True,  # Detect all faces in frame
+                    device=self.device,
+                    margin=self.margin,
+                    post_process=False,
+                    min_face_size=40,
+                )
+            except Exception as e_mtcnn:
+                logger.warning(f"Could not initialize MTCNN: {e_mtcnn}. Using OpenCV fallback.")
+                self.mtcnn = None
+        else:
+            self.mtcnn = None
 
         # Initialize fallback detector (OpenCV Haar Cascade)
         cascade_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
@@ -90,21 +100,22 @@ class FaceDetector:
 
         results = []
 
-        # 1. Primary Detection
-        try:
-            boxes, probs = self.mtcnn.detect(img)
-            if boxes is not None:
-                for box, prob in zip(boxes, probs):
-                    if prob > self.confidence_threshold:
-                        results.append(
-                            {
-                                "box": [int(b) for b in box],
-                                "confidence": float(prob),
-                                "source": "mtcnn",
-                            }
-                        )
-        except Exception as e:  # noqa: BLE001
-            logger.warning(f"MTCNN failed on {image_path}, trying fallback. Error: {e}")
+        # 1. Primary Detection (MTCNN if loaded)
+        if self.mtcnn is not None:
+            try:
+                boxes, probs = self.mtcnn.detect(img)
+                if boxes is not None:
+                    for box, prob in zip(boxes, probs):
+                        if prob > self.confidence_threshold:
+                            results.append(
+                                {
+                                    "box": [int(b) for b in box],
+                                    "confidence": float(prob),
+                                    "source": "mtcnn",
+                                }
+                            )
+            except Exception as e:  # noqa: BLE001
+                logger.warning(f"MTCNN failed on {image_path}, trying fallback. Error: {e}")
 
         # 2. Fallback Detection
         if not results:
