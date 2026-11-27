@@ -149,78 +149,18 @@ function handleFileSelect(files) {
 
 // Reset right panel to clean standby state
 function resetForensicsView() {
-  document.getElementById('analysisJobId').innerText = 'AWAITING MEDIA';
-  
-  const banner = document.getElementById('verdictBanner');
-  banner.className = 'verdict-banner';
-  document.getElementById('verdictIcon').innerText = '⚡';
-  document.getElementById('verdictConfidenceBadge').innerText = '95% CONFIDENCE';
-  document.getElementById('verdictConfidenceBadge').className = 'verdict-badge badge-v-auth';
-  document.getElementById('verdictTimestamp').innerText = 'READY';
-  document.getElementById('verdictTitle').innerText = 'SYSTEM READY FOR INSPECTION';
-  document.getElementById('verdictReason').innerText = 'Select or upload a media file (Video, Audio song, or Static image) from the left panel to execute dedicated forensic inspection.';
+  const jobBadge = document.getElementById('analysisJobId');
+  if (jobBadge) jobBadge.innerText = 'STANDBY';
 
-  // Show cards in ready mode by default
-  const visCard = document.getElementById('visionDiagCard');
-  const audCard = document.getElementById('audioDiagCard');
-  const speechBox = document.getElementById('speechBox');
-  if (visCard) {
-    visCard.style.display = 'block';
-    visCard.style.opacity = '1';
-    document.getElementById('visionCardTitle').innerText = '📹 Face & Visual Check';
-    document.getElementById('visionLegendTitle').innerText = 'Visual Manipulation Risk';
-    document.getElementById('visionScoreText').innerText = '--%';
-    document.getElementById('visionGaugeCircle').style.strokeDashoffset = 226;
-    document.getElementById('visionStatusBadge').innerText = 'READY';
-    document.getElementById('visionStatusBadge').style.background = 'rgba(16, 185, 129, 0.2)';
-    document.getElementById('visionStatusBadge').style.color = '#34d399';
-    document.getElementById('visionMetricsText').innerHTML = `
-      • Frame Consistency: Standard<br>
-      • Sensor Noise: Natural Optical Grain<br>
-      • Face Blending: Normal Blending
-    `;
-  }
-  if (audCard) {
-    audCard.style.display = 'block';
-    audCard.style.opacity = '1';
-    document.getElementById('audioCardTitle').innerText = '🎙️ Voice & Sound Check';
-    document.getElementById('audioLegendTitle').innerText = 'AI Voice Clone Risk';
-    document.getElementById('audioScoreText').innerText = '--%';
-    document.getElementById('audioGaugeCircle').style.strokeDashoffset = 226;
-    document.getElementById('audioStatusBadge').innerText = 'READY';
-    document.getElementById('audioStatusBadge').style.background = 'rgba(16, 185, 129, 0.2)';
-    document.getElementById('audioStatusBadge').style.color = '#34d399';
-    document.getElementById('audioMetricsText').innerHTML = `
-      • Voice Frequency: Smooth Natural Studio Roll-off<br>
-      • Vocal Cords: Natural Human Micro-Variations<br>
-      • High-Frequency (&gt;16kHz): Safe
-    `;
-  }
-  if (speechBox) {
-    speechBox.style.display = 'block';
-    document.getElementById('speechTranscriptText').innerText = '"Awaiting media execution. Spoken words and recognized language will render here upon analysis."';
-    document.getElementById('speechLangBadge').innerText = 'LANG: AUTO';
-  }
+  const standby = document.getElementById('standbyState');
+  const results = document.getElementById('resultsContent');
+  if (standby) standby.style.display = 'flex';
+  if (results) results.style.display = 'none';
 
-  // Reset breakdown table
-  document.getElementById('breakdownMediaBadge').innerText = 'STANDBY';
-  document.getElementById('breakdownTableBody').innerHTML = `
-    <tr>
-      <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 16px;">
-        Upload a video, audio, or image to inspect real-time backend telemetry metrics.
-      </td>
-    </tr>
-  `;
-
-  document.getElementById('timelineHeader').innerText = '⏱️ Forensic Evidence Inspection Timeline';
-  document.getElementById('timelineStream').innerHTML = `
-    <div class="timeline-node">
-      <div class="node-dot"></div>
-      <span class="node-time">00.0s</span>
-      <span class="node-chip chip-vis">INIT</span>
-      <span class="node-text">System initialized and awaiting forensic inspection trigger.</span>
-    </div>
-  `;
+  const visFill = document.getElementById('visionMeterFill');
+  const audFill = document.getElementById('audioMeterFill');
+  if (visFill) visFill.style.width = '0%';
+  if (audFill) audFill.style.width = '0%';
 }
 
 // Drag and drop handlers
@@ -365,16 +305,23 @@ async function runAnalysis() {
 
   } catch (err) {
     console.error('Forensic Analysis failed:', err);
+    streamLog('ERROR', `Pipeline error: ${err.message}`, 'flag');
+    setStreamStatus('ERROR');
     alert('Analysis error: ' + err.message);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<span>Run Forensic Verification Pipeline</span>';
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span>Analyze Media Authenticity</span>';
   }
 }
 
 // Render Forensic Data to Dashboard
 function renderForensics(data) {
   if (!data) return;
+
+  const standby = document.getElementById('standbyState');
+  const results = document.getElementById('resultsContent');
+  if (standby) standby.style.display = 'none';
+  if (results) results.style.display = 'flex';
 
   document.getElementById('analysisJobId').innerText = `JOB: ${data.job_id || 'DG_LIVE'}`;
 
@@ -460,6 +407,11 @@ function renderForensics(data) {
     const visCircle = document.getElementById('visionGaugeCircle');
     visCircle.style.strokeDashoffset = offset;
     visCircle.style.stroke = isFake ? '#b91c1c' : '#15803d';
+    const visMeter = document.getElementById('visionMeterFill');
+    if (visMeter) {
+      visMeter.style.width = overallPercent + '%';
+      visMeter.style.background = isFake ? '#dc2626' : '#16a34a';
+    }
 
     const visStatus = document.getElementById('visionStatusBadge');
     if (isFake) {
@@ -489,6 +441,11 @@ function renderForensics(data) {
     const audCircle = document.getElementById('audioGaugeCircle');
     audCircle.style.strokeDashoffset = offset;
     audCircle.style.stroke = isFake ? '#b91c1c' : '#15803d';
+    const audMeter = document.getElementById('audioMeterFill');
+    if (audMeter) {
+      audMeter.style.width = overallPercent + '%';
+      audMeter.style.background = isFake ? '#dc2626' : '#16a34a';
+    }
 
     const audStatus = document.getElementById('audioStatusBadge');
     if (isFake) {
@@ -580,6 +537,11 @@ function renderForensics(data) {
     const audCircle = document.getElementById('audioGaugeCircle');
     audCircle.style.strokeDashoffset = offset;
     audCircle.style.stroke = isFake ? '#b91c1c' : '#15803d';
+    const audMeter = document.getElementById('audioMeterFill');
+    if (audMeter) {
+      audMeter.style.width = overallPercent + '%';
+      audMeter.style.background = isFake ? '#dc2626' : '#16a34a';
+    }
 
     const audStatus = document.getElementById('audioStatusBadge');
     if (isFake) {
@@ -652,6 +614,11 @@ function renderForensics(data) {
     const visCircle = document.getElementById('visionGaugeCircle');
     visCircle.style.strokeDashoffset = offset;
     visCircle.style.stroke = isFake ? '#b91c1c' : '#15803d';
+    const visMeter = document.getElementById('visionMeterFill');
+    if (visMeter) {
+      visMeter.style.width = overallPercent + '%';
+      visMeter.style.background = isFake ? '#dc2626' : '#16a34a';
+    }
 
     const visStatus = document.getElementById('visionStatusBadge');
     if (data.vision && data.vision.status === 'AI_GENERATED') {
@@ -680,6 +647,11 @@ function renderForensics(data) {
     const audCircle = document.getElementById('audioGaugeCircle');
     audCircle.style.strokeDashoffset = offset;
     audCircle.style.stroke = (data.audio && data.audio.status === 'AI_GENERATED') ? '#b91c1c' : '#15803d';
+    const audMeter = document.getElementById('audioMeterFill');
+    if (audMeter) {
+      audMeter.style.width = overallPercent + '%';
+      audMeter.style.background = (data.audio && data.audio.status === 'AI_GENERATED') ? '#dc2626' : '#16a34a';
+    }
 
     const audStatus = document.getElementById('audioStatusBadge');
     if (data.audio && data.audio.status === 'AI_GENERATED') {
