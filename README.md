@@ -243,7 +243,8 @@ python -m unittest tests/test_cloud_architecture.py tests/test_multimodal_branch
 
 * **Mohan Abhishek Gupta** — *Project Lead & System Architect* ([@MohanAbhishek29](https://github.com/MohanAbhishek29))
 * **Tunga Durga Sai Prasad** — *Computer Vision Lead*
-* **Harsha Vardhan** — *Audio & Acoustic Forensics Lead*
+* **Harsha Paladi** — *Audio & Acoustic Forensics Lead*
+* **Harsha Vardhan** — *Frontend & Console UI Engineering*
 * **Vinay Rayi** — *Speech & Multimodal Analysis*
 * **Bikesh** — *Data Engineering & Evaluation*
 

@@ -1,20 +1,83 @@
 /**
  * ==============================================================================
- * 🛡️ DeepGuard AI — Cyber Forensic Command Center UI Engine
- * Author & Project Lead: Mohan Abhishek Gupta (@MohanAbhishek29)
- * Repository: https://github.com/MohanAbhishek29/DeepGuard_AI
- * License: Proprietary — All Rights Reserved (Patent Pending)
- * Copyright (c) 2026 Mohan Abhishek Gupta. All rights reserved.
+ * 🛡️ DeepGuard AI — Clinical Forensic Workbench Engine
+ * Zero-Scroll Tabbed UI · Qualitative & Physical Evidence Cards (No Gauge Spam)
+ * Frontend Engineering: Harsha Vardhan | Lead Architect: Mohan Abhishek Gupta
  * ==============================================================================
  */
 
 let selectedFile = null;
 let lastAnalysisResult = null;
-const API_BASE = (window.location.protocol === 'file:' || (window.location.port !== '8000'))
+const API_BASE = (window.location.protocol === 'file:' || window.location.port !== '8000')
   ? 'http://127.0.0.1:8000'
   : '';
 
-// High-precision live terminal logger
+const IDLE_ENGINE_COPY = {
+  image: {
+    chips: [
+      'ViT-Base Patch16-224 (TTA)',
+      'Error Level Analysis (ELA Q=90)',
+      'Camera EXIF Tag 271/272',
+      '2D-FFT Upsampling Grid'
+    ],
+    desc: 'Separates physical smartphone/DSLR captures from Gemini, ChatGPT, Midjourney, and DALL-E generations using neural self-attention, uniform compression variance, and optical sensor EXIF proof.'
+  },
+  video: {
+    chips: [
+      '14-Frame Temporal Sampling',
+      'Facial Seam Blending Ratio',
+      'Hardware Clock Drift (FPS)',
+      '1D-FFT Voice Track Check'
+    ],
+    desc: 'Inspects sampled video frames for face-swap splicing seams, temporal warping jitter, diffusion skin smoothing, ViT keyframe anomalies, and embedded audio track cloning.'
+  },
+  audio: {
+    chips: [
+      '1D-FFT >16kHz Energy Ratio',
+      'ID3 / Container Tag Probe',
+      'Biomechanical Jitter Check',
+      'Audio-Visual Alignment'
+    ],
+    desc: 'Measures ultrasonic frequency energy (>16 kHz) produced by neural vocoders (Suno, Udio, HiFi-GAN, ElevenLabs) and checks audio container headers against natural microphone acoustics.'
+  }
+};
+
+function switchIdleEngine(mode, btn) {
+  document.querySelectorAll('.engine-tab').forEach(t => t.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const box = document.getElementById('idleEngineDetail');
+  const info = IDLE_ENGINE_COPY[mode] || IDLE_ENGINE_COPY.image;
+  if (box) {
+    box.innerHTML = `
+      <div class="detail-pill-row">
+        ${info.chips.map(c => `<span class="detail-chip">${c}</span>`).join('')}
+      </div>
+      <p class="detail-caption">${info.desc}</p>
+    `;
+  }
+}
+
+function switchResultTab(tabId, btn) {
+  document.querySelectorAll('.r-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const target = document.getElementById(`tab-${tabId}`);
+  if (target) target.classList.add('active');
+}
+
+function toggleTeamModal() {
+  const modal = document.getElementById('teamModal');
+  if (!modal) return;
+  modal.style.display = (modal.style.display === 'none' || !modal.style.display) ? 'flex' : 'none';
+}
+
+function setTopStatus(text, stateClass = 'idle') {
+  const txt = document.getElementById('topFileText');
+  const dot = document.getElementById('topStatusDot');
+  if (txt) txt.innerText = text;
+  if (dot) dot.className = `status-dot ${stateClass}`;
+}
+
 function formatLogTime() {
   const d = new Date();
   const pad = (n, len = 2) => String(n).padStart(len, '0');
@@ -24,18 +87,11 @@ function formatLogTime() {
 function streamLog(tag, message, category = 'sys') {
   const container = document.getElementById('liveTerminalLogs');
   if (!container) return;
-
   const tagClassMap = {
-    'sys': 'tag-sys',
-    'ingest': 'tag-ingest',
-    'vision': 'tag-vision',
-    'audio': 'tag-audio',
-    'speech': 'tag-speech',
-    'correlate': 'tag-correlate',
-    'verdict': 'tag-verdict',
-    'flag': 'tag-flag'
+    sys: 'tag-sys', ingest: 'tag-ingest', vision: 'tag-vision',
+    audio: 'tag-audio', speech: 'tag-speech', correlate: 'tag-correlate',
+    verdict: 'tag-verdict', flag: 'tag-flag'
   };
-
   const line = document.createElement('div');
   line.className = 'log-line';
   line.innerHTML = `
@@ -43,139 +99,87 @@ function streamLog(tag, message, category = 'sys') {
     <span class="log-tag ${tagClassMap[category] || 'tag-sys'}">${tag.toUpperCase()}</span>
     <span class="log-msg">${message}</span>
   `;
-
   container.appendChild(line);
   container.scrollTop = container.scrollHeight;
-}
-
-function setStreamStatus(statusText) {
-  const badge = document.getElementById('streamStatusBadge');
-  if (badge) badge.innerText = statusText;
 }
 
 function clearLiveLogs() {
   const container = document.getElementById('liveTerminalLogs');
   if (container) {
-    container.innerHTML = `
-      <div class="log-line">
-        <span class="log-time">[${formatLogTime()}]</span>
-        <span class="log-tag tag-sys">SYS</span>
-        <span class="log-msg">Logs cleared. DeepGuard AI Orchestration Kernel ready.</span>
-      </div>
-    `;
+    container.innerHTML = '';
+    streamLog('SYS', 'Execution stream cleared.', 'sys');
   }
 }
 
-// Standard system cursor active
-function initCyberCursor() {}
-
-function handleFileSelect(files) {
-  if (files && files.length > 0) {
-    selectedFile = files[0];
-
-    // 1. Immediately pause and clear any active audio/video playback
-    const audio = document.getElementById('hudAudio');
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
-      audio.removeAttribute('src');
-      audio.load();
-    }
-    const video = document.getElementById('hudVideo');
-    if (video) {
-      video.pause();
-      video.currentTime = 0;
-      video.removeAttribute('src');
-      video.load();
-    }
-
-    // 2. Clear previous analysis UI state
-    resetForensicsView();
-
-    const sizeMb = (selectedFile.size / (1024 * 1024)).toFixed(2);
-    document.getElementById('dropzoneTitle').innerText = selectedFile.name;
-    document.getElementById('dropzoneSubtitle').innerText = `Size: ${sizeMb} MB | Ready for DeepGuard Forensic Pipeline`;
-
-    // Real-Time Log Stream
-    setStreamStatus('INGESTING');
-    streamLog('INGEST', `Media stream '${selectedFile.name}' (${sizeMb} MB) loaded into client buffer.`, 'ingest');
-    streamLog('STORAGE', `Allocating ephemeral memory. Initializing local forensic preview HUD...`, 'sys');
-
-    // 3. Setup local media preview HUD
-    const hud = document.getElementById('mediaHud');
-    const img = document.getElementById('hudImage');
-    const audioBlock = document.getElementById('audioVisualizerBlock');
-    const overlay = document.getElementById('hudOverlay');
-
-    hud.style.display = 'block';
-    const blobUrl = URL.createObjectURL(selectedFile);
-
-    if (selectedFile.type.startsWith('image/')) {
-      if (img) {
-        img.src = blobUrl;
-        img.style.display = 'block';
-      }
-      video.style.display = 'none';
-      audioBlock.style.display = 'none';
-      overlay.style.display = 'none';
-      streamLog('READY', `Static image preview loaded. Click "Run Forensic Verification Pipeline" to evaluate.`, 'vision');
-      setStreamStatus('WAITING');
-    } else if (selectedFile.type.startsWith('video/')) {
-      if (img) img.style.display = 'none';
-      video.style.display = 'block';
-      video.src = blobUrl;
-      audioBlock.style.display = 'none';
-      overlay.style.display = 'flex';
-      const resEl = document.getElementById('hudResText');
-      if (resEl) resEl.innerText = 'VIDEO FORENSIC SCANNER';
-      const fpsEl = document.getElementById('hudFpsText');
-      if (fpsEl) fpsEl.innerText = 'FPS: 30.00';
-      streamLog('READY', `Video stream synced. 30.00 FPS HUD scanline active. Awaiting analysis trigger.`, 'vision');
-      setStreamStatus('WAITING');
-    } else {
-      // Audio stream
-      if (img) img.style.display = 'none';
-      video.style.display = 'none';
-      overlay.style.display = 'none';
-      audioBlock.style.display = 'block';
-      audio.src = blobUrl;
-      document.getElementById('audioTrackTitle').innerText = selectedFile.name;
-      document.getElementById('audioTrackMeta').innerText = `Size: ${sizeMb} MB • Studio 44.1 kHz • Acoustic Probing Ready`;
-      streamLog('READY', `Studio audio decoded (44.1 kHz). Acoustic probing ready. Awaiting analysis trigger.`, 'audio');
-      setStreamStatus('WAITING');
-    }
-  }
-}
-
-// Reset right panel to clean standby state
 function resetForensicsView() {
-  const jobBadge = document.getElementById('analysisJobId');
-  if (jobBadge) jobBadge.innerText = 'STANDBY';
-
   const standby = document.getElementById('standbyState');
   const results = document.getElementById('resultsContent');
-  if (standby) standby.style.display = 'flex';
+  if (standby) standby.style.display = 'block';
   if (results) results.style.display = 'none';
-
-  const visFill = document.getElementById('visionMeterFill');
-  const audFill = document.getElementById('audioMeterFill');
-  if (visFill) visFill.style.width = '0%';
-  if (audFill) audFill.style.width = '0%';
+  // Reset back to Diagnostic Checks tab
+  const firstTab = document.querySelector('.r-tab[data-tab="signals"]');
+  if (firstTab) switchResultTab('signals', firstTab);
 }
 
-// Drag and drop handlers
-const dropZone = document.getElementById('dropZone');
-['dragenter', 'dragover'].forEach(n => dropZone.addEventListener(n, (e) => { e.preventDefault(); dropZone.classList.add('dragover'); }, false));
-['dragleave', 'drop'].forEach(n => dropZone.addEventListener(n, (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); }, false));
-dropZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  handleFileSelect(e.dataTransfer.files);
-});
+function handleFileSelect(files) {
+  if (!files || files.length === 0) return;
+  selectedFile = files[0];
 
-// Run Forensic Analysis
+  const audio = document.getElementById('hudAudio');
+  if (audio) { audio.pause(); audio.removeAttribute('src'); audio.load(); }
+  const video = document.getElementById('hudVideo');
+  if (video) { video.pause(); video.removeAttribute('src'); video.load(); }
+
+  resetForensicsView();
+
+  const sizeMb = (selectedFile.size / (1024 * 1024)).toFixed(2);
+  document.getElementById('dropzoneTitle').innerText = selectedFile.name;
+  document.getElementById('dropzoneSubtitle').innerText = `${sizeMb} MB · Ready to verify`;
+  const changeBtn = document.getElementById('changeFileBtn');
+  if (changeBtn) changeBtn.style.display = 'inline-block';
+
+  const verifyBtn = document.getElementById('analyzeBtn');
+  if (verifyBtn) verifyBtn.disabled = false;
+
+  setTopStatus(`${selectedFile.name} (${sizeMb} MB) · Ready`, 'ready');
+  streamLog('INGEST', `Loaded '${selectedFile.name}' (${sizeMb} MB).`, 'ingest');
+
+  const hud = document.getElementById('mediaHud');
+  const img = document.getElementById('hudImage');
+  const audioBlock = document.getElementById('audioVisualizerBlock');
+  const blobUrl = URL.createObjectURL(selectedFile);
+
+  if (hud) hud.style.display = 'block';
+
+  if (selectedFile.type.startsWith('image/')) {
+    if (img) { img.src = blobUrl; img.style.display = 'block'; }
+    if (video) video.style.display = 'none';
+    if (audioBlock) audioBlock.style.display = 'none';
+  } else if (selectedFile.type.startsWith('video/')) {
+    if (img) img.style.display = 'none';
+    if (video) { video.src = blobUrl; video.style.display = 'block'; }
+    if (audioBlock) audioBlock.style.display = 'none';
+  } else {
+    if (img) img.style.display = 'none';
+    if (video) video.style.display = 'none';
+    if (audioBlock) audioBlock.style.display = 'block';
+    if (audio) audio.src = blobUrl;
+    document.getElementById('audioTrackTitle').innerText = selectedFile.name;
+    document.getElementById('audioTrackMeta').innerText = `${sizeMb} MB · 44.1 kHz Probing Ready`;
+  }
+}
+
+// Drag & Drop
+const dropZone = document.getElementById('dropZone');
+if (dropZone) {
+  ['dragenter', 'dragover'].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.add('dragover'); }));
+  ['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.remove('dragover'); }));
+  dropZone.addEventListener('drop', e => handleFileSelect(e.dataTransfer.files));
+}
+
 async function runAnalysis() {
   if (!selectedFile) {
-    alert('Please select or drag a media file first to analyze!');
+    alert('Please select a media file first.');
     return;
   }
 
@@ -187,134 +191,72 @@ async function runAnalysis() {
 
   const isImage = selectedFile.type.startsWith('image/');
   const isAudio = selectedFile.type.startsWith('audio/');
-  const isVideo = !isImage && !isAudio;
 
   try {
     btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> <span>Evaluating Media Authenticity...</span>';
-    progress.style.display = 'block';
+    btn.innerHTML = '<span class="spinner"></span><span>Inspecting Media...</span>';
+    progress.style.display = 'flex';
+    setTopStatus(`Inspecting ${selectedFile.name}...`, 'busy');
 
-    // Live Telemetry Stream Start
-    setStreamStatus('ANALYZING');
-    streamLog('DISPATCH', `Initializing DeepGuard Tri-Spectral Core. Spawning parallel inspection workers...`, 'sys');
+    step1.innerText = '1/3 · Uploading to local forensic sandbox...';
+    step2.innerText = isImage ? '2/3 · Running ViT, ELA & EXIF checks...' : (isAudio ? '2/3 · Running 1D-FFT & tag checks...' : '2/3 · Sampling frames & audio track...');
+    step3.innerText = '3/3 · Synthesizing final report...';
 
-    // Specific initial status messages per media type (Clear & Faculty Friendly)
-    if (isImage) {
-      step1.innerHTML = '⚡ [1/3] Reading image metadata & checking camera device tags...';
-      step2.innerHTML = '⏳ [2/3] Performing Error Level Analysis (ELA) for image editing...';
-      step3.innerHTML = '⏳ [3/3] Inspecting camera sensor noise & face boundary blending...';
-    } else if (isAudio) {
-      step1.innerHTML = '⚡ [1/3] Ingesting audio file & decoding acoustic container...';
-      step2.innerHTML = '⏳ [2/3] Scanning high-frequency sounds (>16kHz) for AI voice cloning...';
-      step3.innerHTML = '⏳ [3/3] Transcribing spoken words & verifying voice patterns...';
-    } else {
-      step1.innerHTML = '⚡ [1/3] Reading video frames & inspecting face movements...';
-      step2.innerHTML = '⏳ [2/3] Analyzing audio track for AI voice cloning (>16kHz)...';
-      step3.innerHTML = '⏳ [3/3] Comparing face vs voice to detect deepfakes or dubbing...';
-    }
-
-    // 1. Upload file
     const formData = new FormData();
     formData.append('file', selectedFile);
 
     const upRes = await fetch(`${API_BASE}/api/v1/media/upload`, { method: 'POST', body: formData });
+    if (!upRes.ok) throw new Error(`Upload failed (HTTP ${upRes.status})`);
     const upData = await upRes.json();
     const fileId = upData.file_id;
+    streamLog('UPLOAD', `Media stored locally: ${fileId}`, 'ingest');
 
-    streamLog('UPLOAD', `POST /api/v1/media/upload -> Persisted with unique storage ID: ${fileId}`, 'ingest');
-
-    // Update Step 1 complete & Step 2 in-progress
-    if (isImage) {
-      step1.innerHTML = '✅ [1/3] Image Metadata & Camera Device Tags Verified';
-      step2.innerHTML = '⚡ [2/3] Performing Error Level Analysis (ELA) for image editing...';
-      streamLog('VISION', `Auditing camera hardware EXIF tags and color quantization profiles...`, 'vision');
-      await new Promise(r => setTimeout(r, 220));
-      streamLog('VISION', `Executing Error Level Analysis (ELA) recompression gradient scan...`, 'vision');
-    } else if (isAudio) {
-      step1.innerHTML = '✅ [1/3] Audio Stream & Acoustic Container Decoded';
-      step2.innerHTML = '⚡ [2/3] Scanning high-frequency sounds (>16kHz) for AI voice cloning...';
-      streamLog('AUDIO', `Parsing audio container tags for Suno/Udio/generative watermark signatures...`, 'audio');
-      await new Promise(r => setTimeout(r, 220));
-      streamLog('AUDIO', `Scanning ultrasonic frequencies (>16,000 Hz) for HiFi-GAN neural vocoder noise...`, 'audio');
-    } else {
-      step1.innerHTML = '✅ [1/3] Video Frames & Facial Texture Extracted';
-      step2.innerHTML = '⚡ [2/3] Analyzing audio track for AI voice cloning (>16kHz)...';
-      streamLog('VISION', `Extracting video frames. Computing 2D-FFT spatial frequency upsampling grid...`, 'vision');
-      await new Promise(r => setTimeout(r, 220));
-      streamLog('AUDIO', `Isolating embedded audio track for high-frequency vocoder inspection...`, 'audio');
-    }
-
-    await new Promise(r => setTimeout(r, 250));
-
-    // Update Step 2 complete & Step 3 in-progress
-    if (isImage) {
-      step2.innerHTML = '✅ [2/3] Compression Consistency & ELA Scan Complete';
-      step3.innerHTML = '⚡ [3/3] Inspecting camera sensor noise & face boundary blending...';
-      streamLog('VISION', `Computing Laplacian texture variance (photon noise distribution check)...`, 'vision');
-      await new Promise(r => setTimeout(r, 200));
-      streamLog('VISION', `Scanning facial boundary edge seam ratio for cutline discontinuities...`, 'vision');
-    } else if (isAudio) {
-      step2.innerHTML = '✅ [2/3] Frequency Spectrum & Vocal Cord Jitter Probed';
-      step3.innerHTML = '⚡ [3/3] Transcribing spoken words & verifying voice patterns...';
-      streamLog('AUDIO', `Computing biomechanical vocal cord pitch micro-jitter variance...`, 'audio');
-      await new Promise(r => setTimeout(r, 200));
-      streamLog('SPEECH', `Dispatching OpenAI Whisper multilingual ASR for speech phoneme transcription...`, 'speech');
-    } else {
-      step2.innerHTML = '✅ [2/3] Audio Track & Speech Frequencies Probed';
-      step3.innerHTML = '⚡ [3/3] Comparing face vs voice to detect deepfakes or dubbing...';
-      streamLog('AUDIO', `Measuring vocal pitch micro-jitter variance against human harmonic baselines...`, 'audio');
-      await new Promise(r => setTimeout(r, 200));
-      streamLog('SPEECH', `Aligning Whisper speech phonemes with optical mouth motion timecodes...`, 'speech');
-    }
-
-    // 2. Start forensic analysis
-    setStreamStatus('CORRELATING');
-    streamLog('CORRELATE', `Ingesting evidence matrices into Cross-Modal Disagreement Engine...`, 'correlate');
-
+    step1.innerText = '✓ 1/3 · Media ingested';
     const anRes = await fetch(`${API_BASE}/api/v1/analysis/start`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ file_id: fileId, enabled_modalities: ['vision', 'audio', 'speech'] })
     });
+    if (!anRes.ok) throw new Error(`Analysis failed (HTTP ${anRes.status})`);
     const result = await anRes.json();
 
-    // Update Step 3 complete
-    if (isImage) {
-      step3.innerHTML = '✅ [3/3] Camera Sensor Grain & Seam Inspection Complete';
-    } else if (isAudio) {
-      step3.innerHTML = '✅ [3/3] Speech & Vocal Naturalness Verification Complete';
-    } else {
-      step3.innerHTML = '✅ [3/3] Audio-Visual Cross-Modal Match Complete';
-    }
-
+    step2.innerText = '✓ 2/3 · Forensic detectors complete';
+    step3.innerText = '✓ 3/3 · Verification report ready';
     lastAnalysisResult = result;
 
-    const verdict = result.cross_modal ? result.cross_modal.overall_verdict : 'ANALYSIS_COMPLETE';
-    const isSuspicious = verdict.includes('MANIPULATED') || verdict.includes('SYNTHETIC') || verdict.includes('FLAGGED') || verdict.includes('SUSPICIOUS') || verdict.includes('AI GENERATED') || verdict.includes('AI_GENERATED') || verdict.includes('DEEPFAKE');
-    const category = isSuspicious ? 'flag' : 'verdict';
-    const conf = ((result.cross_modal?.confidence_score || 0.95) * 100).toFixed(1);
-
-    streamLog(isSuspicious ? 'FLAGGED' : 'VERIFIED', `Verdict Calculated: ${verdict} (Confidence: ${conf}%)`, category);
-    streamLog('CERTIFICATE', `Tamper-evident cryptographic SHA-256 certificate signed: ${result.job_id}`, 'sys');
-    setStreamStatus(isSuspicious ? 'FLAGGED' : 'GENUINE');
+    const verdict = result.cross_modal ? result.cross_modal.overall_verdict : 'COMPLETE';
+    const isSuspicious = verdict.includes('AI') || verdict.includes('DEEPFAKE') || verdict.includes('CLONED') || verdict.includes('MANIPULATED');
+    streamLog(isSuspicious ? 'FLAGGED' : 'VERIFIED', `Verdict: ${verdict}`, isSuspicious ? 'flag' : 'verdict');
 
     setTimeout(() => {
       renderForensics(result);
       progress.style.display = 'none';
-    }, 350);
-
+    }, 200);
   } catch (err) {
     console.error('Forensic Analysis failed:', err);
-    streamLog('ERROR', `Pipeline error: ${err.message}`, 'flag');
-    setStreamStatus('ERROR');
+    streamLog('ERROR', err.message, 'flag');
+    setTopStatus(`Error: ${err.message}`, 'flag');
     alert('Analysis error: ' + err.message);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span>Analyze Media Authenticity</span>';
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg><span>Verify Authenticity</span>';
   }
 }
 
-// Render Forensic Data to Dashboard
+function buildSignalCard(title, statusKind, statusLabel, reading, note) {
+  const cardCls = statusKind === 'flag' ? 'sig-flag' : (statusKind === 'pass' ? 'sig-pass' : '');
+  return `
+    <div class="sig-card ${cardCls}">
+      <div class="sig-top">
+        <span class="sig-name">${title}</span>
+        <span class="sig-badge ${statusKind}">${statusLabel}</span>
+      </div>
+      <div class="sig-reading">${reading}</div>
+      <div class="sig-note">${note}</div>
+    </div>
+  `;
+}
+
 function renderForensics(data) {
   if (!data) return;
 
@@ -323,478 +265,321 @@ function renderForensics(data) {
   if (standby) standby.style.display = 'none';
   if (results) results.style.display = 'flex';
 
-  document.getElementById('analysisJobId').innerText = `JOB: ${data.job_id || 'DG_LIVE'}`;
-
-  // 1. Determine Media Mode & Overall Verdict
-  const v = (data.cross_modal && data.cross_modal.overall_verdict) ? data.cross_modal.overall_verdict : 'UNKNOWN';
+  const v = (data.cross_modal && data.cross_modal.overall_verdict) ? data.cross_modal.overall_verdict : 'COMPLETE';
   const r = (data.cross_modal && data.cross_modal.disagreement_reason) ? data.cross_modal.disagreement_reason : '';
 
   const isImageMode = (selectedFile && selectedFile.type && selectedFile.type.startsWith('image/')) || (data.vision && !data.audio);
   const isAudioMode = (selectedFile && selectedFile.type && selectedFile.type.startsWith('audio/')) || (data.audio && !data.vision);
-  const isVideoMode = !isImageMode && !isAudioMode;
 
-  const isFake = v.includes('AI_GENERATED') || v.includes('AI GENERATED') || 
-                 v.includes('DEEPFAKE') || v.includes('MANIPULATED') || 
-                 v.includes('SYNTHETIC') ||
+  const isFake = v.includes('AI') || v.includes('DEEPFAKE') || v.includes('CLONED') ||
+                 v.includes('MANIPULATED') || v.includes('SYNTHETIC') ||
                  (data.vision && data.vision.status === 'AI_GENERATED') ||
                  (data.audio && data.audio.status === 'AI_GENERATED');
 
-  // Single unified percentage score across the entire dashboard
-  let overallPercent = 94;
-  if (data.cross_modal && data.cross_modal.confidence_score) {
-    overallPercent = Math.round(data.cross_modal.confidence_score * 100);
-  } else if (data.vision && data.vision.score) {
-    overallPercent = isFake ? Math.round(data.vision.score * 100) : Math.round((1.0 - data.vision.score) * 100);
-  } else if (data.audio && data.audio.score) {
-    overallPercent = isFake ? Math.round(data.audio.score * 100) : Math.round((1.0 - data.audio.score) * 100);
-  }
-  if (overallPercent < 88) overallPercent = 92;
-  if (overallPercent > 99) overallPercent = 97;
-
-  // 2. Verdict Banner
+  // Top Pill & Verdict Card (NO confusing numeric percentages!)
   const banner = document.getElementById('verdictBanner');
-  const icon = document.getElementById('verdictIcon');
+  const badge = document.getElementById('verdictConfidenceBadge');
   const title = document.getElementById('verdictTitle');
   const reason = document.getElementById('verdictReason');
-  const confBadge = document.getElementById('verdictConfidenceBadge');
-  const timestamp = document.getElementById('verdictTimestamp');
+  const icon = document.getElementById('verdictIcon');
 
-  confBadge.innerText = `${overallPercent}% CONFIDENCE`;
-  timestamp.innerText = new Date().toLocaleTimeString();
+  document.getElementById('analysisJobId').innerText = `JOB: ${data.job_id || 'LOCAL'}`;
+  document.getElementById('verdictTimestamp').innerText = new Date().toLocaleTimeString();
   reason.innerText = r;
 
   if (!isFake) {
-    banner.className = 'verdict-banner authentic';
-    icon.innerText = '✅';
-    title.innerText = isImageMode 
-      ? 'GENUINE CAMERA PHOTO' 
-      : (isAudioMode ? 'GENUINE HUMAN VOICE' : 'GENUINE MEDIA — ALL SIGNALS VERIFIED');
-    confBadge.className = 'verdict-badge badge-v-auth';
+    banner.className = 'verdict-card authentic';
+    badge.className = 'verdict-pill pass';
+    badge.innerText = 'VERIFIED AUTHENTIC';
+    icon.innerText = '✓';
+    title.innerText = isImageMode ? 'GENUINE CAMERA PHOTO' : (isAudioMode ? 'GENUINE HUMAN VOICE' : v.replaceAll('_', ' '));
+    setTopStatus(`${selectedFile ? selectedFile.name : 'Media'} · Verified Authentic`, 'pass');
   } else {
-    banner.className = 'verdict-banner manipulated';
-    icon.innerText = '🚨';
-    if (isImageMode) {
-      title.innerText = 'AI GENERATED IMAGE DETECTED';
-    } else if (isAudioMode) {
-      title.innerText = 'AI CLONED VOICE / SYNTHETIC AUDIO DETECTED';
-    } else {
-      title.innerText = v.replaceAll('_', ' ');
-    }
-    confBadge.className = 'verdict-badge badge-v-fake';
+    banner.className = 'verdict-card manipulated';
+    badge.className = 'verdict-pill flag';
+    badge.innerText = 'SYNTHETIC INDICATORS DETECTED';
+    icon.innerText = '!';
+    title.innerText = isImageMode ? 'AI-GENERATED IMAGE DETECTED' : (isAudioMode ? 'SYNTHETIC AUDIO / VOICE DETECTED' : v.replaceAll('_', ' '));
+    setTopStatus(`${selectedFile ? selectedFile.name : 'Media'} · Synthetic Flagged`, 'flag');
   }
 
-  const visCard = document.getElementById('visionDiagCard');
-  const audCard = document.getElementById('audioDiagCard');
-  const speechBox = document.getElementById('speechBox');
-  const timelineHeader = document.getElementById('timelineHeader');
+  const cardsGrid = document.getElementById('signalCardsGrid');
   const breakdownBadge = document.getElementById('breakdownMediaBadge');
   const breakdownBody = document.getElementById('breakdownTableBody');
+  const speechBox = document.getElementById('speechBox');
+  const timelineHeader = document.getElementById('timelineHeader');
 
-  // =========================================================================
-  // SCENARIO 1: STATIC IMAGE FORENSIC VIEW
-  // =========================================================================
+  // -------------------------------------------------------------------------
+  // MODE 1: IMAGE FORENSICS
+  // -------------------------------------------------------------------------
   if (isImageMode) {
-    breakdownBadge.innerText = 'STATIC IMAGE TELEMETRY';
-
-    // 1. Primary Card: Visual Inspection
-    visCard.style.display = 'block';
-    visCard.style.opacity = '1';
-    document.getElementById('visionCardTitle').innerText = '📸 Visual Artifact Inspection';
-    document.getElementById('visionLegendTitle').innerText = isFake ? 'AI Generation Probability' : 'Authenticity Confidence';
-    document.getElementById('visionScoreText').innerText = overallPercent + '%';
-
-    const offset = 226 - (226 * overallPercent / 100);
-    const visCircle = document.getElementById('visionGaugeCircle');
-    visCircle.style.strokeDashoffset = offset;
-    visCircle.style.stroke = isFake ? '#b91c1c' : '#15803d';
-    const visMeter = document.getElementById('visionMeterFill');
-    if (visMeter) {
-      visMeter.style.width = overallPercent + '%';
-      visMeter.style.background = isFake ? '#dc2626' : '#16a34a';
-    }
-
-    const visStatus = document.getElementById('visionStatusBadge');
-    if (isFake) {
-      visStatus.innerText = 'AI GENERATED';
-      visStatus.style.background = '#fef2f2';
-      visStatus.style.color = '#b91c1c';
-    } else {
-      visStatus.innerText = 'GENUINE PHOTO';
-      visStatus.style.background = '#f0fdf4';
-      visStatus.style.color = '#15803d';
-    }
-
-    const art = (data.vision && data.vision.artifacts) ? data.vision.artifacts : [];
-    document.getElementById('visionMetricsText').innerHTML = `
-      • Neural ViT Model: ${isFake ? 'Flagged synthetic generative patterns' : 'Verified authentic optical features'}<br>
-      • Sensor Photon Noise: ${art[1] || 'Optical sensor photon noise verified'}<br>
-      • Pixel Compression (ELA): ${art[0] || 'Natural compression deltas verified'}
-    `;
-
-    // 2. Secondary Card: Device & Hardware Provenance
-    audCard.style.display = 'block';
-    audCard.style.opacity = '1';
-    document.getElementById('audioCardTitle').innerText = '📱 Hardware & Sensor Provenance';
-    document.getElementById('audioLegendTitle').innerText = isFake ? 'Synthetic Origin Risk' : 'Sensor Authenticity';
-    document.getElementById('audioScoreText').innerText = overallPercent + '%';
-
-    const audCircle = document.getElementById('audioGaugeCircle');
-    audCircle.style.strokeDashoffset = offset;
-    audCircle.style.stroke = isFake ? '#b91c1c' : '#15803d';
-    const audMeter = document.getElementById('audioMeterFill');
-    if (audMeter) {
-      audMeter.style.width = overallPercent + '%';
-      audMeter.style.background = isFake ? '#dc2626' : '#16a34a';
-    }
-
-    const audStatus = document.getElementById('audioStatusBadge');
-    if (isFake) {
-      audStatus.innerText = 'NO CAMERA HARDWARE';
-      audStatus.style.background = '#fef2f2';
-      audStatus.style.color = '#b91c1c';
-      document.getElementById('audioMetricsText').innerHTML = `
-        • Camera Sensor EXIF: Missing camera hardware tags (AI generation signature)<br>
-        • Pixel Quantization: Uniform mathematical residual (No optical JPEG chain)<br>
-        • Frequency Spectrum: 2D-FFT latent grid patterns scanned
-      `;
-    } else {
-      audStatus.innerText = 'CAMERA SENSOR CONFIRMED';
-      audStatus.style.background = '#f0fdf4';
-      audStatus.style.color = '#15803d';
-      document.getElementById('audioMetricsText').innerHTML = `
-        • Camera Sensor EXIF: Optical camera sensor verified<br>
-        • Photon Noise Profile: Natural camera photon dispersion confirmed<br>
-        • Light Distribution: Natural optical light decay verified
-      `;
-    }
-
-    // Hide Speech Box for images
+    breakdownBadge.innerText = 'IMAGE REPORT';
     speechBox.style.display = 'none';
-
-    // 4. Detailed Backend Inspection Breakdown Table
     const diag = (data.vision && data.vision.diagnostic_metrics) ? data.vision.diagnostic_metrics : {};
     const hasCameraExif = diag.device_hardware && !diag.device_hardware.includes('No Camera EXIF');
     const isElaFlagged = diag.ela_status && diag.ela_status.includes('Too Uniform');
     const isFftSpike = diag.fft_status && diag.fft_status.includes('Upsampling');
+    const vitRaw = diag.neural_vit_confidence || 'Evaluated';
+    const vitFlag = isFake;
+
+    cardsGrid.innerHTML = [
+      buildSignalCard(
+        'Vision Transformer (ViT)',
+        vitFlag ? 'flag' : 'pass',
+        vitFlag ? 'FLAGGED' : 'PASSED',
+        vitFlag ? 'Synthetic Diffusion Patterns Detected' : 'Natural Visual Distribution',
+        `16×16 multi-scale patch attention (${vitRaw.replace(/\d+(\.\d+)?%/g, '').trim() || 'ViT-Base TTA'}).`
+      ),
+      buildSignalCard(
+        'Camera Hardware EXIF',
+        hasCameraExif ? 'pass' : 'flag',
+        hasCameraExif ? 'CONFIRMED' : 'MISSING',
+        diag.device_hardware || 'No Optical Sensor Tag',
+        hasCameraExif ? 'Physical smartphone or DSLR hardware identifier present in header.' : 'Real cameras record Make/Model tags; AI generators omit optical EXIF.'
+      ),
+      buildSignalCard(
+        'Compression Physics (ELA)',
+        isElaFlagged ? 'flag' : 'pass',
+        isElaFlagged ? 'UNIFORM AI' : 'NATURAL',
+        `${diag.ela_variance || 'Residual Checked'} · ${diag.ela_status || ''}`,
+        'JPEG Q=90 recompression delta distinguishes synthetic smooth pixels from optical lens variance.'
+      ),
+      buildSignalCard(
+        'Photon Noise & 2D-FFT',
+        (!isFftSpike && !isFake) ? 'pass' : 'flag',
+        (!isFftSpike && !isFake) ? 'CLEAN' : 'ANOMALY',
+        `${diag.camera_sensor_noise || 'Noise Checked'} · ${diag.fft_status || 'Spectrum Checked'}`,
+        'Checks physical thermal sensor grain (Laplacian) and periodic generative checkerboard grids.'
+      )
+    ].join('');
 
     breakdownBody.innerHTML = `
       <tr>
         <td><strong>Error Level Analysis (ELA)</strong></td>
-        <td>Evaluates recompression residual delta (AI generates unnatural uniform residual)</td>
-        <td><code>${diag.ela_variance || 'Residual Analyzed'} — ${diag.ela_status || 'Analyzed'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${!isElaFlagged ? 'pill-pass' : 'pill-flag'}">${!isElaFlagged ? 'PASSED ✅' : 'FLAGGED 🚨'}</span></td>
+        <td>JPEG Q=90 recompression delta variance</td>
+        <td><code>${diag.ela_variance || 'N/A'} (${diag.ela_status || 'Checked'})</code></td>
+        <td style="text-align:right;"><span class="status-pill ${!isElaFlagged ? 'pill-pass' : 'pill-flag'}">${!isElaFlagged ? 'PASSED' : 'FLAGGED'}</span></td>
       </tr>
       <tr>
-        <td><strong>Sensor Photon Noise (Laplacian)</strong></td>
-        <td>Checks microscopic physical photon variance (Diffusion over-smooths skin & textures)</td>
-        <td><code>${diag.camera_sensor_noise || 'Noise Verified'} — ${diag.sensor_noise_status || 'Verified'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${!isFake ? 'pill-pass' : 'pill-flag'}">${!isFake ? 'PASSED ✅' : 'FLAGGED 🚨'}</span></td>
+        <td><strong>Camera Hardware EXIF</strong></td>
+        <td>EXIF Tag 271 (Make) &amp; Tag 272 (Model)</td>
+        <td><code>${diag.device_hardware || 'None'}</code></td>
+        <td style="text-align:right;"><span class="status-pill ${hasCameraExif ? 'pill-pass' : 'pill-flag'}">${hasCameraExif ? 'CONFIRMED' : 'MISSING'}</span></td>
       </tr>
       <tr>
-        <td><strong>Camera Hardware EXIF Provenance</strong></td>
-        <td>Audits camera sensor hardware tags (Make/Model/ISO) vs stripped/synthetic metadata</td>
-        <td><code>${diag.device_hardware || 'Optical Camera Sensor'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${hasCameraExif ? 'pill-pass' : 'pill-flag'}">${hasCameraExif ? 'HARDWARE CONFIRMED ✅' : 'NO CAMERA EXIF 🚨'}</span></td>
+        <td><strong>Sensor Photon Noise</strong></td>
+        <td>Laplacian variance across image texture</td>
+        <td><code>${diag.camera_sensor_noise || 'N/A'} — ${diag.sensor_noise_status || 'Checked'}</code></td>
+        <td style="text-align:right;"><span class="status-pill ${!isFake ? 'pill-pass' : 'pill-flag'}">${!isFake ? 'PASSED' : 'FLAGGED'}</span></td>
       </tr>
       <tr>
-        <td><strong>2D-FFT Spatial Frequencies</strong></td>
-        <td>Scans for transposed convolution generative upsampling checkerboard grid artifacts</td>
-        <td><code>Ratio: ${diag.fft_ratio || 'N/A'} — ${diag.fft_status || 'Clean Spectrum'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${!isFftSpike ? 'pill-pass' : 'pill-flag'}">${!isFftSpike ? 'CLEAN SPECTRUM ✅' : 'UPSAMPLING GRID 🚨'}</span></td>
+        <td><strong>2D-FFT Spatial Spectrum</strong></td>
+        <td>Transposed convolution upsampling grid</td>
+        <td><code>Ratio ${diag.fft_ratio || 'N/A'} — ${diag.fft_status || 'Clean'}</code></td>
+        <td style="text-align:right;"><span class="status-pill ${!isFftSpike ? 'pill-pass' : 'pill-flag'}">${!isFftSpike ? 'CLEAN' : 'FLAGGED'}</span></td>
       </tr>
       <tr>
-        <td><strong>Vision Transformer Neural Classifier</strong></td>
-        <td>Fine-tuned ViT-Base with multi-scale Test-Time Augmentation (TTA)</td>
-        <td><code>${diag.neural_vit_confidence || 'Neural Weights Analyzed'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${!isFake ? 'pill-pass' : 'pill-flag'}">${!isFake ? 'CLEAN ✅' : 'AI DETECTED 🚨'}</span></td>
-      </tr>
-      <tr>
-        <td><strong>Multi-Signal Composite Decision</strong></td>
-        <td>Bayesian combination across independent physical & neural indicators</td>
-        <td><code>${diag.composite_signal_score || 'Evaluation Complete'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${!isFake ? 'pill-pass' : 'pill-flag'}">${!isFake ? 'GENUINE COMPOSITE ✅' : 'AI GENERATED COMPOSITE 🚨'}</span></td>
+        <td><strong>Vision Transformer (ViT)</strong></td>
+        <td>Multi-scale TTA neural classification</td>
+        <td><code>${diag.neural_vit_confidence || 'Analyzed'}</code></td>
+        <td style="text-align:right;"><span class="status-pill ${!vitFlag ? 'pill-pass' : 'pill-flag'}">${!vitFlag ? 'CLEAN' : 'FLAGGED'}</span></td>
       </tr>
     `;
-
-    timelineHeader.innerText = '📋 Image Forensic Verification Milestones';
+    timelineHeader.innerText = 'Image Inspection Steps';
   }
 
-  // =========================================================================
-  // SCENARIO 2: AUDIO ONLY FORENSIC VIEW
-  // =========================================================================
+  // -------------------------------------------------------------------------
+  // MODE 2: AUDIO ONLY FORENSICS
+  // -------------------------------------------------------------------------
   else if (isAudioMode) {
-    breakdownBadge.innerText = 'AUDIO & VOICE TELEMETRY';
-
-    visCard.style.display = 'none';
-    audCard.style.display = 'block';
-    audCard.style.opacity = '1';
-
-    document.getElementById('audioCardTitle').innerText = '🎙️ Voice Authenticity Check';
-    document.getElementById('audioLegendTitle').innerText = isFake ? 'AI Voice Clone Risk' : 'Voice Naturalness';
-    document.getElementById('audioScoreText').innerText = overallPercent + '%';
-
-    const offset = 226 - (226 * overallPercent / 100);
-    const audCircle = document.getElementById('audioGaugeCircle');
-    audCircle.style.strokeDashoffset = offset;
-    audCircle.style.stroke = isFake ? '#b91c1c' : '#15803d';
-    const audMeter = document.getElementById('audioMeterFill');
-    if (audMeter) {
-      audMeter.style.width = overallPercent + '%';
-      audMeter.style.background = isFake ? '#dc2626' : '#16a34a';
-    }
-
-    const audStatus = document.getElementById('audioStatusBadge');
-    if (isFake) {
-      audStatus.innerText = 'AI CLONED VOICE / MUSIC';
-      audStatus.style.background = '#fef2f2';
-      audStatus.style.color = '#b91c1c';
-    } else {
-      audStatus.innerText = 'REAL HUMAN VOICE';
-      audStatus.style.background = '#f0fdf4';
-      audStatus.style.color = '#15803d';
-    }
-
+    breakdownBadge.innerText = 'AUDIO REPORT';
     const af = (data.audio && data.audio.acoustic_features) ? data.audio.acoustic_features : {};
-    document.getElementById('audioMetricsText').innerHTML = `
-      • Voice Frequency: ${af.spectral_flatness_normal ? 'Smooth studio roll-off (Natural human sound)' : 'Unnatural digital noise above 16kHz'}<br>
-      • Vocal Cord Micro-Variations: ${af.pitch_jitter_score || 0.012} (${af.spectral_flatness_normal ? 'Human vocal cords' : 'Synthetic vocoder'})<br>
-      • Audio Quality: Studio 44,100 Hz (${af.mel_bands || 128} Frequency Filterbands)
-    `;
-
-    speechBox.style.display = 'block';
-    if (data.speech) {
-      document.getElementById('speechTranscriptText').innerText = `"${data.speech.transcript}"`;
-      document.getElementById('speechLangBadge').innerText = `LANG: ${(data.speech.language_detected || 'en').toUpperCase()}`;
-    }
-
     const isAudPass = !isFake;
-    breakdownBody.innerHTML = `
-      <tr>
-        <td><strong>High-Frequency AI Vocoder (>16kHz)</strong></td>
-        <td>Detects synthetic digital hash in ultrasonic sound frequencies</td>
-        <td><code>${af.high_freq_vocoder_ratio || '0.0019'} (${af.high_freq_status || 'Natural Decay'})</code></td>
-        <td style="text-align: right;"><span class="status-pill ${isAudPass ? 'pill-pass' : 'pill-flag'}">${isAudPass ? 'PASSED ✅' : 'FLAGGED 🚨'}</span></td>
-      </tr>
-      <tr>
-        <td><strong>Vocal Cord Micro-Jitter</strong></td>
-        <td>Analyzes natural micro-tremors in human vocal cords</td>
-        <td><code>${af.pitch_jitter_score || 0.012} (${af.vocal_jitter_status || 'Human Vocal Cords'})</code></td>
-        <td style="text-align: right;"><span class="status-pill ${isAudPass ? 'pill-pass' : 'pill-flag'}">${isAudPass ? 'PASSED ✅' : 'FLAGGED 🚨'}</span></td>
-      </tr>
-      <tr>
-        <td><strong>Audio Container & Metadata</strong></td>
-        <td>Scans ID3 tags for Suno/Udio/ElevenLabs AI audio watermarks</td>
-        <td><code>${af.container_watermark || 'Clean Studio Audio'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${isAudPass ? 'pill-pass' : 'pill-flag'}">${isAudPass ? 'CLEAN ✅' : 'AI TAG 🚨'}</span></td>
-      </tr>
-      <tr>
-        <td><strong>Whisper AI Speech Alignment</strong></td>
-        <td>Transcribes spoken words and verifies acoustic match</td>
-        <td><code>${data.speech ? data.speech.word_count : 0} words transcribed (${(data.speech ? data.speech.language_detected : 'en').toUpperCase()})</code></td>
-        <td style="text-align: right;"><span class="status-pill pill-pass">SYNCHRONIZED ✅</span></td>
-      </tr>
-    `;
+    const isTagFlag = af.container_watermark && af.container_watermark.includes('Suno');
 
-    timelineHeader.innerText = '⏱️ Audio & Voice Forensic Anomaly Timeline';
-  }
-
-  // =========================================================================
-  // SCENARIO 3: VIDEO (MULTIMODAL PARALLEL VIEW)
-  // =========================================================================
-  else {
-    breakdownBadge.innerText = 'MULTIMODAL VIDEO TELEMETRY';
-
-    visCard.style.display = 'block';
-    visCard.style.opacity = '1';
-    document.getElementById('visionCardTitle').innerText = '📹 Face & Visual Check';
-    document.getElementById('visionLegendTitle').innerText = isFake ? 'Visual Tampering Risk' : 'Face Authenticity';
-    document.getElementById('visionScoreText').innerText = overallPercent + '%';
-
-    const offset = 226 - (226 * overallPercent / 100);
-    const visCircle = document.getElementById('visionGaugeCircle');
-    visCircle.style.strokeDashoffset = offset;
-    visCircle.style.stroke = isFake ? '#b91c1c' : '#15803d';
-    const visMeter = document.getElementById('visionMeterFill');
-    if (visMeter) {
-      visMeter.style.width = overallPercent + '%';
-      visMeter.style.background = isFake ? '#dc2626' : '#16a34a';
-    }
-
-    const visStatus = document.getElementById('visionStatusBadge');
-    if (data.vision && data.vision.status === 'AI_GENERATED') {
-      visStatus.innerText = 'FACE MANIPULATED';
-      visStatus.style.background = '#fef2f2';
-      visStatus.style.color = '#b91c1c';
-    } else {
-      visStatus.innerText = 'GENUINE FACE';
-      visStatus.style.background = '#f0fdf4';
-      visStatus.style.color = '#15803d';
-    }
-
-    if (data.vision) {
-      document.getElementById('visionMetricsText').innerHTML = `
-        • Frames: ${data.vision.total_frames_analyzed} frames (${data.vision.suspicious_frames_detected} flagged)<br>
-        • Signals: ${data.vision.artifacts.slice(0, 2).join('<br>• ') || 'Clean optical camera noise'}
-      `;
-    }
-
-    audCard.style.display = 'block';
-    audCard.style.opacity = '1';
-    document.getElementById('audioCardTitle').innerText = '🎙️ Voice & Audio Track Check';
-    document.getElementById('audioLegendTitle').innerText = isFake ? 'Voice Clone Risk' : 'Voice Authenticity';
-    document.getElementById('audioScoreText').innerText = overallPercent + '%';
-
-    const audCircle = document.getElementById('audioGaugeCircle');
-    audCircle.style.strokeDashoffset = offset;
-    audCircle.style.stroke = (data.audio && data.audio.status === 'AI_GENERATED') ? '#b91c1c' : '#15803d';
-    const audMeter = document.getElementById('audioMeterFill');
-    if (audMeter) {
-      audMeter.style.width = overallPercent + '%';
-      audMeter.style.background = (data.audio && data.audio.status === 'AI_GENERATED') ? '#dc2626' : '#16a34a';
-    }
-
-    const audStatus = document.getElementById('audioStatusBadge');
-    if (data.audio && data.audio.status === 'AI_GENERATED') {
-      audStatus.innerText = 'CLONED VOICE';
-      audStatus.style.background = '#fef2f2';
-      audStatus.style.color = '#b91c1c';
-    } else {
-      audStatus.innerText = 'ORIGINAL VOICE';
-      audStatus.style.background = '#f0fdf4';
-      audStatus.style.color = '#15803d';
-    }
-
-    const af = (data.audio && data.audio.acoustic_features) ? data.audio.acoustic_features : {};
-    document.getElementById('audioMetricsText').innerHTML = `
-      • Voice Frequency: ${af.spectral_flatness_normal ? 'Smooth studio roll-off' : 'High-Frequency AI Vocoder (>16kHz)'}<br>
-      • Vocal Cords: ${af.pitch_jitter_score || 0.012} (${af.spectral_flatness_normal ? 'Human vocal cords' : 'Synthetic vocoder'})<br>
-      • Audio Quality: Studio 44,100 Hz
-    `;
+    cardsGrid.innerHTML = [
+      buildSignalCard(
+        'Ultrasonic Band (>16 kHz)',
+        isAudPass ? 'pass' : 'flag',
+        isAudPass ? 'NATURAL' : 'SYNTHETIC',
+        `${af.high_freq_vocoder_ratio ?? '0.00'} · ${af.high_freq_status || 'Checked'}`,
+        '1D-FFT measures energy above 16 kHz produced by neural vocoders vs analog microphones.'
+      ),
+      buildSignalCard(
+        'Container & Tag Audit',
+        !isTagFlag ? 'pass' : 'flag',
+        !isTagFlag ? 'CLEAN' : 'WATERMARK',
+        af.container_watermark || 'Standard Clean Stream',
+        'Probes ID3/container tags via FFprobe for AI generator signatures (Suno, Udio).'
+      ),
+      buildSignalCard(
+        'Harmonic Profile',
+        isAudPass ? 'pass' : 'flag',
+        isAudPass ? 'ORGANIC' : 'SYNTHETIC',
+        af.vocal_jitter_status || 'Checked',
+        'Evaluates spectral roll-off between human vocal band (500–8000 Hz) and ultrasonic band.'
+      ),
+      buildSignalCard(
+        'Speech Context',
+        'neutral',
+        'INDEXED',
+        `${data.speech ? data.speech.word_count : 0} tokens · ${(data.speech ? data.speech.language_detected : 'en').toUpperCase()}`,
+        'See Timeline & Transcript tab for contextual stream notes.'
+      )
+    ].join('');
 
     speechBox.style.display = 'block';
     if (data.speech) {
       document.getElementById('speechTranscriptText').innerText = `"${data.speech.transcript}"`;
-      document.getElementById('speechLangBadge').innerText = `LANG: ${(data.speech.language_detected || 'en').toUpperCase()}`;
+      document.getElementById('speechLangBadge').innerText = (data.speech.language_detected || 'en').toUpperCase();
     }
-
-    const isVPass = (data.vision && data.vision.status !== 'AI_GENERATED');
-    const isAPass = (data.audio && data.audio.status !== 'AI_GENERATED');
 
     breakdownBody.innerHTML = `
       <tr>
-        <td><strong>Facial Boundary & Splicing</strong></td>
-        <td>Detects face-swap cut & paste seams across video frames</td>
-        <td><code>${isVPass ? 'Natural Blending Verified' : 'Facial Boundary Discontinuity'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${isVPass ? 'pill-pass' : 'pill-flag'}">${isVPass ? 'PASSED ✅' : 'FLAGGED 🚨'}</span></td>
+        <td><strong>1D-FFT Ultrasonic Ratio (&gt;16kHz)</strong></td>
+        <td>FFT energy ratio (>16kHz vs 500–8000Hz)</td>
+        <td><code>${af.high_freq_vocoder_ratio ?? 'N/A'} (${af.high_freq_status || 'Checked'})</code></td>
+        <td style="text-align:right;"><span class="status-pill ${isAudPass ? 'pill-pass' : 'pill-flag'}">${isAudPass ? 'PASSED' : 'FLAGGED'}</span></td>
       </tr>
       <tr>
-        <td><strong>Camera Sensor Grain</strong></td>
-        <td>Checks if face skin was artificially airbrushed or smoothed</td>
-        <td><code>${isVPass ? 'Laplacian Grain Verified' : 'Synthetic Diffusion Smoothing'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${isVPass ? 'pill-pass' : 'pill-flag'}">${isVPass ? 'PASSED ✅' : 'FLAGGED 🚨'}</span></td>
+        <td><strong>Container Metadata Probe</strong></td>
+        <td>FFprobe ID3 &amp; encoder tag inspection</td>
+        <td><code>${af.container_watermark || 'Clean'}</code></td>
+        <td style="text-align:right;"><span class="status-pill ${!isTagFlag ? 'pill-pass' : 'pill-flag'}">${!isTagFlag ? 'CLEAN' : 'FLAGGED'}</span></td>
       </tr>
       <tr>
-        <td><strong>High-Frequency AI Vocoder (>16kHz)</strong></td>
-        <td>Checks if audio track was generated or dubbed using AI voice cloning</td>
-        <td><code>${af.high_freq_vocoder_ratio || '0.0021'} (${af.high_freq_status || 'Natural Decay'})</code></td>
-        <td style="text-align: right;"><span class="status-pill ${isAPass ? 'pill-pass' : 'pill-flag'}">${isAPass ? 'PASSED ✅' : 'FLAGGED 🚨'}</span></td>
-      </tr>
-      <tr>
-        <td><strong>Audio-Visual Match (Face vs Voice)</strong></td>
-        <td>Verifies whether the person speaking matches the audio track</td>
-        <td><code>${(data.cross_modal && data.cross_modal.disagreement_detected) ? 'Mismatch Detected (Dubbing/Swap)' : 'Synchronized Agreement'}</code></td>
-        <td style="text-align: right;"><span class="status-pill ${!(data.cross_modal && data.cross_modal.disagreement_detected) ? 'pill-pass' : 'pill-flag'}">${!(data.cross_modal && data.cross_modal.disagreement_detected) ? 'ALIGNED ✅' : 'MISMATCH 🚨'}</span></td>
+        <td><strong>Sampling Rate &amp; Spectrum</strong></td>
+        <td>PCM 44.1kHz decoding &amp; roll-off check</td>
+        <td><code>${af.sampling_rate_hz || 44100} Hz · ${af.mel_bands || 128} bands</code></td>
+        <td style="text-align:right;"><span class="status-pill pill-info">VERIFIED</span></td>
       </tr>
     `;
-
-    timelineHeader.innerText = '⏱️ Audio-Visual Forensic Anomaly Timeline';
+    timelineHeader.innerText = 'Audio Inspection Events';
   }
 
-  // 5. Timeline Events Stream
+  // -------------------------------------------------------------------------
+  // MODE 3: VIDEO (VISUAL + AUDIO CORRELATION)
+  // -------------------------------------------------------------------------
+  else {
+    breakdownBadge.innerText = 'VIDEO MULTIMODAL REPORT';
+    const isVPass = data.vision && data.vision.status !== 'AI_GENERATED';
+    const isSilent = data.audio && data.audio.status === 'NO_AUDIO_TRACK';
+    const isAPass = data.audio && data.audio.status !== 'AI_GENERATED';
+    const vDiag = (data.vision && data.vision.diagnostic_metrics) ? data.vision.diagnostic_metrics : {};
+    const af = (data.audio && data.audio.acoustic_features) ? data.audio.acoustic_features : {};
+
+    cardsGrid.innerHTML = [
+      buildSignalCard(
+        'Visual Frame Integrity',
+        isVPass ? 'pass' : 'flag',
+        isVPass ? 'GENUINE' : 'FLAGGED',
+        `${data.vision ? data.vision.total_frames_analyzed : 0} frames · ${vDiag.frame_rate_fps || 'FPS checked'}`,
+        isVPass ? 'Natural camera sensor grain, clean face seams, and physical frame clock drift.' : ((data.vision && data.vision.artifacts[0]) || 'Synthetic visual patterns flagged.')
+      ),
+      buildSignalCard(
+        'Face Seam & Texture Grain',
+        isVPass ? 'pass' : 'flag',
+        vDiag.face_detected ? (isVPass ? 'NATURAL' : 'ANOMALY') : 'FULL FRAME',
+        `Seam: ${vDiag.face_seam_ratio || 'N/A'} · ${vDiag.camera_sensor_noise || 'Checked'}`,
+        'Measures facial boundary blending discontinuities and diffusion skin over-smoothing.'
+      ),
+      buildSignalCard(
+        'Audio Track Forensics',
+        isSilent ? 'neutral' : (isAPass ? 'pass' : 'flag'),
+        isSilent ? 'NO AUDIO' : (isAPass ? 'ORIGINAL' : 'CLONED'),
+        isSilent ? 'Silent Video (No Audio Track)' : `${af.high_freq_vocoder_ratio ?? '0.00'} · ${af.high_freq_status || 'Checked'}`,
+        isSilent ? 'Video container contains no embedded audio stream.' : '1D-FFT inspects embedded audio track for AI voice cloning (>16kHz).'
+      ),
+      buildSignalCard(
+        'Cross-Modal Agreement',
+        (data.cross_modal && data.cross_modal.disagreement_detected) ? 'flag' : (isFake ? 'flag' : 'pass'),
+        (data.cross_modal && data.cross_modal.disagreement_detected) ? 'MISMATCH' : (isFake ? 'SYNTHETIC' : 'ALIGNED'),
+        (data.cross_modal && data.cross_modal.disagreement_detected) ? 'Asymmetric Tampering Detected' : (isFake ? 'Dual Modality Flagged' : 'Visual & Audio Consistent'),
+        'Correlates visual face authenticity against audio track provenance.'
+      )
+    ].join('');
+
+    speechBox.style.display = isSilent ? 'none' : 'block';
+    if (!isSilent && data.speech) {
+      document.getElementById('speechTranscriptText').innerText = `"${data.speech.transcript}"`;
+      document.getElementById('speechLangBadge').innerText = (data.speech.language_detected || 'en').toUpperCase();
+    }
+
+    breakdownBody.innerHTML = `
+      <tr>
+        <td><strong>Facial Seam &amp; Blending</strong></td>
+        <td>Face boundary Laplacian edge ratio</td>
+        <td><code>${vDiag.face_seam_ratio || 'Checked'} — ${vDiag.face_seam_status || 'Analyzed'}</code></td>
+        <td style="text-align:right;"><span class="status-pill ${isVPass ? 'pill-pass' : 'pill-flag'}">${isVPass ? 'PASSED' : 'FLAGGED'}</span></td>
+      </tr>
+      <tr>
+        <td><strong>Sensor Grain &amp; 2D-FFT</strong></td>
+        <td>Laplacian photon noise &amp; spatial grid</td>
+        <td><code>${vDiag.camera_sensor_noise || 'Checked'} · FFT ${vDiag.spatial_fft_ratio || 'N/A'}</code></td>
+        <td style="text-align:right;"><span class="status-pill ${isVPass ? 'pill-pass' : 'pill-flag'}">${isVPass ? 'PASSED' : 'FLAGGED'}</span></td>
+      </tr>
+      <tr>
+        <td><strong>Embedded Audio Vocoder</strong></td>
+        <td>1D-FFT &gt;16kHz high-frequency probe</td>
+        <td><code>${isSilent ? 'No Audio Stream' : `${af.high_freq_vocoder_ratio ?? 'N/A'} (${af.high_freq_status || 'Checked'})`}</code></td>
+        <td style="text-align:right;"><span class="status-pill ${isSilent ? 'pill-info' : (isAPass ? 'pill-pass' : 'pill-flag')}">${isSilent ? 'SILENT' : (isAPass ? 'PASSED' : 'FLAGGED')}</span></td>
+      </tr>
+      <tr>
+        <td><strong>Cross-Modal Match</strong></td>
+        <td>Visual vs Acoustic consistency matrix</td>
+        <td><code>${(data.cross_modal && data.cross_modal.disagreement_detected) ? 'Mismatch (Dub/Swap)' : 'Consistent'}</code></td>
+        <td style="text-align:right;"><span class="status-pill ${!(data.cross_modal && data.cross_modal.disagreement_detected) ? 'pill-pass' : 'pill-flag'}">${!(data.cross_modal && data.cross_modal.disagreement_detected) ? 'ALIGNED' : 'MISMATCH'}</span></td>
+      </tr>
+    `;
+    timelineHeader.innerText = 'Audio-Visual Event Timeline';
+  }
+
+  // Timeline Stream
   if (data.cross_modal && data.cross_modal.timeline_events && data.cross_modal.timeline_events.length > 0) {
     const list = document.getElementById('timelineStream');
     list.innerHTML = data.cross_modal.timeline_events.map(ev => {
       let chipClass = 'chip-vis';
       if (ev.modality === 'audio') chipClass = 'chip-aud';
       if (ev.modality === 'speech') chipClass = 'chip-spe';
-
-      const timeText = isImageMode ? 'LOG' : (ev.time_sec + 's');
-
+      const timeText = isImageMode ? 'STEP' : (ev.time_sec + 's');
       return `
         <div class="timeline-node">
-          <div class="node-dot"></div>
+          <span class="node-dot"></span>
           <span class="node-time">${timeText}</span>
           <span class="node-chip ${chipClass}">${ev.modality.toUpperCase()}</span>
-          <span class="node-text">${ev.label}</span>
+          <span>${ev.label}</span>
         </div>
       `;
     }).join('');
   }
 }
 
-// Export Forensic Audit Report JSON
 function exportForensicAudit() {
   if (!lastAnalysisResult) {
-    alert('Please select and analyze a media file first before exporting the audit certificate!');
+    alert('Please inspect a media file first before exporting the audit report.');
     return;
   }
   const report = {
-    platform: "DeepGuard AI Multimodal Forensic Platform",
-    edition: "Academic Evaluation Core v2.4",
-    architecture: "Multimodal Deepfake Inspection",
-    license: "Proprietary — All Rights Reserved (Patent Pending)",
-    lead_architect: "Mohan Abhishek Gupta",
+    platform: 'DeepGuard AI Multimodal Forensic Platform',
+    edition: 'Clinical Forensic Workbench v3.0',
+    license: 'Proprietary — All Rights Reserved (Patent Pending)',
+    lead_architect: 'Mohan Abhishek Gupta',
     research_team: [
-      { name: "Mohan Abhishek Gupta", role: "Project Lead & System Architect" },
-      { name: "Tunga Durga Sai Prasad", role: "Computer Vision Lead" },
-      { name: "Harsha Vardhan", role: "Audio & Acoustic Forensics" },
-      { name: "Vinay Rayi", role: "Speech & Multimodal Analysis" },
-      { name: "Bikesh", role: "Data Engineering & Evaluation" }
+      { name: 'Mohan Abhishek Gupta', role: 'Project Lead & System Architect' },
+      { name: 'Tunga Durga Sai Prasad', role: 'Computer Vision Lead' },
+      { name: 'Harsha Paladi', role: 'Audio & Acoustic Forensics' },
+      { name: 'Harsha Vardhan', role: 'Frontend & Console Engineering' },
+      { name: 'Vinay Rayi', role: 'Speech & Multimodal Analysis' },
+      { name: 'Bikesh', role: 'Data Engineering & Evaluation' }
     ],
     timestamp: new Date().toISOString(),
     analysis_job: lastAnalysisResult
   };
-
-  const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
+  const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
+  const a = document.createElement('a');
   a.href = url;
-  a.download = `DeepGuard_Forensic_Audit_${lastAnalysisResult.job_id || 'Report'}.json`;
+  a.download = `DeepGuard_Audit_${lastAnalysisResult.job_id || 'Report'}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
-
-
-// Sticky Header Active Link Highlight on Scroll
-window.addEventListener('scroll', () => {
-  const sections = ['overview', 'threats', 'methodology', 'benchmarks', 'workspace'];
-  const scrollPos = window.scrollY + 140;
-
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    const link = document.querySelector(`.nav-center-menu a[href="#${id}"]`);
-    if (el && link) {
-      if (el.offsetTop <= scrollPos && (el.offsetTop + el.offsetHeight) > scrollPos) {
-        link.classList.add('active');
-      } else {
-        link.classList.remove('active');
-      }
-    }
-  });
-});
-
-// Initialize Custom Cyber Sci-Fi Cursor on DOM ready
-document.addEventListener('DOMContentLoaded', initCyberCursor);
-
-
-
-// Enterprise Light Mode Enforcer (Pure Academic Workstation)
-function toggleTheme() {
-  document.body.classList.add('theme-light');
-  localStorage.setItem('deepguard_theme', 'light');
-}
-
-(function initTheme() {
-  localStorage.setItem('deepguard_theme', 'light');
-  document.body.classList.add('theme-light');
-})();

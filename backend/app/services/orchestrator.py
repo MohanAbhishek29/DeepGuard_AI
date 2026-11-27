@@ -45,7 +45,7 @@ def _get_vit_detector():
             import torch
             from transformers import AutoImageProcessor, AutoModelForImageClassification
             model_id = "capcheck/ai-image-detection"
-            _vit_processor = AutoImageProcessor.from_pretrained(model_id, local_files_only=True)
+            _vit_processor = AutoImageProcessor.from_pretrained(model_id, local_files_only=True, use_fast=False)
             _vit_model = AutoModelForImageClassification.from_pretrained(model_id, local_files_only=True)
             _vit_model.eval()
             logger.info("DeepGuard AI: Vision Transformer (ViT) AI detector loaded on CPU.")
@@ -173,16 +173,19 @@ class PipelineOrchestrator:
         Multimodal Vision Inspection: Extracts true physical signals (Laplacian texture variance,
         2D FFT high-frequency ratio, container metadata, and frame rate hardware drift).
         """
+        import numpy as np
+
         total_frames = 120
         duration = 5.0
         fps = 25.0
         fname = (orig_filename or os.path.basename(media_path)).lower()
-        
+
         meta_encoder = ""
         all_tags_text = ""
         has_audio = False
         lap_vars = []
         fft_ratios = []
+        vit_video_flag = False
 
         # 1. Physical Container & Metadata Probe (FFprobe)
         if media_path and os.path.exists(media_path):
@@ -298,7 +301,7 @@ class PipelineOrchestrator:
                                     probs = torch.softmax(net(**inputs).logits, dim=-1)[0]
                                     vit_video_prob = float(probs[1].item())
                                     if vit_video_prob >= 0.75:
-                                        is_ai_render_video = True
+                                        vit_video_flag = True
                     except Exception as e_v:
                         logger.debug(f"Video ViT check: {e_v}")
             except Exception as e:
@@ -312,10 +315,12 @@ class PipelineOrchestrator:
         has_face = face_detected_count > 0
         fps_drift = abs(fps - round(fps)) > 0.003  # Phone cameras have clock drift (e.g. 30.015 fps)
 
+        # Signal D: Container AI metadata or encoder watermark (must be computed before hardware check)
+        is_ai_meta = any(k in all_tags_text for k in ["google", "runway", "pika", "sora", "veo", "kling", "genai", "deepfake", "facefusion", "roop", "simswap"])
+
         # Hardware Camera verification:
         # Physical clock drift in real cameras (e.g. 30.015 fps, not clean 30.000)
         # + Clean facial border seams (not spliced) + Low temporal jitter
-        # Note: filename-based override REMOVED — a deepfake can be named "cam_recording.mp4"
         is_verified_hardware_camera = (
             fps_drift               # Physical sensor clock drift (real cameras drift slightly)
             and max_b_ratio <= 1.25 # Natural face-background blend (no seam)
@@ -333,14 +338,11 @@ class PipelineOrchestrator:
         # Signal C: Generative Diffusion Facial Smoothing (Face Laplacian < 45.0 on non-hardware cameras)
         is_diffusion_smooth = has_face and (avg_face_lap < 45.0) and not fps_drift
 
-        # Signal D: Container AI metadata or encoder watermark
-        is_ai_meta = any(k in all_tags_text for k in ["google", "runway", "pika", "sora", "veo", "kling", "genai", "deepfake", "facefusion", "roop", "simswap"])
-
         # Signal E: Semantic hint if present
         has_ai_name = any(k in fname for k in ["gemini", "lady", "veo", "motu", "patlu", "sora", "kling", "runway", "deepfake", "fake", "diffusion", "grok", "brahmi", "clone", "swap"])
 
-        # Signal F: Full-frame AI generation (for non-face videos like Google Veo / Sora landscape)
-        is_ai_render_video = (not has_face and (avg_lap < 45.0 or (avg_fft > 0.82 and not fps_drift)))
+        # Signal F: Full-frame AI generation (ViT keyframe or non-face generative render)
+        is_ai_render_video = vit_video_flag or (not has_face and (avg_lap < 45.0 or (avg_fft > 0.82 and not fps_drift)))
 
         is_synthetic_diffusion = not is_verified_hardware_camera and (
             is_seam_anomaly or 
@@ -721,6 +723,7 @@ class PipelineOrchestrator:
         # 1. Probing audio track & container tags via ffprobe
         all_tags_text = ""
         duration = 0.0
+        has_audio_stream = False
         try:
             import subprocess, json
             cmd = ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_streams", "-show_format", media_path]
@@ -731,6 +734,8 @@ class PipelineOrchestrator:
                 duration = float(fmt.get("duration", 0))
                 tag_list = [f"{k}:{v}" for k, v in fmt.get("tags", {}).items()]
                 for s in data.get("streams", []):
+                    if s.get("codec_type") == "audio":
+                        has_audio_stream = True
                     for k, v in s.get("tags", {}).items():
                         tag_list.append(f"{k}:{v}")
                 all_tags_text = " ".join(tag_list).lower()
@@ -739,8 +744,9 @@ class PipelineOrchestrator:
 
         # 2. Physical 1D FFT Vocoder High-Frequency Ratio Test
         # Neural vocoders (Suno, Udio, Bark, HiFi-GAN) exhibit unnatural quantization hash in the >16kHz band.
-        # Authentic studio recordings (e.g. Samajavaragamana) have smooth physical analog roll-off (ratio < 0.0020).
+        # Authentic studio recordings have smooth physical analog roll-off (ratio < 0.0020).
         ratio_hf = 0.0
+        samples_len = 0
         try:
             import numpy as np
             import subprocess
@@ -748,9 +754,10 @@ class PipelineOrchestrator:
             pcm_cmd = ["ffmpeg", "-nostdin", "-v", "quiet", "-ss", ss, "-t", "10", "-i", media_path, "-f", "s16le", "-ac", "1", "-ar", "44100", "-"]
             pcm_res = subprocess.run(pcm_cmd, capture_output=True, timeout=5)
             samples = np.frombuffer(pcm_res.stdout, dtype=np.int16).astype(np.float32)
-            if len(samples) > 44100:
+            samples_len = len(samples)
+            if samples_len > 44100:
                 fft_vals = np.abs(np.fft.rfft(samples))
-                freqs = np.fft.rfftfreq(len(samples), 1.0 / 44100)
+                freqs = np.fft.rfftfreq(samples_len, 1.0 / 44100)
                 b_speech = (freqs >= 500) & (freqs <= 8000)
                 b_hf = (freqs >= 16000) & (freqs <= 22000)
                 e_speech = np.mean(fft_vals[b_speech]) if np.any(b_speech) else 1.0
@@ -758,6 +765,9 @@ class PipelineOrchestrator:
                 ratio_hf = float(e_hf / (e_speech + 1e-6))
         except Exception as e:
             logger.debug(f"Audio FFT vocoder probe error: {e}")
+
+        ext = fname.split(".")[-1].lower() if "." in fname else ""
+        is_video_without_audio = (ext in VIDEO_EXTENSIONS) and not has_audio_stream and samples_len == 0
 
         # 3. Objective Forensic Decision
         # Signal A: AI audio container watermark (Suno embeds 'made with suno' in ID3 comment tags)
@@ -774,35 +784,51 @@ class PipelineOrchestrator:
         # Authentic override: If natural analog roll-off (ratio_hf < 0.0055) and NO suno tag
         is_natural_analog = (ratio_hf < 0.0055 and not is_suno_tag)
 
-        is_ai_audio = (is_suno_tag or (is_vocoder_anomaly and not is_real_named) or has_ai_name) and not is_natural_analog
+        is_ai_audio = (not is_video_without_audio) and (is_suno_tag or (is_vocoder_anomaly and not is_real_named) or has_ai_name) and not is_natural_analog
 
-        if is_ai_audio:
+        if is_video_without_audio:
+            score = 0.0
+            status = "NO_AUDIO_TRACK"
+            timestamps = []
+            jitter = 0.0
+            flatness_normal = True
+            hf_status = "Silent Video (No Audio Stream)"
+            jitter_status = "No Audio Track Present"
+            container_wm = "Silent Video Container"
+        elif is_ai_audio:
             score = round(0.86 + (prop_seed % 8) / 100.0, 2)
             status = "AI_GENERATED"
             timestamps = [1.2, 3.4]
             jitter = round(0.0016 + (prop_seed % 8) / 10000.0, 4)
             flatness_normal = False
+            hf_status = "Natural High-Frequency Decay" if ratio_hf < 0.0070 else "High-Frequency AI Hash (>16kHz)"
+            jitter_status = "Synthetic Vocoder (0.001)"
+            container_wm = "Suno AI Watermark" if is_suno_tag else "Standard Clean Audio Stream"
         else:
             score = round(0.13 + (prop_seed % 9) / 100.0, 2)
             status = "GENUINE"
             timestamps = []
             jitter = round(0.0118 + (prop_seed % 15) / 10000.0, 4)
             flatness_normal = True
+            hf_status = "Natural High-Frequency Decay" if ratio_hf < 0.0070 else "High-Frequency AI Hash (>16kHz)"
+            jitter_status = "Natural Human Voice (0.012)"
+            container_wm = "Standard Clean Audio Stream"
 
         return AudioEvidence(
             score=score,
             status=status,
-            spectrogram_generated=True,
+            spectrogram_generated=not is_video_without_audio,
             timestamps=timestamps,
             acoustic_features={
-                "mel_bands": 128,
-                "sampling_rate_hz": 44100,
+                "has_audio_stream": not is_video_without_audio,
+                "mel_bands": 128 if not is_video_without_audio else 0,
+                "sampling_rate_hz": 44100 if not is_video_without_audio else 0,
                 "spectral_flatness_normal": flatness_normal,
                 "pitch_jitter_score": jitter,
                 "high_freq_vocoder_ratio": round(ratio_hf, 5),
-                "high_freq_status": "Natural High-Frequency Decay" if ratio_hf < 0.0070 else "High-Frequency AI Hash (>16kHz)",
-                "vocal_jitter_status": "Natural Human Voice (0.012)" if jitter >= 0.005 else "Synthetic Vocoder (0.001)",
-                "container_watermark": "Suno AI Watermark" if is_suno_tag else "Standard Clean Audio Stream"
+                "high_freq_status": hf_status,
+                "vocal_jitter_status": jitter_status,
+                "container_watermark": container_wm
             }
         )
 
@@ -939,9 +965,21 @@ class PipelineOrchestrator:
         between video face manipulation and voice synthesis.
         """
         vis_suspicious = vision.score >= 0.5
-        aud_suspicious = audio.score >= 0.5
+        is_silent_video = (audio.status == "NO_AUDIO_TRACK")
+        aud_suspicious = (not is_silent_video) and (audio.score >= 0.5)
 
-        if vis_suspicious and not aud_suspicious:
+        if is_silent_video:
+            if vis_suspicious:
+                verdict = "AI GENERATED VIDEO DETECTED"
+                disagreement = False
+                reason = "Visual analysis detected synthetic generation or deepfake artifacts across video frames (Silent video — no audio track present)."
+                confidence = vision.score
+            else:
+                verdict = "GENUINE CAMERA VIDEO"
+                disagreement = False
+                reason = "Visual frame inspection verified natural optical sensor noise and clean temporal motion (Silent video — no audio track present)."
+                confidence = round(1.0 - vision.score, 2)
+        elif vis_suspicious and not aud_suspicious:
             verdict = "VISUAL DEEPFAKE — GENUINE VOICE"
             disagreement = True
             reason = "Visual analysis detected facial deepfake manipulation, while the audio is authentic human speech (Tampered Face + Real Voice)."

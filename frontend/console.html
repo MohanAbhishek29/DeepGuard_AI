@@ -3,278 +3,183 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DeepGuard AI — Forensic Verification Studio</title>
-  <meta name="description" content="Academic Evaluation Studio for Real-Time Multimodal Deepfake and Synthetic Media Inspection. Project Lead: Mohan Abhishek Gupta." />
+  <title>DeepGuard AI — Forensic Workbench</title>
+  <meta name="description" content="Zero-scroll clinical forensic inspection workbench for multimodal deepfake and synthetic media verification." />
 
   <link rel="icon" type="image/png" href="assets/DeepGuard_AI_App_logo.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=3.0">
 </head>
 <body class="theme-light">
 
-  <!-- ══════════════════════════════════════════════════════════════
-       TOP APP NAVBAR (SLEEK GLASS STUDIO BAR)
-       ══════════════════════════════════════════════════════════════ -->
-  <nav class="studio-navbar">
-    <div class="nav-inner">
-      <div class="brand">
-        <img src="assets/DeepGuard_AI_App_logo.png" alt="DeepGuard AI Logo" class="brand-logo">
-        <div class="brand-info">
-          <div class="brand-title-row">
-            <span class="brand-name">DeepGuard AI</span>
-            <span class="tag-ver">Forensic Studio v2.4</span>
-          </div>
-          <p class="brand-sub">Multimodal Synthetic Media Verification Workspace</p>
+  <div class="workbench-shell">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIM TOP COMMAND BAR (56px)
+         ═══════════════════════════════════════════════════════════ -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <img src="assets/DeepGuard_AI_App_logo.png" alt="DeepGuard AI" class="topbar-logo">
+        <div class="topbar-brand">
+          <span class="topbar-title">DeepGuard AI</span>
+          <span class="topbar-divider">/</span>
+          <span class="topbar-mode">Clinical Forensic Workbench</span>
         </div>
       </div>
 
-      <div class="nav-center-status">
-        <span class="live-dot"></span>
-        <span class="live-label">ViT-Base + ELA + 1D-FFT Core Ready</span>
+      <div class="topbar-center">
+        <div class="file-status-pill" id="topFilePill">
+          <span class="status-dot idle" id="topStatusDot"></span>
+          <span id="topFileText">Ready · No media loaded</span>
+        </div>
       </div>
 
-      <div class="header-actions">
-        <a href="website.html" class="btn-nav-secondary">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-          <span>Research Paper</span>
+      <div class="topbar-right">
+        <button class="btn-ghost" onclick="toggleTeamModal()" title="View Research Team">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Team (6)</span>
+        </button>
+        <a href="website.html" class="btn-ghost">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+          <span>Overview</span>
         </a>
-        <button class="btn-nav-primary" onclick="exportForensicAudit()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <button class="btn-solid" onclick="exportForensicAudit()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span>Export Audit</span>
         </button>
       </div>
-    </div>
-  </nav>
+    </header>
 
-  <main class="studio-main">
-    <div class="workspace-grid">
+    <!-- ═══════════════════════════════════════════════════════════
+         SPLIT-RAIL WORKSPACE (FITS 100VH WITHOUT SCROLL)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="workbench-body">
 
-      <!-- ══════════════════════════════════════════════════════════════
-           LEFT COLUMN: MEDIA STUDIO INGESTION & PIPELINE
-           ══════════════════════════════════════════════════════════════ -->
-      <section class="studio-card panel-left">
-        <div class="card-top-bar">
-          <div>
-            <span class="step-kicker">Step 01</span>
-            <h2 class="panel-title">Media Ingestion</h2>
+      <!-- LEFT COMPACT MEDIA RAIL -->
+      <aside class="media-rail">
+        <div class="rail-section">
+          <div class="rail-heading-row">
+            <span class="rail-label">Media Input</span>
+            <button class="btn-link-sm" id="changeFileBtn" style="display: none;" onclick="document.getElementById('fileInput').click()">Change file</button>
           </div>
-          <span class="chip-badge chip-teal">Local Inference</span>
-        </div>
 
-        <!-- Modern Interactive Dropzone -->
-        <div class="dropzone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-          <div class="dropzone-art">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="17 8 12 3 7 8"/>
-              <line x1="12" y1="3" x2="12" y2="15"/>
-            </svg>
-          </div>
-          <div class="dropzone-title" id="dropzoneTitle">Drop media here or click to browse</div>
-          <div class="dropzone-subtitle" id="dropzoneSubtitle">Instant verification for photos, videos, and voice clips</div>
-          <div class="format-pills">
-            <span class="fmt-pill">JPG · PNG · WEBP</span>
-            <span class="fmt-pill">MP4 · MOV</span>
-            <span class="fmt-pill">WAV · MP3</span>
-          </div>
-          <input type="file" id="fileInput" class="file-input" accept="video/*,audio/*,image/*" onchange="handleFileSelect(this.files)">
-        </div>
-
-        <!-- Media Preview (Hidden until file selected) -->
-        <div class="media-preview-container" id="mediaHud" style="display: none;">
-          <img class="media-hud-image" id="hudImage" style="display: none;" alt="Forensic image preview" />
-          <video class="media-hud-video" id="hudVideo" controls playsinline style="display: none;"></video>
-
-          <div id="audioVisualizerBlock" class="audio-player-wrapper" style="display: none;">
-            <div class="audio-wave-badge">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+          <div class="upload-box" id="dropZone" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
             </div>
-            <div class="audio-track-title" id="audioTrackTitle">Audio Stream Loaded</div>
-            <div class="audio-track-meta" id="audioTrackMeta">44.1 kHz · Acoustic Spectral Probing Ready</div>
-            <audio class="media-hud-audio" id="hudAudio" controls style="width: 100%;"></audio>
-            <div class="audio-track-badge">1D-FFT High-Frequency &amp; Pitch Jitter Probing</div>
+            <div class="upload-title" id="dropzoneTitle">Upload photo, video or audio</div>
+            <div class="upload-sub" id="dropzoneSubtitle">JPG · PNG · WEBP · MP4 · WAV · MP3</div>
+            <input type="file" id="fileInput" class="file-input" accept="video/*,audio/*,image/*" onchange="handleFileSelect(this.files)">
           </div>
 
-          <div class="hud-overlay" id="hudOverlay" style="display: none;"></div>
-        </div>
-
-        <!-- Primary CTA -->
-        <button class="btn-analyze" id="analyzeBtn" onclick="runAnalysis()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-          <span>Analyze Media Authenticity</span>
-        </button>
-
-        <!-- Dynamic Pipeline Progress Stepper -->
-        <div class="pipeline-progress" id="pipelineProgress" style="display: none;">
-          <div class="progress-step" id="step1">⏳ [1/3] Awaiting Media Stream...</div>
-          <div class="progress-step" id="step2">⏳ [2/3] Standby for Modality Probing...</div>
-          <div class="progress-step" id="step3">⏳ [3/3] Cross-Modal Correlation Queue...</div>
-        </div>
-
-        <!-- Sleek Activity Log -->
-        <div class="activity-card" id="liveTerminalPanel">
-          <div class="activity-header">
-            <span class="activity-title">
-              <span class="activity-dot"></span>
-              Execution Stream
-              <span class="status-pill pill-idle" id="streamStatusBadge">READY</span>
-            </span>
-            <button class="terminal-clear-btn" onclick="clearLiveLogs()">Clear</button>
-          </div>
-          <div class="live-terminal-logs" id="liveTerminalLogs">
-            <div class="log-line">
-              <span class="log-time">[INIT]</span>
-              <span class="log-tag tag-sys">SYS</span>
-              <span class="log-msg">Multi-signal forensic core initialized. Ready for upload.</span>
+          <!-- Compact Media Preview -->
+          <div class="preview-frame" id="mediaHud" style="display: none;">
+            <img class="preview-img" id="hudImage" style="display: none;" alt="Uploaded image preview" />
+            <video class="preview-video" id="hudVideo" controls playsinline style="display: none;"></video>
+            <div id="audioVisualizerBlock" class="preview-audio" style="display: none;">
+              <div class="audio-pill-title" id="audioTrackTitle">Audio Clip</div>
+              <div class="audio-pill-meta" id="audioTrackMeta">Ready for 1D-FFT scan</div>
+              <audio id="hudAudio" controls style="width: 100%; height: 36px;"></audio>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- ══════════════════════════════════════════════════════════════
-           RIGHT COLUMN: STANDBY WELCOME STATE & RESULTS DASHBOARD
-           ══════════════════════════════════════════════════════════════ -->
-      <section class="studio-card panel-right" id="resultsPanel">
-        <div class="card-top-bar">
-          <div>
-            <span class="step-kicker">Step 02</span>
-            <h2 class="panel-title">Forensic Intelligence Report</h2>
+          <!-- Primary Verify Action -->
+          <button class="btn-verify" id="analyzeBtn" onclick="runAnalysis()" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            <span>Verify Authenticity</span>
+          </button>
+
+          <!-- Compact Pipeline Step Tracker (During scan) -->
+          <div class="step-tracker" id="pipelineProgress" style="display: none;">
+            <div class="step-row" id="step1">Reading media headers...</div>
+            <div class="step-row" id="step2">Running forensic detectors...</div>
+            <div class="step-row" id="step3">Synthesizing verdict...</div>
           </div>
-          <span id="analysisJobId" class="panel-job-id">STANDBY</span>
         </div>
 
-        <!-- STATE A: CLEAN INVITING STANDBY STATE (Shown before first scan) -->
-        <div class="standby-hero" id="standbyState">
-          <div class="standby-emblem">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <circle cx="12" cy="11" r="3"/>
-            </svg>
-          </div>
-          <h3 class="standby-heading">Ready to Verify Media Authenticity</h3>
-          <p class="standby-desc">
-            Upload an image, video, or audio recording on the left to run neural Vision Transformer inference, physical sensor EXIF &amp; ELA checks, and acoustic spectral probing.
+        <div class="rail-footer">
+          <div class="rail-credit-title">VNRVJIET CSE · Capstone 2026</div>
+          <div class="rail-credit-names">Mohan Abhishek · Tunga Durga Sai Prasad · Harsha Paladi · Harsha Vardhan · Vinay Rayi · Bikesh</div>
+        </div>
+      </aside>
+
+      <!-- RIGHT MAIN INSPECTION STAGE -->
+      <main class="inspection-stage">
+
+        <!-- STAGE A: CLEAN INTERACTIVE IDLE VIEW -->
+        <div class="stage-idle" id="standbyState">
+          <div class="idle-hero-badge">Local Multimodal Verification Engine</div>
+          <h1 class="idle-headline">Select a media file to inspect authenticity.</h1>
+          <p class="idle-subtext">
+            DeepGuard evaluates visual pixel physics, neural Vision Transformer features, camera hardware metadata, and ultrasonic voice harmonics without relying on fragile filename heuristics.
           </p>
 
-          <div class="capability-grid">
-            <div class="cap-card">
-              <div class="cap-icon cap-indigo">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-              </div>
-              <div class="cap-title">Vision Transformer</div>
-              <div class="cap-text">ViT-Base multi-scale patch attention flags Midjourney, Gemini &amp; DALL-E diffusion patterns.</div>
-            </div>
+          <!-- Interactive Engine Explorer Tabs -->
+          <div class="engine-selector">
+            <button class="engine-tab active" onclick="switchIdleEngine('image', this)">Photo Forensics</button>
+            <button class="engine-tab" onclick="switchIdleEngine('video', this)">Video Deepfake</button>
+            <button class="engine-tab" onclick="switchIdleEngine('audio', this)">Voice &amp; Audio</button>
+          </div>
 
-            <div class="cap-card">
-              <div class="cap-icon cap-teal">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-              </div>
-              <div class="cap-title">Optical &amp; ELA Physics</div>
-              <div class="cap-text">Audits JPEG Error Level residuals, Laplacian photon grain, and camera hardware EXIF tags.</div>
+          <div class="engine-detail-box" id="idleEngineDetail">
+            <div class="detail-pill-row">
+              <span class="detail-chip">ViT-Base Patch16-224 (TTA)</span>
+              <span class="detail-chip">Error Level Analysis (ELA Q=90)</span>
+              <span class="detail-chip">Camera EXIF Tag 271/272</span>
+              <span class="detail-chip">2D-FFT Upsampling Grid</span>
             </div>
-
-            <div class="cap-card">
-              <div class="cap-icon cap-sky">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/></svg>
-              </div>
-              <div class="cap-title">Acoustic &amp; Video</div>
-              <div class="cap-text">1D-FFT &gt;16kHz vocoder probing, facial seam inspection, and audio-visual lip-sync checks.</div>
-            </div>
+            <p class="detail-caption">
+              Separates physical smartphone/DSLR captures from Gemini, ChatGPT, Midjourney, and DALL-E generations using neural self-attention, uniform compression variance, and optical sensor EXIF proof.
+            </p>
           </div>
         </div>
 
-        <!-- STATE B: LIVE RESULTS DASHBOARD (Revealed cleanly after analysis) -->
-        <div class="results-content" id="resultsContent" style="display: none;">
+        <!-- STAGE B: ZERO-SCROLL TABBED EVALUATION RESULT -->
+        <div class="stage-results" id="resultsContent" style="display: none;">
 
-          <!-- Hero Verdict Banner -->
-          <div class="verdict-banner" id="verdictBanner">
-            <div class="verdict-icon-container" id="verdictIconContainer">
-              <span id="verdictIcon">📋</span>
-            </div>
-            <div class="verdict-body">
-              <div class="verdict-badge-row">
-                <span class="verdict-badge" id="verdictConfidenceBadge">--% CONFIDENCE</span>
-                <span class="verdict-timestamp" id="verdictTimestamp">READY</span>
+          <!-- 1. COMPACT HIGH-CLARITY VERDICT CARD (NO PERCENTAGES) -->
+          <div class="verdict-card" id="verdictBanner">
+            <div class="verdict-left">
+              <div class="verdict-badge-strip">
+                <span class="verdict-pill" id="verdictConfidenceBadge">VERIFIED</span>
+                <span class="verdict-job" id="analysisJobId">JOB</span>
+                <span class="verdict-time" id="verdictTimestamp"></span>
               </div>
-              <div class="verdict-title" id="verdictTitle">ANALYSIS COMPLETE</div>
-              <div class="verdict-reason" id="verdictReason"></div>
+              <h2 class="verdict-headline" id="verdictTitle">GENUINE CAMERA PHOTO</h2>
+              <p class="verdict-summary" id="verdictReason"></p>
+            </div>
+            <div class="verdict-stamp" id="verdictIconContainer">
+              <span id="verdictIcon">✓</span>
             </div>
           </div>
 
-          <!-- Modality Evidence Cards (Vision & Audio/Hardware) -->
-          <div class="diagnostic-grid" id="diagnosticGrid">
-
-            <!-- Card 1: Visual Forensics -->
-            <div class="diag-card" id="visionDiagCard">
-              <div class="diag-header">
-                <span class="diag-name" id="visionCardTitle">Visual Artifact Inspection</span>
-                <span class="diag-status" id="visionStatusBadge">READY</span>
-              </div>
-              <div class="gauge-wrapper">
-                <svg class="gauge-svg" viewBox="0 0 80 80">
-                  <circle class="gauge-circle-bg" cx="40" cy="40" r="36"></circle>
-                  <circle class="gauge-circle-val" id="visionGaugeCircle" cx="40" cy="40" r="36" stroke="#0f766e"></circle>
-                </svg>
-                <div class="gauge-legend">
-                  <div class="gauge-legend-title" id="visionLegendTitle">Detection Confidence</div>
-                  <div class="gauge-legend-score" id="visionScoreText">--%</div>
-                  <div class="linear-meter">
-                    <div class="linear-meter-fill" id="visionMeterFill" style="width: 0%;"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="diag-metrics-list" id="visionMetricsText"></div>
+          <!-- 2. RESULT VIEW TABS (PREVENTS VERTICAL PAGE SCROLLING) -->
+          <div class="result-tabs-bar">
+            <div class="result-tabs">
+              <button class="r-tab active" data-tab="signals" onclick="switchResultTab('signals', this)">Diagnostic Checks</button>
+              <button class="r-tab" data-tab="telemetry" onclick="switchResultTab('telemetry', this)">Technical Telemetry</button>
+              <button class="r-tab" data-tab="timeline" onclick="switchResultTab('timeline', this)">Timeline &amp; Transcript</button>
             </div>
-
-            <!-- Card 2: Acoustic / Hardware Provenance -->
-            <div class="diag-card" id="audioDiagCard">
-              <div class="diag-header">
-                <span class="diag-name" id="audioCardTitle">Hardware &amp; Acoustic Provenance</span>
-                <span class="diag-status" id="audioStatusBadge">READY</span>
-              </div>
-              <div class="gauge-wrapper">
-                <svg class="gauge-svg" viewBox="0 0 80 80">
-                  <circle class="gauge-circle-bg" cx="40" cy="40" r="36"></circle>
-                  <circle class="gauge-circle-val" id="audioGaugeCircle" cx="40" cy="40" r="36" stroke="#0f766e"></circle>
-                </svg>
-                <div class="gauge-legend">
-                  <div class="gauge-legend-title" id="audioLegendTitle">Provenance Confidence</div>
-                  <div class="gauge-legend-score" id="audioScoreText">--%</div>
-                  <div class="linear-meter">
-                    <div class="linear-meter-fill" id="audioMeterFill" style="width: 0%;"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="diag-metrics-list" id="audioMetricsText"></div>
-            </div>
-
+            <span class="mode-tag" id="breakdownMediaBadge">IMAGE REPORT</span>
           </div>
 
-          <!-- Speech Transcription Box (Audio/Video only) -->
-          <div class="speech-box" id="speechBox" style="display: none;">
-            <div class="speech-header">
-              <span class="speech-title">Spoken Word Transcription</span>
-              <span class="lang-badge" id="speechLangBadge">LANG: AUTO</span>
-            </div>
-            <div class="transcript-content" id="speechTranscriptText"></div>
+          <!-- TAB 1: CLEAN SIGNAL CHECKLIST CARDS (NO DONUT RINGS, NO PERCENTAGES) -->
+          <div class="tab-panel active" id="tab-signals">
+            <div class="signal-cards-grid" id="signalCardsGrid"></div>
           </div>
 
-          <!-- Scientific Evidence Breakdown Table -->
-          <div class="breakdown-card" id="breakdownCard">
-            <div class="breakdown-header">
-              <span>Multi-Signal Forensic Telemetry</span>
-              <span class="breakdown-badge" id="breakdownMediaBadge">TELEMETRY</span>
-            </div>
-            <div class="table-scroll">
-              <table class="breakdown-table">
+          <!-- TAB 2: TECHNICAL TELEMETRY TABLE (INTERNAL SCROLL ONLY IF NEEDED) -->
+          <div class="tab-panel" id="tab-telemetry">
+            <div class="table-container">
+              <table class="telemetry-table">
                 <thead>
                   <tr>
-                    <th>Inspection Parameter</th>
-                    <th>Forensic Principle</th>
-                    <th>Measured Output</th>
+                    <th>Inspection Check</th>
+                    <th>Forensic Method</th>
+                    <th>Observed Reading</th>
                     <th style="text-align: right;">Status</th>
                   </tr>
                 </thead>
@@ -283,36 +188,85 @@
             </div>
           </div>
 
-          <!-- Forensic Signal Timeline -->
-          <div class="timeline-card" id="timelineCard">
-            <div class="timeline-header" id="timelineHeader">Forensic Signal Timeline</div>
-            <div class="timeline-stream" id="timelineStream"></div>
+          <!-- TAB 3: TIMELINE, TRANSCRIPT & EXECUTION LOGS -->
+          <div class="tab-panel" id="tab-timeline">
+            <div class="timeline-split">
+              <div class="speech-panel" id="speechBox" style="display: none;">
+                <div class="speech-top">
+                  <span class="speech-heading">Spoken Audio Context</span>
+                  <span class="lang-chip" id="speechLangBadge">EN</span>
+                </div>
+                <p class="speech-quote" id="speechTranscriptText"></p>
+              </div>
+
+              <div class="timeline-box">
+                <div class="box-subhead" id="timelineHeader">Forensic Event Sequence</div>
+                <div class="timeline-list" id="timelineStream"></div>
+              </div>
+
+              <div class="log-box">
+                <div class="log-top">
+                  <span class="box-subhead">Execution Stream</span>
+                  <button class="btn-clear-xs" onclick="clearLiveLogs()">Clear</button>
+                </div>
+                <div class="log-entries" id="liveTerminalLogs"></div>
+              </div>
+            </div>
           </div>
 
         </div>
-      </section>
+      </main>
 
     </div>
+  </div>
 
-    <!-- ══════════════════════════════════════════════════════════════
-         COMPACT RESEARCH TEAM & ARCHITECTURE FOOTER
-         ══════════════════════════════════════════════════════════════ -->
-    <footer class="studio-footer">
-      <div class="footer-team-strip">
-        <span class="footer-team-label">Research Team:</span>
-        <span class="team-chip lead">Mohan Abhishek Gupta <em>(Lead)</em></span>
-        <span class="team-chip">Tunga Durga Sai Prasad <em>(CV)</em></span>
-        <span class="team-chip">Harsha Vardhan <em>(Audio)</em></span>
-        <span class="team-chip">Vinay Rayi <em>(Speech)</em></span>
-        <span class="team-chip">Bikesh <em>(Data &amp; Eval)</em></span>
+  <!-- ═══════════════════════════════════════════════════════════
+       RESEARCH TEAM MODAL (CLEAN POPOVER FOR ALL 6 MEMBERS)
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="modal-backdrop" id="teamModal" style="display: none;" onclick="if(event.target===this) toggleTeamModal()">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h3>DeepGuard AI Research Team</h3>
+          <p>VNRVJIET · Department of Computer Science &amp; Engineering · Capstone 2026</p>
+        </div>
+        <button class="modal-close" onclick="toggleTeamModal()">✕</button>
       </div>
-      <div class="footer-bottom">
-        <span><strong>DeepGuard AI</strong> · VNR Vignana Jyothi Institute of Engineering &amp; Technology · CSE Capstone 2026</span>
-        <a href="website.html" class="footer-link">View Research Paper &amp; Benchmarks →</a>
+      <div class="modal-team-grid">
+        <div class="m-member lead">
+          <div class="m-role">Project Lead &amp; System Architect</div>
+          <div class="m-name">Mohan Abhishek Gupta</div>
+          <div class="m-desc">FastAPI orchestration, ViT integration, cross-modal engine &amp; architecture</div>
+        </div>
+        <div class="m-member">
+          <div class="m-role">Computer Vision Lead</div>
+          <div class="m-name">Tunga Durga Sai Prasad</div>
+          <div class="m-desc">ELA recompression physics, Laplacian photon grain &amp; 2D-FFT analysis</div>
+        </div>
+        <div class="m-member">
+          <div class="m-role">Audio &amp; Acoustic Forensics</div>
+          <div class="m-name">Harsha Paladi</div>
+          <div class="m-desc">1D-FFT &gt;16kHz vocoder energy probing &amp; audio watermark checks</div>
+        </div>
+        <div class="m-member">
+          <div class="m-role">Frontend &amp; Console Engineering</div>
+          <div class="m-name">Harsha Vardhan</div>
+          <div class="m-desc">Clinical forensic workbench UI/UX, media preview &amp; telemetry views</div>
+        </div>
+        <div class="m-member">
+          <div class="m-role">Speech &amp; Multimodal Analysis</div>
+          <div class="m-name">Vinay Rayi</div>
+          <div class="m-desc">Speech pipeline integration &amp; audio-visual synchronization checks</div>
+        </div>
+        <div class="m-member">
+          <div class="m-role">Data Engineering &amp; Evaluation</div>
+          <div class="m-name">Bikesh</div>
+          <div class="m-desc">Benchmark dataset curation &amp; multi-signal evaluation metrics</div>
+        </div>
       </div>
-    </footer>
-  </main>
+    </div>
+  </div>
 
-  <script src="js/app.js" defer></script>
+  <script src="js/app.js?v=3.0" defer></script>
 </body>
 </html>
