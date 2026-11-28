@@ -36,11 +36,11 @@ app = FastAPI(
     ]
 )
 
-# CORS Middleware (Allows Next.js / React frontend integration)
+# CORS Middleware (Allows Next.js / React Vite localhost dev & production origins cleanly)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

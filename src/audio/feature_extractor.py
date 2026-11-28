@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 class AudioFeatureExtractor:
     """
     Acoustic feature extractor and synthetic voice forensic analyzer.
-    Engineered by Harsha Paladi (Audio Machine Learning).
+    Engineered by Vinay Rayi (Audio & Speech Forensics).
     
     Extracts Mel-spectrogram features, calculates spectral flatness,
     and detects vocoder/zero-shot TTS voice cloning artifacts (ASVspoof 2021).

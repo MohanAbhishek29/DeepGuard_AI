@@ -567,9 +567,8 @@ function exportForensicAudit() {
     research_team: [
       { name: 'Mohan Abhishek Gupta', role: 'Project Lead & System Architect' },
       { name: 'Tunga Durga Sai Prasad', role: 'Computer Vision Lead' },
-      { name: 'Harsha Paladi', role: 'Audio & Acoustic Forensics' },
       { name: 'Harsha Vardhan', role: 'Frontend & Console Engineering' },
-      { name: 'Vinay Rayi', role: 'Speech & Multimodal Analysis' },
+      { name: 'Vinay Rayi', role: 'Audio, Speech & Multimodal Forensics' },
       { name: 'Bikesh', role: 'Data Engineering & Evaluation' }
     ],
     timestamp: new Date().toISOString(),
